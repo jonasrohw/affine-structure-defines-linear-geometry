@@ -1,0 +1,75 @@
+{
+  "n_facts": 5388,
+  "n_faithful": 2751,
+  "relations": 58,
+  "micro_faithfulness": 0.5105790645879733,
+  "macro_faithfulness": 0.5436590694594714,
+  "single_token_relations": [
+    "astronomical parent body",
+    "athlete sport position",
+    "company chief executive",
+    "person educated at",
+    "person employer",
+    "person sport",
+    "river mouth",
+    "software operating system",
+    "work creator",
+    "work director"
+  ],
+  "variable_token_facts": 4883,
+  "variable_token_faithfulness": 0.45996313741552325,
+  "variable_token_rho": {
+    "subject": 0.07298082901290223,
+    "subject-object": 0.008123255175337794,
+    "subject-relation": -0.032849555231212
+  },
+  "relation_level_correlations": {
+    "all": {
+      "n_relations": 58,
+      "pearson_log1p": -0.07526920043360502,
+      "n_positive_frequency_relations": 57,
+      "pearson_log_positive": -0.03757642080990085
+    },
+    "variable_tokens": {
+      "n_relations": 48,
+      "pearson_log1p": 0.09536224799959592,
+      "n_positive_frequency_relations": 48,
+      "pearson_log_positive": 0.09992152983079304
+    },
+    "variable_tokens_n_ge_20": {
+      "n_relations": 33,
+      "pearson_log1p": 0.2138527196424466,
+      "n_positive_frequency_relations": 33,
+      "pearson_log_positive": 0.20527914391058855
+    }
+  },
+  "metrics": [
+    {
+      "metric": "subject",
+      "pooled_spearman_rho": 0.015791617545949682,
+      "eligible_relations": 27,
+      "decreasing": 11,
+      "equal": 2,
+      "increasing": 14,
+      "mean_delta_pp": 1.4499594596603427
+    },
+    {
+      "metric": "subject-object",
+      "pooled_spearman_rho": -0.07908783059194974,
+      "eligible_relations": 27,
+      "decreasing": 11,
+      "equal": 3,
+      "increasing": 13,
+      "mean_delta_pp": -0.4180700510950925
+    },
+    {
+      "metric": "subject-relation",
+      "pooled_spearman_rho": -0.03611834029872501,
+      "eligible_relations": 21,
+      "decreasing": 9,
+      "equal": 2,
+      "increasing": 10,
+      "mean_delta_pp": -1.472156642332593
+    }
+  ]
+}

@@ -1,0 +1,1355 @@
+{
+  "runs": [
+    {
+      "seed": 19,
+      "relation": "semantic",
+      "occurrences_per_triple": 16,
+      "replay_verified": true,
+      "definition": {
+        "attention_core": "normalized subject state -> relation-position attention update",
+        "attention": "subject residual -> relation-position post-attention residual",
+        "mlp_core": "normalized post-attention state -> MLP update",
+        "mlp": "post-attention residual -> post-MLP residual",
+        "readout": "post-MLP residual -> centered object-logit contrasts",
+        "full_lookup": "subject residual -> centered object-logit contrasts",
+        "affine_test": "cross-validated vector reconstruction on disjoint memorized subjects",
+        "j_equivalence_test": "constancy of exact Jacobians across disjoint memorized subjects",
+        "continuous_domain": "natural continuous extension of the residual stream with separator and the analyzed relation token fixed"
+      },
+      "split": {
+        "folds": 4,
+        "fit_subjects_per_fold": 96,
+        "evaluation_subjects_per_fold": 32,
+        "crossvalidated_subjects": 128,
+        "fit_per_target": 3,
+        "evaluation_per_target": 1
+      },
+      "stages": {
+        "attention_core": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9910774562051408,
+            "centered_relative_l2_error": 0.09445921762781669,
+            "output_relative_l2_error": 0.09143770096295317,
+            "mean_cosine": 0.9956982591976368,
+            "rmse": 0.0033928706361304904,
+            "max_abs_error": 0.01951033198301033
+          },
+          "affine_decision": {
+            "target_accuracy": 0.7109375
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.04026248678565025,
+            "mean_pair_relative_defect": 0.03760947287082672,
+            "max_pair_relative_defect": 0.10033329576253891,
+            "rmse": 0.0010114763863384724,
+            "max_abs_error": 0.0070161595940589905
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.08952195644257194,
+            "max_relative_dispersion": 0.1410311723163919,
+            "pooled_relative_dispersion": 0.0910584200834039,
+            "mean_cosine_to_mean_jacobian": 0.996524458847923,
+            "affine_fit_relative_error": 87152.9567956196,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.08207817338565156,
+            "affine_fit_tangent_relative_error": 0.13316817216055607,
+            "mean_jacobian_frobenius_norm": 0.26535047468426437
+          }
+        },
+        "attention": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9778817071602911,
+            "centered_relative_l2_error": 0.14872220022481153,
+            "output_relative_l2_error": 0.09451628569778059,
+            "mean_cosine": 0.9959483601137593,
+            "rmse": 0.005341936958271169,
+            "max_abs_error": 0.025041106546170783
+          },
+          "affine_decision": {
+            "target_accuracy": 0.703125
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.2706906497478485,
+            "mean_pair_relative_defect": 0.2756975293159485,
+            "max_pair_relative_defect": 0.627949059009552,
+            "rmse": 0.006800306495279074,
+            "max_abs_error": 0.03536105155944824
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.1742955650411226,
+            "max_relative_dispersion": 0.22298678589380966,
+            "pooled_relative_dispersion": 0.176973050867566,
+            "mean_cosine_to_mean_jacobian": 0.9869603459089373,
+            "affine_fit_relative_error": 0.31166077509418527,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.185203026623404,
+            "affine_fit_tangent_relative_error": 0.2497221806473354,
+            "mean_jacobian_frobenius_norm": 6.135413182710112
+          }
+        },
+        "mlp_core": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9822093885018696,
+            "centered_relative_l2_error": 0.13338145110220703,
+            "output_relative_l2_error": 0.10091750459619406,
+            "mean_cosine": 0.9947657475217996,
+            "rmse": 0.01402848831319107,
+            "max_abs_error": 0.09028851997412168
+          },
+          "affine_decision": {
+            "target_accuracy": 0.703125
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.0928860455751419,
+            "mean_pair_relative_defect": 0.08664898574352264,
+            "max_pair_relative_defect": 0.13449472188949585,
+            "rmse": 0.006914440076798201,
+            "max_abs_error": 0.0443449430167675
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.13666386244637574,
+            "max_relative_dispersion": 0.19867230466200916,
+            "pooled_relative_dispersion": 0.13742910829072308,
+            "mean_cosine_to_mean_jacobian": 0.9910669679799103,
+            "affine_fit_relative_error": 87238.43987590254,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.14710353229650389,
+            "affine_fit_tangent_relative_error": 0.8741493576141343,
+            "mean_jacobian_frobenius_norm": 1.1087771662569923
+          }
+        },
+        "mlp": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.977714523469538,
+            "centered_relative_l2_error": 0.14928320913773904,
+            "output_relative_l2_error": 0.11167383693487681,
+            "mean_cosine": 0.9944760039427503,
+            "rmse": 0.018627506271264693,
+            "max_abs_error": 0.09558615197974518
+          },
+          "affine_decision": {
+            "target_accuracy": 0.734375
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.22020699083805084,
+            "mean_pair_relative_defect": 0.20599541068077087,
+            "max_pair_relative_defect": 0.3439784348011017,
+            "rmse": 0.019509796053171158,
+            "max_abs_error": 0.10153797268867493
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.1655546985009234,
+            "max_relative_dispersion": 0.28235726556423835,
+            "pooled_relative_dispersion": 0.1654463877733506,
+            "mean_cosine_to_mean_jacobian": 0.9881101065361768,
+            "affine_fit_relative_error": 89.56655217548737,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.17528766017926992,
+            "affine_fit_tangent_relative_error": 1.019581316694298,
+            "mean_jacobian_frobenius_norm": 22.5104005183281
+          }
+        },
+        "readout": {
+          "input_dim": 64,
+          "output_dim": 32,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9889340346629065,
+            "centered_relative_l2_error": 0.10519489216256385,
+            "output_relative_l2_error": 0.1024257357359691,
+            "mean_cosine": 0.9961968479547226,
+            "rmse": 0.0740033264779673,
+            "max_abs_error": 0.3897513675531994
+          },
+          "affine_decision": {
+            "target_accuracy": 0.734375
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.2027074247598648,
+            "mean_pair_relative_defect": 0.1960214078426361,
+            "max_pair_relative_defect": 0.3225553333759308,
+            "rmse": 0.10163698345422745,
+            "max_abs_error": 0.6152513027191162
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.2369752720254965,
+            "max_relative_dispersion": 0.3197536380217937,
+            "pooled_relative_dispersion": 0.23679445950112832,
+            "mean_cosine_to_mean_jacobian": 0.9747175575132443,
+            "affine_fit_relative_error": 5.720559302891889,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.2387783415347507,
+            "affine_fit_tangent_relative_error": 1.5808983419089033,
+            "mean_jacobian_frobenius_norm": 12.621851727505966
+          }
+        },
+        "full_lookup": {
+          "input_dim": 64,
+          "output_dim": 32,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9505504525630846,
+            "centered_relative_l2_error": 0.22237254200308873,
+            "output_relative_l2_error": 0.21651879434360677,
+            "mean_cosine": 0.9811638321819022,
+            "rmse": 0.1564363771594458,
+            "max_abs_error": 0.77130593408764
+          },
+          "affine_decision": {
+            "target_accuracy": 0.703125
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.36700937151908875,
+            "mean_pair_relative_defect": 0.3702816665172577,
+            "max_pair_relative_defect": 0.8547617793083191,
+            "rmse": 0.18401764333248138,
+            "max_abs_error": 1.122835397720337
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.29885396486020643,
+            "max_relative_dispersion": 0.5155181034617238,
+            "pooled_relative_dispersion": 0.29580300409802823,
+            "mean_cosine_to_mean_jacobian": 0.9646208508395159,
+            "affine_fit_relative_error": 0.5062725250711523,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.3007594619567726,
+            "affine_fit_tangent_relative_error": 0.3906600931498343,
+            "mean_jacobian_frobenius_norm": 72.39693804706957
+          }
+        }
+      }
+    },
+    {
+      "seed": 31,
+      "relation": "semantic",
+      "occurrences_per_triple": 16,
+      "replay_verified": true,
+      "definition": {
+        "attention_core": "normalized subject state -> relation-position attention update",
+        "attention": "subject residual -> relation-position post-attention residual",
+        "mlp_core": "normalized post-attention state -> MLP update",
+        "mlp": "post-attention residual -> post-MLP residual",
+        "readout": "post-MLP residual -> centered object-logit contrasts",
+        "full_lookup": "subject residual -> centered object-logit contrasts",
+        "affine_test": "cross-validated vector reconstruction on disjoint memorized subjects",
+        "j_equivalence_test": "constancy of exact Jacobians across disjoint memorized subjects",
+        "continuous_domain": "natural continuous extension of the residual stream with separator and the analyzed relation token fixed"
+      },
+      "split": {
+        "folds": 4,
+        "fit_subjects_per_fold": 96,
+        "evaluation_subjects_per_fold": 32,
+        "crossvalidated_subjects": 128,
+        "fit_per_target": 3,
+        "evaluation_per_target": 1
+      },
+      "stages": {
+        "attention_core": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9956408688744405,
+            "centered_relative_l2_error": 0.06602371638706438,
+            "output_relative_l2_error": 0.060676703626668285,
+            "mean_cosine": 0.9983406317694672,
+            "rmse": 0.00227429499501473,
+            "max_abs_error": 0.011252826237644342
+          },
+          "affine_decision": {
+            "target_accuracy": 0.6875
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.024370096623897552,
+            "mean_pair_relative_defect": 0.022270306944847107,
+            "max_pair_relative_defect": 0.04993671923875809,
+            "rmse": 0.0006030314834788442,
+            "max_abs_error": 0.004560187458992004
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.0654225419268443,
+            "max_relative_dispersion": 0.09399530856603684,
+            "pooled_relative_dispersion": 0.06631112850674682,
+            "mean_cosine_to_mean_jacobian": 0.9981737307711626,
+            "affine_fit_relative_error": 39824.02268457554,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.054249761174810895,
+            "affine_fit_tangent_relative_error": 0.09667307177261994,
+            "mean_jacobian_frobenius_norm": 0.26029019034129697
+          }
+        },
+        "attention": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9869104671822223,
+            "centered_relative_l2_error": 0.11440949618706321,
+            "output_relative_l2_error": 0.07278966565773896,
+            "mean_cosine": 0.9976903565908365,
+            "rmse": 0.003941022382656689,
+            "max_abs_error": 0.021867998766393268
+          },
+          "affine_decision": {
+            "target_accuracy": 0.703125
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.2629678547382355,
+            "mean_pair_relative_defect": 0.2692146897315979,
+            "max_pair_relative_defect": 0.509041428565979,
+            "rmse": 0.006507069803774357,
+            "max_abs_error": 0.028527311980724335
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.17111452126978333,
+            "max_relative_dispersion": 0.20933539176984917,
+            "pooled_relative_dispersion": 0.17329446565972575,
+            "mean_cosine_to_mean_jacobian": 0.9873005794048438,
+            "affine_fit_relative_error": 0.2577157732063151,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.1772592454734235,
+            "affine_fit_tangent_relative_error": 0.2218481818902822,
+            "mean_jacobian_frobenius_norm": 5.405618861477844
+          }
+        },
+        "mlp_core": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9864317737932958,
+            "centered_relative_l2_error": 0.11648272922070549,
+            "output_relative_l2_error": 0.08523443225041114,
+            "mean_cosine": 0.996413149866801,
+            "rmse": 0.012193675623594689,
+            "max_abs_error": 0.05773181189371712
+          },
+          "affine_decision": {
+            "target_accuracy": 0.6953125
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.09105192869901657,
+            "mean_pair_relative_defect": 0.08501233905553818,
+            "max_pair_relative_defect": 0.1691754013299942,
+            "rmse": 0.006904831156134605,
+            "max_abs_error": 0.035828545689582825
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.12792441395204462,
+            "max_relative_dispersion": 0.16906691734919538,
+            "pooled_relative_dispersion": 0.12874986347630668,
+            "mean_cosine_to_mean_jacobian": 0.9918906642200874,
+            "affine_fit_relative_error": 65309.10249418808,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.1336087036046692,
+            "affine_fit_tangent_relative_error": 0.7918393538756581,
+            "mean_jacobian_frobenius_norm": 1.0719408265960892
+          }
+        },
+        "mlp": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9781557399478755,
+            "centered_relative_l2_error": 0.1477980380523517,
+            "output_relative_l2_error": 0.10756857245647373,
+            "mean_cosine": 0.9952145957079488,
+            "rmse": 0.018401240059708293,
+            "max_abs_error": 0.09566699773368725
+          },
+          "affine_decision": {
+            "target_accuracy": 0.703125
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.23776277899742126,
+            "mean_pair_relative_defect": 0.22283147275447845,
+            "max_pair_relative_defect": 0.3599644899368286,
+            "rmse": 0.02139146998524666,
+            "max_abs_error": 0.09727635979652405
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.16363497618849454,
+            "max_relative_dispersion": 0.2265765955766282,
+            "pooled_relative_dispersion": 0.1651718226681682,
+            "mean_cosine_to_mean_jacobian": 0.9880844519173707,
+            "affine_fit_relative_error": 146.63567580467847,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.17728459935254848,
+            "affine_fit_tangent_relative_error": 1.2030842671929507,
+            "mean_jacobian_frobenius_norm": 22.48324350794496
+          }
+        },
+        "readout": {
+          "input_dim": 64,
+          "output_dim": 32,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.995165326079401,
+            "centered_relative_l2_error": 0.0695318194828744,
+            "output_relative_l2_error": 0.06578867800076806,
+            "mean_cosine": 0.9984152804695294,
+            "rmse": 0.04681246267725059,
+            "max_abs_error": 0.26806737779734036
+          },
+          "affine_decision": {
+            "target_accuracy": 0.703125
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.1994532197713852,
+            "mean_pair_relative_defect": 0.1926870197057724,
+            "max_pair_relative_defect": 0.2817782163619995,
+            "rmse": 0.09641791135072708,
+            "max_abs_error": 0.5281965732574463
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.21934698356476465,
+            "max_relative_dispersion": 0.29419595020841793,
+            "pooled_relative_dispersion": 0.21946480458056417,
+            "mean_cosine_to_mean_jacobian": 0.9771213541248751,
+            "affine_fit_relative_error": 4.003647212352618,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.22575391936414654,
+            "affine_fit_tangent_relative_error": 1.2215918858381183,
+            "mean_jacobian_frobenius_norm": 12.66810154656502
+          }
+        },
+        "full_lookup": {
+          "input_dim": 64,
+          "output_dim": 32,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9738024306202976,
+            "centered_relative_l2_error": 0.16185663217706708,
+            "output_relative_l2_error": 0.15314332252169083,
+            "mean_cosine": 0.9908640651610923,
+            "rmse": 0.10897036219109167,
+            "max_abs_error": 0.717394175658983
+          },
+          "affine_decision": {
+            "target_accuracy": 0.71875
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.3478385806083679,
+            "mean_pair_relative_defect": 0.3505466878414154,
+            "max_pair_relative_defect": 0.5992269515991211,
+            "rmse": 0.16814908385276794,
+            "max_abs_error": 1.0857250690460205
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.2671551078971127,
+            "max_relative_dispersion": 0.41874567356652653,
+            "pooled_relative_dispersion": 0.2650966497892123,
+            "mean_cosine_to_mean_jacobian": 0.9695493299954738,
+            "affine_fit_relative_error": 0.4575998638709475,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.27032514596220864,
+            "affine_fit_tangent_relative_error": 0.36378714385350974,
+            "mean_jacobian_frobenius_norm": 63.835495061995104
+          }
+        }
+      }
+    },
+    {
+      "seed": 47,
+      "relation": "semantic",
+      "occurrences_per_triple": 16,
+      "replay_verified": true,
+      "definition": {
+        "attention_core": "normalized subject state -> relation-position attention update",
+        "attention": "subject residual -> relation-position post-attention residual",
+        "mlp_core": "normalized post-attention state -> MLP update",
+        "mlp": "post-attention residual -> post-MLP residual",
+        "readout": "post-MLP residual -> centered object-logit contrasts",
+        "full_lookup": "subject residual -> centered object-logit contrasts",
+        "affine_test": "cross-validated vector reconstruction on disjoint memorized subjects",
+        "j_equivalence_test": "constancy of exact Jacobians across disjoint memorized subjects",
+        "continuous_domain": "natural continuous extension of the residual stream with separator and the analyzed relation token fixed"
+      },
+      "split": {
+        "folds": 4,
+        "fit_subjects_per_fold": 96,
+        "evaluation_subjects_per_fold": 32,
+        "crossvalidated_subjects": 128,
+        "fit_per_target": 3,
+        "evaluation_per_target": 1
+      },
+      "stages": {
+        "attention_core": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9935248189687728,
+            "centered_relative_l2_error": 0.0804685095626063,
+            "output_relative_l2_error": 0.07848905310133293,
+            "mean_cosine": 0.9973284736035687,
+            "rmse": 0.0031417641476114014,
+            "max_abs_error": 0.013699924115259776
+          },
+          "affine_decision": {
+            "target_accuracy": 0.84375
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.04022873565554619,
+            "mean_pair_relative_defect": 0.03538814187049866,
+            "max_pair_relative_defect": 0.10052048414945602,
+            "rmse": 0.001130231423303485,
+            "max_abs_error": 0.008662243373692036
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.09495292352244439,
+            "max_relative_dispersion": 0.14246030921293393,
+            "pooled_relative_dispersion": 0.09628403460137128,
+            "mean_cosine_to_mean_jacobian": 0.9959160024081133,
+            "affine_fit_relative_error": 79985.43456803197,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.0807690000777034,
+            "affine_fit_tangent_relative_error": 0.12747082468599624,
+            "mean_jacobian_frobenius_norm": 0.2743395700644201
+          }
+        },
+        "attention": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9850225118309911,
+            "centered_relative_l2_error": 0.12238254846590231,
+            "output_relative_l2_error": 0.08476883416137804,
+            "mean_cosine": 0.9969348192264933,
+            "rmse": 0.004778230708803971,
+            "max_abs_error": 0.026497630112975054
+          },
+          "affine_decision": {
+            "target_accuracy": 0.84375
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.2862108647823334,
+            "mean_pair_relative_defect": 0.29275578260421753,
+            "max_pair_relative_defect": 0.6479235291481018,
+            "rmse": 0.008041130378842354,
+            "max_abs_error": 0.036705851554870605
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.18516573561846028,
+            "max_relative_dispersion": 0.21668428383463606,
+            "pooled_relative_dispersion": 0.1855528940940423,
+            "mean_cosine_to_mean_jacobian": 0.9842934798643905,
+            "affine_fit_relative_error": 0.2873624026696426,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.18765271231314548,
+            "affine_fit_tangent_relative_error": 0.23652671438716183,
+            "mean_jacobian_frobenius_norm": 6.316054826172951
+          }
+        },
+        "mlp_core": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9777436049465434,
+            "centered_relative_l2_error": 0.14918577362958074,
+            "output_relative_l2_error": 0.11012159570300697,
+            "mean_cosine": 0.9940651367093989,
+            "rmse": 0.01793800375776041,
+            "max_abs_error": 0.10211973306094535
+          },
+          "affine_decision": {
+            "target_accuracy": 0.84375
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.1024886891245842,
+            "mean_pair_relative_defect": 0.09728459268808365,
+            "max_pair_relative_defect": 0.1557929664850235,
+            "rmse": 0.008939532563090324,
+            "max_abs_error": 0.048390693962574005
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.14480735758051638,
+            "max_relative_dispersion": 0.1958880388760411,
+            "pooled_relative_dispersion": 0.1453818481167659,
+            "mean_cosine_to_mean_jacobian": 0.989806590999557,
+            "affine_fit_relative_error": 83162.61579828463,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.15799824685941657,
+            "affine_fit_tangent_relative_error": 1.022472381642569,
+            "mean_jacobian_frobenius_norm": 1.165939436884872
+          }
+        },
+        "mlp": {
+          "input_dim": 64,
+          "output_dim": 64,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9661430241321333,
+            "centered_relative_l2_error": 0.18400265179574665,
+            "output_relative_l2_error": 0.13372150278525508,
+            "mean_cosine": 0.9927875104025632,
+            "rmse": 0.025903079107663277,
+            "max_abs_error": 0.19260330840107542
+          },
+          "affine_decision": {
+            "target_accuracy": 0.8359375
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.283579558134079,
+            "mean_pair_relative_defect": 0.2669198513031006,
+            "max_pair_relative_defect": 0.48003000020980835,
+            "rmse": 0.028930310159921646,
+            "max_abs_error": 0.14652031660079956
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.18276585223966058,
+            "max_relative_dispersion": 0.23595778216037588,
+            "pooled_relative_dispersion": 0.1841787256499162,
+            "mean_cosine_to_mean_jacobian": 0.9850245702119866,
+            "affine_fit_relative_error": 67.08436015699625,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.21179054585224083,
+            "affine_fit_tangent_relative_error": 1.5522787467455572,
+            "mean_jacobian_frobenius_norm": 23.044032301904853
+          }
+        },
+        "readout": {
+          "input_dim": 64,
+          "output_dim": 32,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9953832602804054,
+            "centered_relative_l2_error": 0.06794659461367146,
+            "output_relative_l2_error": 0.06551378827406135,
+            "mean_cosine": 0.9982692390069261,
+            "rmse": 0.053545687717919774,
+            "max_abs_error": 0.23652850436618955
+          },
+          "affine_decision": {
+            "target_accuracy": 0.84375
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.1940302848815918,
+            "mean_pair_relative_defect": 0.18843427300453186,
+            "max_pair_relative_defect": 0.32262134552001953,
+            "rmse": 0.11131931096315384,
+            "max_abs_error": 0.6244714260101318
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.22770070323390304,
+            "max_relative_dispersion": 0.3097687047834563,
+            "pooled_relative_dispersion": 0.22829033650494066,
+            "mean_cosine_to_mean_jacobian": 0.9750553865134675,
+            "affine_fit_relative_error": 3.237682942249511,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.2345537409224501,
+            "affine_fit_tangent_relative_error": 1.035893418806376,
+            "mean_jacobian_frobenius_norm": 12.600601629551361
+          }
+        },
+        "full_lookup": {
+          "input_dim": 64,
+          "output_dim": 32,
+          "affine_folds": 4,
+          "affine_fit_subjects_per_fold": 96,
+          "crossvalidated_subjects": 128,
+          "jacobian_subjects": 32,
+          "affine_reconstruction": {
+            "r2": 0.9710114433048146,
+            "centered_relative_l2_error": 0.17026026164429978,
+            "output_relative_l2_error": 0.16416414680194408,
+            "mean_cosine": 0.9897777943236329,
+            "rmse": 0.13417453593682568,
+            "max_abs_error": 0.5748947126024557
+          },
+          "affine_decision": {
+            "target_accuracy": 0.828125
+          },
+          "midpoint": {
+            "relative_frobenius_defect": 0.34020355343818665,
+            "mean_pair_relative_defect": 0.3501448929309845,
+            "max_pair_relative_defect": 0.9216212630271912,
+            "rmse": 0.19518204033374786,
+            "max_abs_error": 0.887354850769043
+          },
+          "jacobian": {
+            "mean_relative_dispersion": 0.28200996480077317,
+            "max_relative_dispersion": 0.40082825071425937,
+            "pooled_relative_dispersion": 0.28150888862670803,
+            "mean_cosine_to_mean_jacobian": 0.9656156189809346,
+            "affine_fit_relative_error": 0.46522662831189465,
+            "empirical_tangent_rank": 31,
+            "tangent_pooled_relative_dispersion": 0.2821439393004612,
+            "affine_fit_tangent_relative_error": 0.3696269059371258,
+            "mean_jacobian_frobenius_norm": 77.14310940622182
+          }
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "semantic": {
+      "attention_core": {
+        "affine_reconstruction": {
+          "r2": {
+            "mean": 0.9934143813494513,
+            "sd": 0.00186464136827118,
+            "min": 0.9910774562051408,
+            "max": 0.9956408688744405
+          },
+          "centered_relative_l2_error": {
+            "mean": 0.08031714785916245,
+            "sd": 0.0116092381454644,
+            "min": 0.06602371638706438,
+            "max": 0.09445921762781669
+          },
+          "output_relative_l2_error": {
+            "mean": 0.07686781923031812,
+            "sd": 0.01261034069666969,
+            "min": 0.060676703626668285,
+            "max": 0.09143770096295317
+          },
+          "mean_cosine": {
+            "mean": 0.9971224548568909,
+            "sd": 0.0010885360184141658,
+            "min": 0.9956982591976368,
+            "max": 0.9983406317694672
+          }
+        },
+        "affine_decision": {
+          "target_accuracy": {
+            "mean": 0.7473958333333334,
+            "sd": 0.06880127507095264,
+            "min": 0.6875,
+            "max": 0.84375
+          }
+        },
+        "midpoint": {
+          "relative_frobenius_defect": {
+            "mean": 0.034953773021698,
+            "sd": 0.007483802035272111,
+            "min": 0.024370096623897552,
+            "max": 0.04026248678565025
+          },
+          "mean_pair_relative_defect": {
+            "mean": 0.03175597389539083,
+            "sd": 0.006768406310485637,
+            "min": 0.022270306944847107,
+            "max": 0.03760947287082672
+          },
+          "max_pair_relative_defect": {
+            "mean": 0.08359683305025101,
+            "sd": 0.023801417411925162,
+            "min": 0.04993671923875809,
+            "max": 0.10052048414945602
+          }
+        },
+        "jacobian": {
+          "mean_relative_dispersion": {
+            "mean": 0.0832991406306202,
+            "sd": 0.012833639046597982,
+            "min": 0.0654225419268443,
+            "max": 0.09495292352244439
+          },
+          "max_relative_dispersion": {
+            "mean": 0.12582893003178755,
+            "sd": 0.022517329619440415,
+            "min": 0.09399530856603684,
+            "max": 0.14246030921293393
+          },
+          "pooled_relative_dispersion": {
+            "mean": 0.084551194397174,
+            "sd": 0.013072917668165271,
+            "min": 0.06631112850674682,
+            "max": 0.09628403460137128
+          },
+          "mean_cosine_to_mean_jacobian": {
+            "mean": 0.9968713973423995,
+            "sd": 0.0009538025929724931,
+            "min": 0.9959160024081133,
+            "max": 0.9981737307711626
+          },
+          "affine_fit_relative_error": {
+            "mean": 68987.47134940904,
+            "sd": 20828.240400003782,
+            "min": 39824.02268457554,
+            "max": 87152.9567956196
+          },
+          "tangent_pooled_relative_dispersion": {
+            "mean": 0.07236564487938861,
+            "sd": 0.01282100920328036,
+            "min": 0.054249761174810895,
+            "max": 0.08207817338565156
+          },
+          "affine_fit_tangent_relative_error": {
+            "mean": 0.11910402287305742,
+            "sd": 0.016030712554637765,
+            "min": 0.09667307177261994,
+            "max": 0.13316817216055607
+          }
+        }
+      },
+      "attention": {
+        "affine_reconstruction": {
+          "r2": {
+            "mean": 0.9832715620578348,
+            "sd": 0.0038883583266371567,
+            "min": 0.9778817071602911,
+            "max": 0.9869104671822223
+          },
+          "centered_relative_l2_error": {
+            "mean": 0.12850474829259234,
+            "sd": 0.014661773713389753,
+            "min": 0.11440949618706321,
+            "max": 0.14872220022481153
+          },
+          "output_relative_l2_error": {
+            "mean": 0.08402492850563253,
+            "sd": 0.008885439449255251,
+            "min": 0.07278966565773896,
+            "max": 0.09451628569778059
+          },
+          "mean_cosine": {
+            "mean": 0.996857845310363,
+            "sd": 0.000713246880755253,
+            "min": 0.9959483601137593,
+            "max": 0.9976903565908365
+          }
+        },
+        "affine_decision": {
+          "target_accuracy": {
+            "mean": 0.75,
+            "sd": 0.06629126073623882,
+            "min": 0.703125,
+            "max": 0.84375
+          }
+        },
+        "midpoint": {
+          "relative_frobenius_defect": {
+            "mean": 0.2732897897561391,
+            "sd": 0.009665265147752256,
+            "min": 0.2629678547382355,
+            "max": 0.2862108647823334
+          },
+          "mean_pair_relative_defect": {
+            "mean": 0.27922266721725464,
+            "sd": 0.009928602161658829,
+            "min": 0.2692146897315979,
+            "max": 0.29275578260421753
+          },
+          "max_pair_relative_defect": {
+            "mean": 0.5949713389078776,
+            "sd": 0.06130637260434407,
+            "min": 0.509041428565979,
+            "max": 0.6479235291481018
+          }
+        },
+        "jacobian": {
+          "mean_relative_dispersion": {
+            "mean": 0.17685860730978872,
+            "sd": 0.006015870423102725,
+            "min": 0.17111452126978333,
+            "max": 0.18516573561846028
+          },
+          "max_relative_dispersion": {
+            "mean": 0.2163354871660983,
+            "sd": 0.005578613012742687,
+            "min": 0.20933539176984917,
+            "max": 0.22298678589380966
+          },
+          "pooled_relative_dispersion": {
+            "mean": 0.17860680354044467,
+            "sd": 0.005136089807555857,
+            "min": 0.17329446565972575,
+            "max": 0.1855528940940423
+          },
+          "mean_cosine_to_mean_jacobian": {
+            "mean": 0.9861848017260573,
+            "sd": 0.0013445602741535964,
+            "min": 0.9842934798643905,
+            "max": 0.9873005794048438
+          },
+          "affine_fit_relative_error": {
+            "mean": 0.285579650323381,
+            "sd": 0.02205900362840012,
+            "min": 0.2577157732063151,
+            "max": 0.31166077509418527
+          },
+          "tangent_pooled_relative_dispersion": {
+            "mean": 0.18337166146999098,
+            "sd": 0.004436324453189573,
+            "min": 0.1772592454734235,
+            "max": 0.18765271231314548
+          },
+          "affine_fit_tangent_relative_error": {
+            "mean": 0.23603235897492647,
+            "sd": 0.011384880094003501,
+            "min": 0.2218481818902822,
+            "max": 0.2497221806473354
+          }
+        }
+      },
+      "mlp_core": {
+        "affine_reconstruction": {
+          "r2": {
+            "mean": 0.9821282557472363,
+            "sd": 0.003547394007843454,
+            "min": 0.9777436049465434,
+            "max": 0.9864317737932958
+          },
+          "centered_relative_l2_error": {
+            "mean": 0.13301665131749776,
+            "sd": 0.01335345367472175,
+            "min": 0.11648272922070549,
+            "max": 0.14918577362958074
+          },
+          "output_relative_l2_error": {
+            "mean": 0.09875784418320406,
+            "sd": 0.010274266429730564,
+            "min": 0.08523443225041114,
+            "max": 0.11012159570300697
+          },
+          "mean_cosine": {
+            "mean": 0.9950813446993331,
+            "sd": 0.0009842061541105694,
+            "min": 0.9940651367093989,
+            "max": 0.996413149866801
+          }
+        },
+        "affine_decision": {
+          "target_accuracy": {
+            "mean": 0.7473958333333334,
+            "sd": 0.06820729611306664,
+            "min": 0.6953125,
+            "max": 0.84375
+          }
+        },
+        "midpoint": {
+          "relative_frobenius_defect": {
+            "mean": 0.09547555446624756,
+            "sd": 0.005015246054501804,
+            "min": 0.09105192869901657,
+            "max": 0.1024886891245842
+          },
+          "mean_pair_relative_defect": {
+            "mean": 0.08964863916238149,
+            "sd": 0.00544061839501939,
+            "min": 0.08501233905553818,
+            "max": 0.09728459268808365
+          },
+          "max_pair_relative_defect": {
+            "mean": 0.15315436323483786,
+            "sd": 0.014280734153573685,
+            "min": 0.13449472188949585,
+            "max": 0.1691754013299942
+          }
+        },
+        "jacobian": {
+          "mean_relative_dispersion": {
+            "mean": 0.13646521132631226,
+            "sd": 0.006893864087779588,
+            "min": 0.12792441395204462,
+            "max": 0.14480735758051638
+          },
+          "max_relative_dispersion": {
+            "mean": 0.1878757536290819,
+            "sd": 0.013348340112648438,
+            "min": 0.16906691734919538,
+            "max": 0.19867230466200916
+          },
+          "pooled_relative_dispersion": {
+            "mean": 0.13718693996126521,
+            "sd": 0.006792138219783332,
+            "min": 0.12874986347630668,
+            "max": 0.1453818481167659
+          },
+          "mean_cosine_to_mean_jacobian": {
+            "mean": 0.9909214077331848,
+            "sd": 0.0008570224175220663,
+            "min": 0.989806590999557,
+            "max": 0.9918906642200874
+          },
+          "affine_fit_relative_error": {
+            "mean": 78570.05272279175,
+            "sd": 9523.398770118794,
+            "min": 65309.10249418808,
+            "max": 87238.43987590254
+          },
+          "tangent_pooled_relative_dispersion": {
+            "mean": 0.1462368275868632,
+            "sd": 0.00997583205666185,
+            "min": 0.1336087036046692,
+            "max": 0.15799824685941657
+          },
+          "affine_fit_tangent_relative_error": {
+            "mean": 0.8961536977107872,
+            "sd": 0.09543249485561349,
+            "min": 0.7918393538756581,
+            "max": 1.022472381642569
+          }
+        }
+      },
+      "mlp": {
+        "affine_reconstruction": {
+          "r2": {
+            "mean": 0.9740044291831823,
+            "sd": 0.005561770403248906,
+            "min": 0.9661430241321333,
+            "max": 0.9781557399478755
+          },
+          "centered_relative_l2_error": {
+            "mean": 0.16036129966194582,
+            "sd": 0.016727952282013785,
+            "min": 0.1477980380523517,
+            "max": 0.18400265179574665
+          },
+          "output_relative_l2_error": {
+            "mean": 0.11765463739220187,
+            "sd": 0.011483943044624741,
+            "min": 0.10756857245647373,
+            "max": 0.13372150278525508
+          },
+          "mean_cosine": {
+            "mean": 0.994159370017754,
+            "sd": 0.0010158341569857898,
+            "min": 0.9927875104025632,
+            "max": 0.9952145957079488
+          }
+        },
+        "affine_decision": {
+          "target_accuracy": {
+            "mean": 0.7578125,
+            "sd": 0.05669672150280532,
+            "min": 0.703125,
+            "max": 0.8359375
+          }
+        },
+        "midpoint": {
+          "relative_frobenius_defect": {
+            "mean": 0.2471831093231837,
+            "sd": 0.026715507843538655,
+            "min": 0.22020699083805084,
+            "max": 0.283579558134079
+          },
+          "mean_pair_relative_defect": {
+            "mean": 0.23191557824611664,
+            "sd": 0.02568835787827309,
+            "min": 0.20599541068077087,
+            "max": 0.2669198513031006
+          },
+          "max_pair_relative_defect": {
+            "mean": 0.3946576416492462,
+            "sd": 0.060719124907756016,
+            "min": 0.3439784348011017,
+            "max": 0.48003000020980835
+          }
+        },
+        "jacobian": {
+          "mean_relative_dispersion": {
+            "mean": 0.17065184230969285,
+            "sd": 0.008601676614735333,
+            "min": 0.16363497618849454,
+            "max": 0.18276585223966058
+          },
+          "max_relative_dispersion": {
+            "mean": 0.2482972144337475,
+            "sd": 0.024386703722705273,
+            "min": 0.2265765955766282,
+            "max": 0.28235726556423835
+          },
+          "pooled_relative_dispersion": {
+            "mean": 0.17159897869714502,
+            "sd": 0.00889593058823576,
+            "min": 0.1651718226681682,
+            "max": 0.1841787256499162
+          },
+          "mean_cosine_to_mean_jacobian": {
+            "mean": 0.9870730428885114,
+            "sd": 0.0014485267848675016,
+            "min": 0.9850245702119866,
+            "max": 0.9881101065361768
+          },
+          "affine_fit_relative_error": {
+            "mean": 101.09552937905403,
+            "sd": 33.484234517551315,
+            "min": 67.08436015699625,
+            "max": 146.63567580467847
+          },
+          "tangent_pooled_relative_dispersion": {
+            "mean": 0.18812093512801975,
+            "sd": 0.01675678559852824,
+            "min": 0.17528766017926992,
+            "max": 0.21179054585224083
+          },
+          "affine_fit_tangent_relative_error": {
+            "mean": 1.258314776877602,
+            "sd": 0.2209516461367718,
+            "min": 1.019581316694298,
+            "max": 1.5522787467455572
+          }
+        }
+      },
+      "readout": {
+        "affine_reconstruction": {
+          "r2": {
+            "mean": 0.9931608736742378,
+            "sd": 0.002990150481138001,
+            "min": 0.9889340346629065,
+            "max": 0.9953832602804054
+          },
+          "centered_relative_l2_error": {
+            "mean": 0.0808911020863699,
+            "sd": 0.01719755590236129,
+            "min": 0.06794659461367146,
+            "max": 0.10519489216256385
+          },
+          "output_relative_l2_error": {
+            "mean": 0.07790940067026617,
+            "sd": 0.017336030012295656,
+            "min": 0.06551378827406135,
+            "max": 0.1024257357359691
+          },
+          "mean_cosine": {
+            "mean": 0.9976271224770595,
+            "sd": 0.0010131126736067939,
+            "min": 0.9961968479547226,
+            "max": 0.9984152804695294
+          }
+        },
+        "affine_decision": {
+          "target_accuracy": {
+            "mean": 0.7604166666666666,
+            "sd": 0.06029081720203243,
+            "min": 0.703125,
+            "max": 0.84375
+          }
+        },
+        "midpoint": {
+          "relative_frobenius_defect": {
+            "mean": 0.1987303098042806,
+            "sd": 0.0035791189076068534,
+            "min": 0.1940302848815918,
+            "max": 0.2027074247598648
+          },
+          "mean_pair_relative_defect": {
+            "mean": 0.19238090018431345,
+            "sd": 0.003104989064281063,
+            "min": 0.18843427300453186,
+            "max": 0.1960214078426361
+          },
+          "max_pair_relative_defect": {
+            "mean": 0.3089849650859833,
+            "sd": 0.01923809539253277,
+            "min": 0.2817782163619995,
+            "max": 0.32262134552001953
+          }
+        },
+        "jacobian": {
+          "mean_relative_dispersion": {
+            "mean": 0.22800765294138806,
+            "sd": 0.007199990838229676,
+            "min": 0.21934698356476465,
+            "max": 0.2369752720254965
+          },
+          "max_relative_dispersion": {
+            "mean": 0.3079060976712226,
+            "sd": 0.010516679784431378,
+            "min": 0.29419595020841793,
+            "max": 0.3197536380217937
+          },
+          "pooled_relative_dispersion": {
+            "mean": 0.2281832001955444,
+            "sd": 0.0070752075850843005,
+            "min": 0.21946480458056417,
+            "max": 0.23679445950112832
+          },
+          "mean_cosine_to_mean_jacobian": {
+            "mean": 0.9756314327171957,
+            "sd": 0.0010625226143928,
+            "min": 0.9747175575132443,
+            "max": 0.9771213541248751
+          },
+          "affine_fit_relative_error": {
+            "mean": 4.320629819164672,
+            "sd": 1.0381159971554912,
+            "min": 3.237682942249511,
+            "max": 5.720559302891889
+          },
+          "tangent_pooled_relative_dispersion": {
+            "mean": 0.23302866727378244,
+            "sd": 0.005425451160651778,
+            "min": 0.22575391936414654,
+            "max": 0.2387783415347507
+          },
+          "affine_fit_tangent_relative_error": {
+            "mean": 1.2794612155177993,
+            "sd": 0.22622884584667746,
+            "min": 1.035893418806376,
+            "max": 1.5808983419089033
+          }
+        }
+      },
+      "full_lookup": {
+        "affine_reconstruction": {
+          "r2": {
+            "mean": 0.9651214421627322,
+            "sd": 0.010366056980471645,
+            "min": 0.9505504525630846,
+            "max": 0.9738024306202976
+          },
+          "centered_relative_l2_error": {
+            "mean": 0.18482981194148518,
+            "sd": 0.026767488767962,
+            "min": 0.16185663217706708,
+            "max": 0.22237254200308873
+          },
+          "output_relative_l2_error": {
+            "mean": 0.17794208788908059,
+            "sd": 0.027646414506683842,
+            "min": 0.15314332252169083,
+            "max": 0.21651879434360677
+          },
+          "mean_cosine": {
+            "mean": 0.9872685638888757,
+            "sd": 0.004339416857418771,
+            "min": 0.9811638321819022,
+            "max": 0.9908640651610923
+          }
+        },
+        "affine_decision": {
+          "target_accuracy": {
+            "mean": 0.75,
+            "sd": 0.05560978256266308,
+            "min": 0.703125,
+            "max": 0.828125
+          }
+        },
+        "midpoint": {
+          "relative_frobenius_defect": {
+            "mean": 0.3516838351885478,
+            "sd": 0.011276153535563448,
+            "min": 0.34020355343818665,
+            "max": 0.36700937151908875
+          },
+          "mean_pair_relative_defect": {
+            "mean": 0.35699108242988586,
+            "sd": 0.00939929354881305,
+            "min": 0.3501448929309845,
+            "max": 0.3702816665172577
+          },
+          "max_pair_relative_defect": {
+            "mean": 0.7918699979782104,
+            "sd": 0.13892697153408937,
+            "min": 0.5992269515991211,
+            "max": 0.9216212630271912
+          }
+        },
+        "jacobian": {
+          "mean_relative_dispersion": {
+            "mean": 0.2826730125193641,
+            "sd": 0.012949494389087558,
+            "min": 0.2671551078971127,
+            "max": 0.29885396486020643
+          },
+          "max_relative_dispersion": {
+            "mean": 0.44503067591416984,
+            "sd": 0.05037602996214555,
+            "min": 0.40082825071425937,
+            "max": 0.5155181034617238
+          },
+          "pooled_relative_dispersion": {
+            "mean": 0.28080284750464957,
+            "sd": 0.012545754110034267,
+            "min": 0.2650966497892123,
+            "max": 0.29580300409802823
+          },
+          "mean_cosine_to_mean_jacobian": {
+            "mean": 0.966595266605308,
+            "sd": 0.0021279503124890663,
+            "min": 0.9646208508395159,
+            "max": 0.9695493299954738
+          },
+          "affine_fit_relative_error": {
+            "mean": 0.4763663390846648,
+            "sd": 0.021374858348898424,
+            "min": 0.4575998638709475,
+            "max": 0.5062725250711523
+          },
+          "tangent_pooled_relative_dispersion": {
+            "mean": 0.28440951573981416,
+            "sd": 0.012527610172898274,
+            "min": 0.27032514596220864,
+            "max": 0.3007594619567726
+          },
+          "affine_fit_tangent_relative_error": {
+            "mean": 0.37469138098015664,
+            "sd": 0.011540523719104459,
+            "min": 0.36378714385350974,
+            "max": 0.3906600931498343
+          }
+        }
+      }
+    }
+  }
+}

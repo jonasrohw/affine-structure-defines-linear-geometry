@@ -1,0 +1,2 @@
+cairosvg==2.8.2 --hash=sha256:eab46dad4674f33267a671dce39b64be245911c901c70d65d2b7b0821e852bf5
+cssselect2==0.10.1 --hash=sha256:25cc4494d55985d6a6da359be48da6ce98c28dcbafa2314c383ace3fc32ec868

@@ -1,0 +1,15 @@
+# Build this runtime with docker/rtx/Dockerfile first. Its recipe pins the
+# interpreter archive, OS package snapshot and complete CUDA dependency lock.
+ARG RTX_RUNTIME=factual-recall:rtx-runtime
+FROM ${RTX_RUNTIME}
+COPY docker/rtx/cairo-requirement.txt /opt/beta-environment/cairo-requirement.txt
+RUN uv pip install --python /opt/beta-venv/bin/python --require-hashes --no-deps -r /opt/beta-environment/cairo-requirement.txt
+ENV CUBLAS_WORKSPACE_CONFIG=:4096:8
+WORKDIR /app
+COPY pyproject.toml uv.lock .python-version README.md ./
+COPY experiments/factual_recall experiments/factual_recall
+COPY experiments/tests experiments/tests
+COPY paper paper
+COPY scripts scripts
+ENTRYPOINT ["/opt/beta-venv/bin/python", "-m", "factual_recall.reproduce"]
+CMD ["--experiment2-device", "cuda", "--runtime-profile", "deterministic"]

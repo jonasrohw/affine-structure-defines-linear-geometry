@@ -1,0 +1,23 @@
+# Reproducible outputs and local environments
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.rtk/
+results/
+*.pt
+*.pth
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+.graphify/
+paper/main.pdf
+.venv-validation/
+# Versioned paper evidence includes the three certified final checkpoints.
+!paper/baselines/rtx4090-v1/checkpoints/*.pt

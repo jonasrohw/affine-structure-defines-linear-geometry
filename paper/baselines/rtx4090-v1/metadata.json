@@ -1,0 +1,21 @@
+{
+  "baseline": "rtx4090-v1",
+  "date": "2026-10-07",
+  "status": "certified",
+  "seeds": [
+    19,
+    31,
+    47
+  ],
+  "historical_references_unchanged": true,
+  "historical_reference_sha256": {
+    "experiment1_mechanism.json": "e85c91b8a3d97ca43cea8b29b901b220e9164714d0286333e2a604835b84a25e",
+    "experiment2.json": "94dbc6b71149dbd7e056d262629916a4c5f780c51a39a4490d7426f34372275c"
+  },
+  "final_checkpoint_sha256": {
+    "seed19.pt": "3c42d81dbeefa1542414509efbae4974508417ca5fdc8b7d2f4b83dec6a9709f",
+    "seed31.pt": "9f23c985cf489b1b0dd3e0b6f536c011fe890b23846040d97ccec9b40750a4b0",
+    "seed47.pt": "ab79f0a0f1930b00c658c76d740dbc06f77f23e590ea21096bcbc0b139baa2df"
+  },
+  "note": "Archived baseline certification. The anonymous distribution validation.json reports separate preparation checks. Fresh discovery runs audited historical references and preserved numerical differences."
+}

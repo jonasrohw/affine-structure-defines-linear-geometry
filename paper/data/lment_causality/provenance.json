@@ -1,0 +1,15 @@
+{
+  "source": "external/analysis/results/comparison_figures_v1_20260912/tables/relation_metrics_frequency.csv",
+  "source_sha256": "48f142a738af6231041808517ac71348d447c138e1c8e0698e2148ca3bd85d38",
+  "snapshot_sha256": "64ff0a548bd87ab778bb675af9cc3e98fe3c9631fbd640055fc2eb42b3d114c4",
+  "selection": {
+    "population": "custom",
+    "count": "subject_object_count",
+    "metric": "causal_pairwise_success"
+  },
+  "n_relations": 56,
+  "n_test_query_trials": 15874,
+  "metric": "Mean indicator that, after the primary LRE edit, the target first-token probability exceeds the original object first-token probability. Not exact full-vocabulary success or proof of affine computation.",
+  "frequency": "Mean subject-object literal co-occurrence count in distinct LMEnt corpus documents over the same valid test trials.",
+  "evaluation": "Task04 custom native prompts, seeds42/43/44, validation-selected operators; frozen task11 relation aggregation. Different from historical faithfulness cohort in panel B."
+}

@@ -1,0 +1,4 @@
+# Preserve scientific snapshot bytes across platforms for SHA-256 verification.
+paper/data/**/*.csv -text whitespace=cr-at-eol
+paper/baselines/rtx4090-v1/** linguist-generated=true
+*.pt -text

@@ -1,0 +1,210 @@
+{
+  "core_claim_checks": {
+    "exp1_affine_transfer_perfect_at_frequency_one": true,
+    "exp1_semantic_heldout_recall_above_half": true,
+    "exp1_random_training_recall_perfect_at_frequency_64": true,
+    "exp1_lookup_approximately_affine_but_positive_defect_and_jacobian_dispersion": true,
+    "all_behavior_symmetry_geometry_gates_pass": true,
+    "each_structured_fit_explains_over_95_percent": true,
+    "each_random_fit_explains_less_than_half": true,
+    "random_cv_r2_negative_every_seed": true,
+    "each_global_intervention_harms_both_relation_types_every_seed": true,
+    "each_layer_ablation_harms_random_recall_every_seed": true
+  },
+  "claim_revisions": [
+    {
+      "claim": "Seeds 31 and 47 exceed the 98th permutation-null percentile",
+      "replacement": "Report each measured percentile explicitly; the historical seed-specific statement does not hold.",
+      "percentiles": {
+        "19": 94.8,
+        "31": 98.0,
+        "47": 49.2
+      }
+    },
+    {
+      "claim": "Every structured fit has R-squared at least .995",
+      "replacement": "Report the measured minimum, correcting an inequality already overstated in the historical prose.",
+      "measured_minimum": 0.994846061834609
+    },
+    {
+      "claim": "Exact layer-localization and patch-recovery values describe the new runs",
+      "replacement": "Replace all curves and prose values; layer localization is specific to the reported solutions."
+    }
+  ],
+  "historical": {
+    "random_r2_mean": 0.38290540084730845,
+    "null_percentiles": {
+      "19": 38.2,
+      "31": 98.4,
+      "47": 99.2
+    },
+    "random_logit_lens_mean": [
+      0.5,
+      0.5003255208333334,
+      0.50927734375,
+      0.5599772135416666,
+      0.5519205729166666,
+      0.5922037760416666,
+      0.701904296875,
+      0.8595377604166666,
+      0.9984537760416666
+    ],
+    "random_component_accuracy": {
+      "full": {
+        "mean": 0.9984537760416666,
+        "sd": 0.0009243014885742633
+      },
+      "gelu_identity": {
+        "mean": 0.52294921875,
+        "sd": 0.020700188194561982
+      },
+      "uniform_attention": {
+        "mean": 0.4986165364583333,
+        "sd": 0.0036566800030372677
+      },
+      "no_mlp": {
+        "mean": 0.5122884114583334,
+        "sd": 0.010404898035398256
+      },
+      "no_attention": {
+        "mean": 0.5,
+        "sd": 0.0
+      }
+    },
+    "random_layer_ablations": {
+      "attention": [
+        0.624755859375,
+        0.5752766927083334,
+        0.5826822916666666,
+        0.6513671875,
+        0.65771484375,
+        0.64794921875,
+        0.6836751302083334,
+        0.7500813802083334
+      ],
+      "mlp": [
+        0.6898600260416666,
+        0.6871744791666666,
+        0.7111002604166666,
+        0.7652994791666666,
+        0.8833821614583334,
+        0.930908203125,
+        0.874267578125,
+        0.721923828125
+      ]
+    },
+    "random_trace": {
+      "subject": [
+        1.0,
+        0.6456493402246449,
+        0.4661479139972293,
+        0.34352197522953687,
+        0.2775480353432169,
+        0.20992378419758495,
+        0.15370119465866516,
+        0.04378682795640718,
+        0.0
+      ],
+      "object": [
+        0.0,
+        0.2779994010834798,
+        0.4034352620010339,
+        0.6158198004678055,
+        0.680295986333547,
+        0.8165888373862348,
+        0.8910685654143832,
+        0.9902699354792417,
+        1.0
+      ]
+    }
+  },
+  "rtx": {
+    "random_r2_mean": 0.3749300084467279,
+    "null_percentiles": {
+      "19": 94.8,
+      "31": 98.0,
+      "47": 49.2
+    },
+    "random_logit_lens_mean": [
+      0.5,
+      0.5034993489583334,
+      0.504638671875,
+      0.5222981770833334,
+      0.53515625,
+      0.5183919270833334,
+      0.6204427083333334,
+      0.6649576822916666,
+      0.9998372395833334
+    ],
+    "random_component_accuracy": {
+      "full": {
+        "mean": 0.9998372395833334,
+        "sd": 0.0001409546555638735
+      },
+      "gelu_identity": {
+        "mean": 0.5101725260416666,
+        "sd": 0.007542062007876081
+      },
+      "uniform_attention": {
+        "mean": 0.4982096354166667,
+        "sd": 0.002892147728502093
+      },
+      "no_mlp": {
+        "mean": 0.5306803385416666,
+        "sd": 0.014025519454683815
+      },
+      "no_attention": {
+        "mean": 0.5,
+        "sd": 0.0
+      }
+    },
+    "random_layer_ablations": {
+      "attention": [
+        0.6424967447916666,
+        0.6329752604166666,
+        0.60546875,
+        0.613525390625,
+        0.6177571614583334,
+        0.5970865885416666,
+        0.5970052083333334,
+        0.713623046875
+      ],
+      "mlp": [
+        0.692138671875,
+        0.702880859375,
+        0.6914876302083334,
+        0.7176106770833334,
+        0.830810546875,
+        0.8693033854166666,
+        0.802978515625,
+        0.9160970052083334
+      ]
+    },
+    "random_trace": {
+      "subject": [
+        1.0,
+        0.6840092797344709,
+        0.6501860756175883,
+        0.44221752712255474,
+        0.41417423139138215,
+        0.36319034747918466,
+        0.2537304946224677,
+        0.10704485045909312,
+        0.0
+      ],
+      "object": [
+        0.0,
+        0.23520692520529377,
+        0.42634761903693913,
+        0.5479193916149957,
+        0.5769456649516219,
+        0.6390620161676563,
+        0.7642723077892465,
+        0.9224939318099045,
+        1.0
+      ]
+    }
+  },
+  "method_change": "Joint checkpoint selection and early stopping now include the existing symmetry threshold.",
+  "interpretation": "Numerical null percentiles and layer/patch curves are solution-specific. Check core_claim_checks before retaining each qualitative claim; do not infer cross-hardware invariance."
+}

@@ -1,0 +1,60 @@
+{
+  "distribution": "anonymous-reproducibility",
+  "tests": {
+    "command": "uv run --locked pytest -q",
+    "passed": 24
+  },
+  "environment": {
+    "command": "uv sync --locked",
+    "status": "passed",
+    "python": "3.13.11",
+    "torch": "2.12.0+cpu"
+  },
+  "smoke": {
+    "command": "uv run --locked reproduce --smoke --output results/smoke",
+    "status": "smoke_passed",
+    "figure_sets": [
+      "frequency_not_enough",
+      "goal2_raw_transformer_mechanism",
+      "goal2_raw_transformer_results",
+      "linear_shift_transition",
+      "lment_frequency_aggregate",
+      "synthetic_dataset_generation"
+    ],
+    "csv_tables": [
+      "experiment1.csv",
+      "experiment2.csv",
+      "transformations.csv"
+    ],
+    "manuscript_required": false
+  },
+  "preservation": {
+    "training_and_model_source_unchanged": true,
+    "historical_references_byte_identical": true,
+    "three_final_checkpoints_byte_identical": true,
+    "all_scientific_numeric_fields_preserved": true,
+    "lment_aggregates_match_tolerance": 1e-10,
+    "numeric_fields_verified": 41122
+  },
+  "anonymization": {
+    "direct_identifiers_found": 0,
+    "checkpoint_payloads": "tensor dictionaries only",
+    "history": "single root commit with generic author",
+    "removed": [
+      "manuscript sources and rendered figures",
+      "author-specific agent instructions",
+      "personal absolute paths",
+      "obsolete backup identifiers",
+      "original Git history"
+    ],
+    "retained": "Public dependency and pretrained-model identifiers, numerical evidence and runtime versions.",
+    "limitation": "Code and data can be recognizable through comparison with public material. Hosting under an identifying account reveals ownership."
+  },
+  "full_gpu_training_repeated": false,
+  "all_manuscript_results_reproducible": false,
+  "missing": [
+    "Original LMEnt inference and corpus-counting code and inputs",
+    "LMEnt sharing/regression/probe/case-study analysis source and per-fact inputs"
+  ],
+  "historical_evidence": "paper/baselines/rtx4090-v1/repeatability.json"
+}

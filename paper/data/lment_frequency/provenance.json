@@ -1,0 +1,552 @@
+{
+  "source_root": "external/dataset",
+  "input_sha256": {
+    "results/lment-lre-v2/predictions.csv": "bfc20097aadce4b7b2eb1980e2f129226b9da084d73c7c92f9406eaa5b6cfb8f",
+    "results/lment-lre-v2/frequency/fact_counts.csv": "aac47ebf08dd5a9a24dcc6c4426d7e0a4d71d7827308edfa9d07c57fedbdd00b",
+    "results/lment-lre-v2/manifest.json": "84fc6c8de0aebd89356995bc089be040da628385aa0f010558a5f8bb36128633",
+    "results/lment-lre-v2/frequency/manifest.json": "416b5d286be1d43983126dc98393ad430cbc5acb6c0b1bd4de8eed2e6e41080c",
+    "results/lment-lre-v2/contexts/manifest.json": "ba902508ac10820a802109d09bbae57ff355c7d9544ddf68da6258a1be3b2b6b",
+    "work/lment-lre-v2/manifest.json": "262c9e1244f8df44098bd64ca80da09320aa1e3b1908484c55763661301fadc2",
+    "scripts/build_lment_lre_curves.py": "31aa97ee75de4569de002c0937a86c229f9de57a9e980fc180039e1c322c1ba4",
+    "scripts/count_lment_lre_frequencies.py": "ba457dd450f23865a933eb6e751e2cf63600635ce7ceb5352b3d7807c4e2f4d0",
+    "lre-frequency-site/data/curves.json": "db301a1e7d38ba753f18809d5bd9ca569024c696519659e863a2c03550ec7e5b",
+    "results/lment-lre-v2/relation_results/astronomical_parent_body.json": "34e470f48a848fc2192578d5de48d9c5c44a51d49c912c84865157605dbe18bd",
+    "results/lment-lre-v2/relation_results/athlete_position.json": "23d7edd456bc02c2c97fee319582fff4187bbc929869d9fa25fb494cc49544d0",
+    "results/lment-lre-v2/relation_results/city_continent.json": "b612a99c490fe0ce3fae929c0b5c46145ed0d2937fd444acb5533be60d0a7378",
+    "results/lment-lre-v2/relation_results/city_country.json": "ea4f0f71a970bd2054eea2e32058b742e708ddcf64a420c1c874f66dfd1221cc",
+    "results/lment-lre-v2/relation_results/company_chief_executive.json": "56672e16e9180242bf3cd3089183e077794467fdedc88fec8feed6e6968011d7",
+    "results/lment-lre-v2/relation_results/country_capital.json": "be352d8a4e385fca9d5481f715f31e4017c6c35b2c0fa4f8f723c183e68b8118",
+    "results/lment-lre-v2/relation_results/country_continent.json": "a3040e196b59f3f9b50145dea520f0fd7f8d9ecdb808048e048540832d83a7e3",
+    "results/lment-lre-v2/relation_results/country_currency.json": "d17769bc337036082c5688cc50a47644d08b26df7f3f5efb596823868dd84eef",
+    "results/lment-lre-v2/relation_results/country_head_of_state.json": "fe35c23a37bc755f5eae86ac31d0cb641f408fa2285f6767648f52715a87c227",
+    "results/lment-lre-v2/relation_results/country_official_language.json": "15ee2ca59f11e9e6c0d9f8e6aaf0e4f9eb3cd318ff6d57bd5e3fba09fd164b80",
+    "results/lment-lre-v2/relation_results/entity_owner.json": "d26d9f3d5e38a52787f0c343fd2b0b6d8923000df8bc72269c7278ef2e8fab19",
+    "results/lment-lre-v2/relation_results/lake_inflow.json": "1e857de0a8286e1323aa53fc73a8f21858caa762feb0eb447988711ae4fd950f",
+    "results/lment-lre-v2/relation_results/landmark_continent.json": "fdcf241d2acf407393260c7ab53de7e5b0026a32dd4924d3342efe1197002d81",
+    "results/lment-lre-v2/relation_results/landmark_country.json": "6de8b0acb5ee029b61e2d7b3683c0fbdf7fd3b02f3b017b2d1d7cba4f4ef636c",
+    "results/lment-lre-v2/relation_results/mountain_range.json": "b6ef2e1aa51d3628b45fe4ce276db60ff5251dcb62ee39bb3d8bd5ee029a93e3",
+    "results/lment-lre-v2/relation_results/organization_country.json": "7ddb83a81e038a8734a2c7604ad7d6b8b7d851e6796857d51d7321fcbbf73461",
+    "results/lment-lre-v2/relation_results/organization_foundation_place.json": "733fa29b97c70a9168fa237952bb754460588be89fa124695af8ce3ef7ef459d",
+    "results/lment-lre-v2/relation_results/organization_founder.json": "40df8bbfb05f2a3da42acfeea10a88b83ac6ed1352c9375285138dcf3a351ae1",
+    "results/lment-lre-v2/relation_results/organization_headquarters.json": "cf9a787d71a27ecca2932f2edd9c9afa92ba6f36ad07382b6d7e0244828f70c4",
+    "results/lment-lre-v2/relation_results/organization_industry.json": "94a6085f344382db8c53eea9a8cbdac0e47c151fd3fee5f8b79b85baad593ab6",
+    "results/lment-lre-v2/relation_results/organization_legal_form.json": "e24e9e266e733dc04ef1bbc1c9af0c0129d81e80de8819825b992343d1c057b0",
+    "results/lment-lre-v2/relation_results/organization_parent.json": "eb7d97dafd720e325fc77c51cedea445f1f421195aea7d5bfff4e13fbc31e4df",
+    "results/lment-lre-v2/relation_results/person_award.json": "7c9fb01cc2b09efa586241ae0f4547cf9a8c83649c176c3d8e4c479ebf79101e",
+    "results/lment-lre-v2/relation_results/person_birth_place.json": "78aa3d089e694fc59072d17760d3b55e0cb9dec76fe774f5a68aef34a00efcab",
+    "results/lment-lre-v2/relation_results/person_burial_place.json": "48bdc4df24aa7c77ce5533392ad1758d9b5583c4d9e35103496a5375a0f3e3c0",
+    "results/lment-lre-v2/relation_results/person_child.json": "7a77545ff214e3ded3b04409e7ccefc5186b5c31075d9aa049f1f913182f2865",
+    "results/lment-lre-v2/relation_results/person_citizenship.json": "52bb1f76e18f86fbae689a47d5da0d9a3b45a26f065da58c0d5429fbcb89f6df",
+    "results/lment-lre-v2/relation_results/person_death_place.json": "c439920f969681285f113394df2df88aabe53024f6dd6776d0e8889810f50815",
+    "results/lment-lre-v2/relation_results/person_educated_at.json": "1d8398feefb049acd2cf72dcade2626acaaf68d27779f2fde783708c3788d6f9",
+    "results/lment-lre-v2/relation_results/person_employer.json": "13dbd93cb52b868126c17edcda9a2e64ba67241d7ad1a94803383b4a38247854",
+    "results/lment-lre-v2/relation_results/person_father.json": "34988afc5f46a7e4b69ef90a6a5ec532bc2a303fc5806315ab439d317950b63f",
+    "results/lment-lre-v2/relation_results/person_field_of_work.json": "a52131552de2af293854aab114d0f444760b608a29802f6cf79e3c8e84f0c94e",
+    "results/lment-lre-v2/relation_results/person_given_name.json": "67e611613df41ffb4057cb7d51f298153e259719cb06dafb003b96a5aeb2ad1d",
+    "results/lment-lre-v2/relation_results/person_instrument.json": "7fa6ab87cd3152ae5ee1a62c1c1a1bc2b878542d04920fc27e7ca8e3f58f5ebc",
+    "results/lment-lre-v2/relation_results/person_member_of.json": "c8a3aad81d552fee59cf90acbef4c883035261755d3c45ae674e4d751c32aadc",
+    "results/lment-lre-v2/relation_results/person_mother.json": "1b5141af83186d09121ff1dbc2788ed3d5487f7cc51b841456d70aabe6b7699e",
+    "results/lment-lre-v2/relation_results/person_native_language.json": "d43f38832df777131341c6ac8fb2162439026f9afecb6adac12719d64691ea60",
+    "results/lment-lre-v2/relation_results/person_noble_title.json": "814afb0a290e5ce9d1ad5854a16b33dbede265528605014d44441b5dfdb37912",
+    "results/lment-lre-v2/relation_results/person_occupation.json": "a746f8f56def420653137999fa20f5c3a4688c4be88ae83be4705f46b49efe44",
+    "results/lment-lre-v2/relation_results/person_religion.json": "17a9060727ebd55704210efbcb6e8869835702c77fce5cbf096a175e18bea2c3",
+    "results/lment-lre-v2/relation_results/person_sport.json": "e2e5d3356f9d0a84cae43834df0e2691d6d42421fc8ad458119d230cb7fd8dee",
+    "results/lment-lre-v2/relation_results/person_spouse.json": "7f0a1979ec1008cb948ad9e8edb57d5ffcb63158bf6fe81f744cf93e12cd643a",
+    "results/lment-lre-v2/relation_results/product_developer.json": "54864154c6eb99af5b05dd979c9cf6eeae784c630e770277566612cb5f020c0f",
+    "results/lment-lre-v2/relation_results/product_manufacturer.json": "264f935a8752cc9c325d1d69e82ef5911b7bcdcf2005b62b68785dfad3e774f3",
+    "results/lment-lre-v2/relation_results/river_mouth.json": "24637b3d3cc8e05234ce5a50cf9bdfaeb5da934ea8fd998484a120ad4220dfe0",
+    "results/lment-lre-v2/relation_results/software_operating_system.json": "a159449dcebc3c9c2fe5a100dee88424f6b813148c0d9908d1cdb8fa9d057c50",
+    "results/lment-lre-v2/relation_results/software_programming_language.json": "bcc82fdbb5c1c1e27961cf531b314d1b19ba39cd73f0d729a01f12752a9c8368",
+    "results/lment-lre-v2/relation_results/star_constellation.json": "e00428f84e2638c096d4bd36b4ae588aa796a0863b6999ab48a254fa727c9c20",
+    "results/lment-lre-v2/relation_results/taxon_parent.json": "417108fd7e95cddf488b12630b84238e4ac16c6fcc59f373d684cb163c6e6ce8",
+    "results/lment-lre-v2/relation_results/work_author.json": "862760f9fc3955c48c45646e69ac93193b2e8458634201c58ce5e038612999df",
+    "results/lment-lre-v2/relation_results/work_composer.json": "5040c19fb165edaad7b7837805091428aa936860aecf151600778d4c33fc009d",
+    "results/lment-lre-v2/relation_results/work_country_of_origin.json": "2c40930ac4e0a75bc17ca819e9ead6d310327d1c34e4d2d02fc793683d967ed2",
+    "results/lment-lre-v2/relation_results/work_creator.json": "aa72ed15b6fc2bede463ea36860c34a26576c2ceb1e270abca35bee9955c5e59",
+    "results/lment-lre-v2/relation_results/work_director.json": "7fb96db581b70106d6325559cd6b96c5e365d10d8bf2150bf0d39d4604c89c8d",
+    "results/lment-lre-v2/relation_results/work_genre.json": "8d4cdaa8d2b0294089637c4790a76fd668dff0cc48c701427069c776786b2a90",
+    "results/lment-lre-v2/relation_results/work_original_language.json": "1c69255a0a815b2a48ac0f980825c5888b61a8837ca85290b77fa0c7ecb91339",
+    "results/lment-lre-v2/relation_results/work_publisher.json": "fbcdf0a54836454f32ff10e7e1dddd0d45bd028df80f042f7fdad53f6be57999",
+    "results/lment-lre-v2/relation_results/work_screenwriter.json": "8ced337f063eaae9af69dc6003cf6d94bbe404323abcddce6ad23a009a694553",
+    "external/analysis/scripts/evaluate_lre_faithfulness.py": "8264d45eff87d56e33e263900acaac24f8a00f260ae1efea244f9de63cbd7d99"
+  },
+  "snapshot_sha256": "7396be0cad8a30956757ebd33ea54e63c1a921854f93d8b9cacd7c3ea339ee31",
+  "evaluation_manifest": {
+    "model_repo": "dhgottesman/LMEnt-1B-1E",
+    "model_revision": "step109672",
+    "model_path": "data/models/LMEnt-1B-1E/step109672",
+    "dataset_dir": "external/dataset/work/lment-lre-v2/filtered/relations",
+    "method": "Hernandez et al. mean-Jacobian affine LRE via exact JVPs",
+    "faithfulness_definition": "exact top-1 token agreement with the full LM",
+    "n_train": 8,
+    "seed": 42,
+    "candidate_layers": [
+      0,
+      3,
+      6,
+      9,
+      12,
+      15
+    ],
+    "candidate_betas": [
+      1.0,
+      2.0,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      8.0,
+      10.0
+    ],
+    "beta_selection": "global macro mean of per-relation best-layer faithfulness",
+    "layer_selection": "best faithfulness per relation on the reported evaluation set",
+    "selected_beta": 4.0,
+    "beta_scores": [
+      {
+        "beta": 1.0,
+        "macro_mean_best_layer_faithfulness": 0.48259529844246696
+      },
+      {
+        "beta": 2.0,
+        "macro_mean_best_layer_faithfulness": 0.5262474787102825
+      },
+      {
+        "beta": 3.0,
+        "macro_mean_best_layer_faithfulness": 0.5311155541873491
+      },
+      {
+        "beta": 4.0,
+        "macro_mean_best_layer_faithfulness": 0.5436590694594714
+      },
+      {
+        "beta": 5.0,
+        "macro_mean_best_layer_faithfulness": 0.543644622793244
+      },
+      {
+        "beta": 6.0,
+        "macro_mean_best_layer_faithfulness": 0.5380324690848388
+      },
+      {
+        "beta": 8.0,
+        "macro_mean_best_layer_faithfulness": 0.5321887256011064
+      },
+      {
+        "beta": 10.0,
+        "macro_mean_best_layer_faithfulness": 0.5185698111549492
+      }
+    ],
+    "completed_relations": 58,
+    "not_estimable_relations": 0,
+    "macro_faithfulness": 0.5436590694594714,
+    "micro_faithfulness": 0.5105790645879733,
+    "micro_correct": 2751,
+    "micro_n": 5388
+  },
+  "dataset_manifest": {
+    "all_source_release_status_counts": {
+      "accepted": 41635,
+      "quarantined": 11129
+    },
+    "catalog": "external/dataset/catalog/relations.json",
+    "dataset_dir": "external/dataset/review/data/v2",
+    "query_deduplication": "one row per exact (subject label, object label) within relation",
+    "relations": 60,
+    "relations_eligible_for_eight_shot_filter": 58,
+    "relations_with_samples": 59,
+    "samples": 41616,
+    "selection": "category=factual and release_status=accepted",
+    "source_sha256": "6ac9996ca75527e148cda29dd05d72e7db21a1fdc6691e037cb3fa2333394b9f"
+  },
+  "count_manifest": {
+    "facts": 7614,
+    "label_aliases": {
+      "Africa": [
+        "Africa",
+        "African"
+      ],
+      "Antarctica": [
+        "Antarctica",
+        "Antarctic"
+      ],
+      "Asia": [
+        "Asia",
+        "Asian"
+      ],
+      "Australia": [
+        "Australia",
+        "Australian"
+      ],
+      "Canada": [
+        "Canada",
+        "Canadian"
+      ],
+      "Denmark": [
+        "Denmark",
+        "Danish"
+      ],
+      "Europe": [
+        "Europe",
+        "European"
+      ],
+      "France": [
+        "France",
+        "French"
+      ],
+      "Germany": [
+        "Germany",
+        "German"
+      ],
+      "India": [
+        "India",
+        "Indian"
+      ],
+      "Iran": [
+        "Iran",
+        "Iranian"
+      ],
+      "Italy": [
+        "Italy",
+        "Italian"
+      ],
+      "Japan": [
+        "Japan",
+        "Japanese"
+      ],
+      "Lithuania": [
+        "Lithuania",
+        "Lithuanian"
+      ],
+      "North America": [
+        "North America",
+        "North American"
+      ],
+      "Norway": [
+        "Norway",
+        "Norwegian"
+      ],
+      "Russia": [
+        "Russia",
+        "Russian"
+      ],
+      "South America": [
+        "South America",
+        "South American"
+      ],
+      "United Kingdom": [
+        "United Kingdom",
+        "British"
+      ],
+      "United States": [
+        "United States",
+        "American"
+      ]
+    },
+    "method": "distinct subject-QID-linked LMEnt documents",
+    "object_match": "case-insensitive exact label at word boundaries with recorded demonym aliases",
+    "relation_cue_patterns": {
+      "astronomical parent body": [
+        "\\borbits?\\b",
+        "\\bparent (?:body|planet|star)\\b"
+      ],
+      "athlete sport position": [
+        "\\bplaying positions?\\b",
+        "\\bplays? as (?:an? )?\\w+\\b"
+      ],
+      "city continent": [
+        "\\bcontinents?\\b"
+      ],
+      "city country": [
+        "\\bcountr(?:y|ies)\\b",
+        "\\bis located in\\b"
+      ],
+      "company chief executive": [
+        "\\bceos?\\b",
+        "\\bchief executives?(?: officers?)?\\b"
+      ],
+      "country capital": [
+        "\\bcapital(?: city| cities)?\\b"
+      ],
+      "country continent": [
+        "\\bcontinents?\\b"
+      ],
+      "country currency": [
+        "\\bcurrenc(?:y|ies)\\b",
+        "\\blegal tender\\b"
+      ],
+      "country head of government": [
+        "\\bhead of government\\b",
+        "\\bprime ministers?\\b"
+      ],
+      "country head of state": [
+        "\\bhead of state\\b",
+        "\\bpresidents?\\b",
+        "\\bmonarchs?\\b"
+      ],
+      "country official language": [
+        "\\bofficial languages?\\b",
+        "\\bnational languages?\\b"
+      ],
+      "entity owner": [
+        "\\bown(?:ed|er|ers|ership|s|ing)?\\b"
+      ],
+      "lake inflow": [
+        "\\binflows?\\b",
+        "\\b(?:river|stream)s? (?:feeds?|enters?|flows? into)\\b"
+      ],
+      "landmark continent": [
+        "\\bcontinents?\\b"
+      ],
+      "landmark country": [
+        "\\bcountr(?:y|ies)\\b",
+        "\\bis located in\\b"
+      ],
+      "mountain range": [
+        "\\bmountain ranges?\\b",
+        "\\bpart of the .{0,50}\\bmountains\\b"
+      ],
+      "organization country": [
+        "\\bbased in\\b",
+        "\\bheadquarter(?:ed|s)? in\\b",
+        "\\bcountry\\b"
+      ],
+      "organization foundation place": [
+        "\\bfound(?:ed|ation) in\\b",
+        "\\bestablished in\\b"
+      ],
+      "organization founder": [
+        "\\bfounders?\\b",
+        "\\bfounded by\\b",
+        "\\bco-founded by\\b"
+      ],
+      "organization headquarters": [
+        "\\bheadquarter(?:ed|s|ing)?\\b",
+        "\\bhead office\\b"
+      ],
+      "organization industry": [
+        "\\bindustr(?:y|ies)\\b",
+        "\\bsector\\b"
+      ],
+      "organization legal form": [
+        "\\blegal form\\b",
+        "\\bincorporat(?:ed|ion)\\b",
+        "\\bcompany type\\b"
+      ],
+      "organization parent": [
+        "\\bparent (?:company|organization)\\b",
+        "\\bsubsidiary of\\b"
+      ],
+      "person award": [
+        "\\bawards?\\b",
+        "\\bprizes?\\b",
+        "\\b(?:won|received|awarded)\\b"
+      ],
+      "person birth place": [
+        "\\bborn in\\b",
+        "\\bbirthplaces?\\b",
+        "\\bplace of birth\\b"
+      ],
+      "person burial place": [
+        "\\bburied (?:at|in)\\b",
+        "\\b(?:burial|resting) place\\b"
+      ],
+      "person child": [
+        "\\bchildren\\b",
+        "\\bsons?\\b",
+        "\\bdaughters?\\b"
+      ],
+      "person citizenship": [
+        "\\bcitizenship\\b",
+        "\\bnationalit(?:y|ies)\\b",
+        "\\bcitizen of\\b"
+      ],
+      "person death place": [
+        "\\bdied in\\b",
+        "\\bplace of death\\b",
+        "\\bdeath place\\b"
+      ],
+      "person educated at": [
+        "\\beducat(?:ed|ion) at\\b",
+        "\\bgraduat(?:ed|ion) from\\b",
+        "\\balma mater\\b"
+      ],
+      "person employer": [
+        "\\bemploy(?:ed|er|ers|ment)\\b",
+        "\\bworks? (?:at|for)\\b"
+      ],
+      "person family name": [
+        "\\bfamily name\\b",
+        "\\bsurname\\b",
+        "\\blast name\\b"
+      ],
+      "person father": [
+        "\\bfathers?\\b",
+        "\\b(?:son|daughter) of\\b"
+      ],
+      "person field of work": [
+        "\\bfield of work\\b",
+        "\\bworks? in the field\\b",
+        "\\bresearch areas?\\b"
+      ],
+      "person given name": [
+        "\\bgiven names?\\b",
+        "\\bfirst names?\\b"
+      ],
+      "person member of organization": [
+        "\\bmember of\\b",
+        "\\bmemberships?\\b",
+        "\\baffiliated with\\b"
+      ],
+      "person mother": [
+        "\\bmothers?\\b",
+        "\\b(?:son|daughter) of\\b"
+      ],
+      "person musical instrument": [
+        "\\bmusical instruments?\\b",
+        "\\binstrumentalists?\\b",
+        "\\bplays? the\\b"
+      ],
+      "person native language": [
+        "\\bnative languages?\\b",
+        "\\bmother tongues?\\b",
+        "\\bfirst languages?\\b"
+      ],
+      "person noble title": [
+        "\\bnoble titles?\\b",
+        "\\bpeerage\\b",
+        "\\bheld the title\\b"
+      ],
+      "person occupation": [
+        "\\boccupations?\\b",
+        "\\bprofessions?\\b",
+        "\\bworks? (?:professionally )?as\\b"
+      ],
+      "person religion": [
+        "\\breligions?\\b",
+        "\\bfaith\\b",
+        "\\breligious affiliation\\b"
+      ],
+      "person sport": [
+        "\\bsports?\\b",
+        "\\b(?:plays?|competes? in|participates? in)\\b"
+      ],
+      "person spouse": [
+        "\\bspouses?\\b",
+        "\\b(?:husband|wife|married to)\\b"
+      ],
+      "product developer": [
+        "\\bdevelop(?:ed|er|ers|ment) by\\b",
+        "\\bsoftware developer\\b"
+      ],
+      "product manufacturer": [
+        "\\bmanufactur(?:ed|er|ers|ing) by\\b",
+        "\\bmaker\\b"
+      ],
+      "river mouth": [
+        "\\briver mouths?\\b",
+        "\\bflows? into\\b",
+        "\\bempties into\\b"
+      ],
+      "software operating system": [
+        "\\boperating systems?\\b",
+        "\\bruns? on\\b",
+        "\\bplatforms?\\b"
+      ],
+      "software programming language": [
+        "\\bprogramming languages?\\b",
+        "\\bimplemented in\\b",
+        "\\bwritten in\\b"
+      ],
+      "star constellation": [
+        "\\bconstellations?\\b"
+      ],
+      "taxon parent": [
+        "\\bparent taxon\\b",
+        "\\btaxonomic parent\\b",
+        "\\bbelongs to the genus\\b"
+      ],
+      "work author": [
+        "\\bauthors?\\b",
+        "\\bauthored by\\b",
+        "\\bwritten by\\b"
+      ],
+      "work composer": [
+        "\\bcomposers?\\b",
+        "\\bcomposed by\\b",
+        "\\bmusic by\\b"
+      ],
+      "work country of origin": [
+        "\\bcountry of origin\\b",
+        "\\boriginat(?:e|es|ed|ing) (?:in|from)\\b"
+      ],
+      "work creator": [
+        "\\bcreators?\\b",
+        "\\bcreated by\\b"
+      ],
+      "work director": [
+        "\\bdirectors?\\b",
+        "\\bdirected by\\b"
+      ],
+      "work genre": [
+        "\\bgenres?\\b"
+      ],
+      "work original language": [
+        "\\boriginal languages?\\b",
+        "\\boriginally (?:written|produced|created) in\\b"
+      ],
+      "work publisher": [
+        "\\bpublishers?\\b",
+        "\\bpublished by\\b"
+      ],
+      "work screenwriter": [
+        "\\bscreenwriters?\\b",
+        "\\bscreenplays? by\\b",
+        "\\bwritten for the screen by\\b"
+      ]
+    },
+    "relation_match": "at least one recorded relation-bearing lexical cue",
+    "relations": 58,
+    "subject_document_total_across_facts": 11961064,
+    "subject_object_document_total_across_facts": 2395264,
+    "subject_relation_document_total_across_facts": 431237
+  },
+  "context_manifest": {
+    "associations": [
+      "associations/part-0-00000.parquet",
+      "associations/part-1-00000.parquet",
+      "associations/part-2-00000.parquet",
+      "associations/part-3-00000.parquet",
+      "associations/part-4-00000.parquet",
+      "associations/part-5-00000.parquet",
+      "associations/part-6-00000.parquet",
+      "associations/part-7-00000.parquet"
+    ],
+    "coverage": "coverage.parquet",
+    "documents": [
+      "documents/part-0-00000.parquet",
+      "documents/part-1-00000.parquet",
+      "documents/part-2-00000.parquet",
+      "documents/part-3-00000.parquet",
+      "documents/part-4-00000.parquet",
+      "documents/part-5-00000.parquet",
+      "documents/part-6-00000.parquet",
+      "documents/part-7-00000.parquet"
+    ],
+    "expected_associations": 8498450,
+    "format": "normalized_parquet_v1",
+    "method": "LMEnt entity-linked document extraction reused from lment-count-analysis",
+    "observed_associations": 8498450,
+    "predictions": "work/lment-lre-v2/filtered/predictions.csv",
+    "queries": "queries.parquet",
+    "query_facts": 7614,
+    "selected_documents": 4031667,
+    "subject_qids": 7305,
+    "v2_facts": "external/dataset/work/lment-lre-v2/facts.csv",
+    "zero_frequency_subjects": 366
+  },
+  "checks": [
+    "one-to-one count join",
+    "exact match to all 174 raw browser curves",
+    "no estimation/evaluation fact overlap",
+    "evaluation totals reproduced"
+  ]
+}
