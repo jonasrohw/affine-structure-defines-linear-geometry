@@ -4,7 +4,19 @@
 
 \url{https://arxiv.org/pdf/2412.06538}
 
-Their setup:
+They show that, in contrast to the linear storage capacity
+(?) of Hopfield networks, transformers have quadratic
+capacity due to the fact that decoding to a fixed discrete
+set of output tokens via the unembedding matrix does not
+require producing the exact target vector, but only a vector
+in the right Voronoi cell.
+
+This is a crucial insight for work on ``linear relations'':
+ultimately, what is needed is not a function that computes
+the correct object embedding, but rather a function that
+computes an embedding that lands in the right Voronoi cell.
+
+Their setup is:
 
 \begin{quote}
 We primarily focus on the setting where the embeddings
@@ -13,7 +25,7 @@ are drawn i.i.d uniformly from the sphere of radius 1.
 \end{quote}
 
 Arguably, this setup does not model a transformer that has
-been trained on language. Such a transformer encodes the the
+been trained on language. Such a transformer encodes the 
 semantic structure of the vocabulary in the embedding space.
 
 One could easily show (I think) that their
