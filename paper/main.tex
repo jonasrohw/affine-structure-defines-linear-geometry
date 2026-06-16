@@ -9,7 +9,7 @@
 \usepackage{url}
 
 
-\title{Formatting Instructions for ICLR 2026 \\ Conference Submissions}
+\title{Factual recall mechanisms in transformers}
 
 % Authors must not appear in the submitted version. They should be hidden
 % as long as the \iclrfinalcopy macro remains commented out below.
@@ -53,11 +53,17 @@ Address \\
 \maketitle
 
 \begin{abstract}
-TBD
+The prerequisite for the extensive use of large language models as generalists is their ability to memorise vast amounts of facts acquired during pretraining. As a connectionist high-dimensional architecture the computational theory of superposition applies under the the Johnson-Straus Lemma, many relationships among high-dimensional vectors can be approximately preserved even after projection into a lower-dimensional space. However, a full mechanistic explanation remains unclear. Previous work has argued that key-value lookup or a an affine transformation emerge after a certain frequency these mechanisms emerge and interact. We show through a justified synthetic setup, how in a toy regime factual recall can be implemented. Finally, we connect this to real language models showing that our finding translate for web-scale LLMs.
 \end{abstract}
 
-\section{Related work}
 
+\section{Problem Setup}
+$$
+\mathcal{F} = {(s_i,r_i,o_i)}_{i=1}^N
+$$
+
+\section{Related work}
+\paragraph{Retrieval as Key-value lookup}
 \input{rawrel}
 
 \newpage

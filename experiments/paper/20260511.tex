@@ -1,0 +1,633 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{multirow}
+
+\title{When Do Transformers Learn Structure?\\Affine Maps and Compositional Generalization\\in Synthetic Relational Tasks}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Do transformers learn structured representations of relations, or do they memorize
+input--output associations? We investigate this question through two complementary
+synthetic studies. In the first (Salzburg), we test whether a single-layer transformer
+implements relations as affine maps between subject and object embeddings. In the
+second (Graz), we test whether a transformer can generalize relational predictions to
+unseen entity pairings by learning compositional attribute structure. Both studies
+reveal the same finding: \emph{memorization is the default}. Structured solutions ---
+affine relation maps, compositional type encodings --- emerge only when capacity is
+constrained to a problem-dependent sweet spot. Too little capacity and no good
+structured solution exists; too much and memorization is cheaper than structure. In
+Salzburg, a tiny auxiliary loss (0.02\% of the main objective) suffices to nudge the
+model from 97\% to 100\% affine accuracy, showing that structured solutions are
+reachable but not found by standard training. In Graz, the optimal hidden dimension
+for generalization follows the same non-monotonic pattern: dim=16 achieves 90\%
+held-out accuracy while dim=64 achieves only 67.5\%. These results suggest that the
+memorization--structure tradeoff is governed by the ratio of model capacity to task
+complexity, with implications for understanding when large language models learn
+generalizable representations.
+\end{abstract}
+
+\section{Introduction}
+
+Large language models encode vast amounts of relational knowledge --- facts about
+entities, their properties, and their relationships. But the nature of this encoding
+remains debated: do models learn \emph{structured} representations that support
+generalization, or do they \emph{memorize} specific associations?
+
+Recent work has provided evidence for linear structure in LLM representations.
+Hernandez et al.~\cite{hernandez2024} showed that certain relations are approximately
+implemented as linear maps between subject and object embeddings. However, it remains
+unclear when such structure emerges and when models instead rely on memorization.
+
+We approach this question through two synthetic studies designed for precise
+experimental control:
+
+\begin{itemize}
+\item \textbf{Salzburg}: Can a transformer learn to implement relations as affine maps
+  from subject to object embeddings? We vary the hidden dimension and measure whether
+  the internal computation is well-approximated by per-relation affine transformations.
+\item \textbf{Graz}: Can a transformer generalize relational predictions to unseen
+  entity pairings by learning compositional attribute structure? Entities are defined by
+  combinatorial attribute types, and relations select on shared attributes. We test
+  whether the model discovers this compositional rule or memorizes specific pairings.
+\end{itemize}
+
+Both studies converge on the same finding: structured solutions emerge at an
+intermediate capacity --- a sweet spot where memorization is too expensive but
+sufficient representational capacity exists for the structured solution. This
+non-monotonic relationship between capacity and structure is the central contribution
+of this paper.
+
+\section{Related Work}
+
+\paragraph{Linear relational structure.}
+Hernandez et al.~\cite{hernandez2024} demonstrated that relations in large language
+models can be approximated by linear maps between subject and object representations,
+proposing the delta-cosine similarity metric ($\Delta\cos$) to quantify this structure.
+Our Salzburg experiments extend this analysis to controlled settings where we can
+manipulate capacity and measure the conditions under which affine structure emerges.
+
+\paragraph{Grokking and delayed generalization.}
+Power et al.~\cite{power2022} showed that neural networks can transition from
+memorization to generalization long after fitting the training data, a phenomenon termed
+``grokking.'' Our results are complementary: we study the \emph{conditions} under which
+structure emerges, rather than its temporal dynamics.
+
+\paragraph{Compositional generalization.}
+The ability to generalize compositionally --- combining known primitives in novel ways
+--- has been studied extensively in sequence-to-sequence models~\cite{lake2018,kim2020}.
+Our Graz experiments test a specific form of compositionality: whether attribute-level
+structure supports generalization to unseen entity-level pairings.
+
+\paragraph{Information bottleneck.}
+The information bottleneck principle~\cite{tishby2000} suggests that compressed
+representations retain task-relevant information while discarding noise. Our dimension
+sweep results are consistent with this view: moderate compression forces structured
+representations, while excess capacity permits unstructured memorization.
+
+\section{Experimental Setup}
+
+\subsection{Salzburg: Affine Relation Maps}
+
+\paragraph{Data.}
+The vocabulary consists of 100 subjects ($a_0, \ldots, a_{99}$), 100 objects
+($b_0, \ldots, b_{99}$), 2 relation tokens ($r_0, r_1$), and a separator token ($x$).
+Training sequences are 4-token triples $[x, r_k, a_i, b_j]$ where $b_j$ is the correct
+object for subject $a_i$ under relation $r_k$. Relation $r_0$ is the identity mapping
+($a_i \mapsto b_i$) and $r_1$ is a cyclic shift by 50 ($a_i \mapsto b_{(i+50) \bmod 100}$).
+
+\paragraph{Model.}
+A single-layer transformer with 4 attention heads, trained with next-token prediction
+(cross-entropy loss). The hidden dimension $d$ varies across experiments
+($d \in \{8, 16, 32, 64\}$).
+
+\paragraph{Evaluation.}
+We measure two quantities: (1)~\emph{object prediction accuracy} --- does the model
+predict the correct object? (2)~\emph{affine accuracy} --- we fit a per-relation affine
+map $\hat{o} = W_k \cdot h_0(a_i) + b_k$ from input embeddings to output representations
+via least-squares regression on all 100 subjects, then check whether the affine-predicted
+output $\hat{o}$ falls in the correct Voronoi cell (closest to the true object embedding).
+
+\subsection{Graz: Compositional Attribute Relations}
+
+\paragraph{Entity structure.}
+Each entity is characterized by two attribute groups: an \emph{f-type} and a
+\emph{g-type}. With $n=5$ features and $k=2$ attributes per group, each type is a
+2-element subset of $\{0,\ldots,4\}$, giving $\binom{5}{2} = 10$ possible types. We
+create $10^2 = 100$ entities, one for each (f-type, g-type) combination. Objects' types
+are shifted relative to subjects' via shifts coprime to 10 ($r_0$-shift$\,=3$,
+$r_1$-shift$\,=7$), ensuring distinct type assignments.
+
+\paragraph{Relations.}
+Relation $R_0$ connects subject $a_i$ to all objects $b_j$ sharing the same f-type.
+Relation $R_1$ connects subject $a_i$ to all objects $b_j$ sharing the same g-type.
+Each subject has 10 valid targets per relation (chance level: $10/100 = 10\%$).
+
+\paragraph{Training data.}
+Sequences of length 48 contain a mix of four sentence types:
+\begin{itemize}
+\item \emph{Attribute sentences} $[x, e, a]$: entity $e$ with one of its attributes $a$
+  (probability ${\approx}0.27$)
+\item \emph{Relation sentences} $[x, r_k, a_i, b_j]$: subject $a_i$ mapped to a valid
+  object $b_j$ via relation $r_k$ (probability $0.264$)
+\item \emph{Reverse lookups} $[x, M, a, e]$: marker $M \in \{S, O\}$ with attribute $a$
+  mapping to entity $e$ (probability $0.264$)
+\item \emph{Contrastive sentences} $[x, Q_k, b_j, a_i, y/n]$: query whether object $b_j$
+  and subject $a_i$ are related via $r_k$, answered with $y$ (yes) or $n$ (no)
+  (probability $0.20$)
+\end{itemize}
+Contrastive sentences use dedicated query markers ($Q_0, Q_1$) distinct from the
+relation tokens, and reverse the entity order (object before subject) to prevent
+interference with generative relation sentences.
+
+We hold out 20\% of (subject, relation) triples at random and train on 62{,}500
+sequences for 800 epochs. The model is a single-layer transformer with 4 attention heads.
+The hidden dimension $d$ varies across experiments ($d \in \{8, 16, 32, 64\}$).
+
+\paragraph{Evaluation.}
+(1)~\emph{Held-out relation accuracy}: given $[x, r_k, a_i]$, does the model predict
+any valid object $b_j$? Evaluated on all held-out triples. (2)~\emph{Contrastive
+accuracy}: does the model correctly predict $y$ or $n$? (3)~\emph{Affine probe}: a
+post-hoc linear classifier trained on half the subjects' hidden representations to
+predict type membership, tested on the other half.
+
+\section{Salzburg Results}
+
+\subsection{Affine Structure Emerges at the Right Scale}
+
+All models achieve near-perfect object prediction accuracy ($\geq 99.5\%$) regardless
+of hidden dimension. However, \emph{affine accuracy} --- the degree to which the
+internal computation is well-approximated by per-relation affine maps --- varies
+dramatically (Table~\ref{tab:salzburg}).
+
+\begin{table}[h]
+\centering
+\caption{Salzburg dimension sweep. All models predict correctly, but affine structure
+is non-monotonic in capacity. The existence test fits affine maps to fixed random
+unit-vector object embeddings via 20K Adam steps.}
+\label{tab:salzburg}
+\begin{tabular}{lccccl}
+\toprule
+& dim=8 & dim=16 & dim=32 & dim=64 & \\
+\midrule
+Parameters & 5{,}128 & 11{,}792 & 29{,}728 & 84{,}032 & \\
+Object accuracy & 99.5\% & 100\% & 100\% & 100\% & \\
+Affine accuracy (L1 avg) & 73.0\% & 97.0\% & 100\% & 27.5\% & \\
+Existence test (Voronoi) & 70.0\% & 99.0\% & 100\% & --- & \\
+\midrule
+Regime & \multicolumn{1}{c}{(A)} & \multicolumn{2}{c}{Sweet spot} & \multicolumn{1}{c}{(C)} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three regimes are evident:
+
+\begin{itemize}
+\item \textbf{dim=8 --- No good solution exists (A).} The existence test, which fits
+  affine maps under ideal conditions (fixed unit-vector objects, 20K optimization steps),
+  achieves only 70\% Voronoi accuracy. The transformer matches this at 73\%. The
+  limitation is geometric: 100 objects in 8 dimensions cannot be separated well enough
+  for affine maps to work.
+\item \textbf{dim=16--32 --- Sweet spot.} The existence test achieves 99--100\%, and the
+  transformer tracks this closely (97--100\%). Structure is both representable and found
+  by SGD, because the affine map is the most parameter-efficient solution.
+\item \textbf{dim=64 --- Memorization wins (C).} Despite 84K parameters for only 200
+  facts (420 parameters per fact), affine accuracy collapses to 27.5\%. The model can
+  dedicate unique directions to each subject--object pair without needing affine
+  regularity.
+\end{itemize}
+
+Figure~\ref{fig:dim_sweeps} (left) shows this non-monotonic relationship.
+
+\subsection{Auxiliary Loss Nudges Toward Structure}
+
+At dim=16, the transformer achieves 97\% affine accuracy --- close to but not matching
+the existence test's 99\%. To test whether the gap is due to architectural limitation or
+optimization, we add a tiny auxiliary loss encouraging affine structure:
+\[
+\mathcal{L} = \mathcal{L}_{\text{CE}} + \lambda \sum_{k} \frac{1}{N} \sum_i \| W_k \cdot h_0(a_i) + b_k - h_1(a_i) \|^2
+\]
+where $W_k, b_k$ are learnable affine parameters (one per relation) optimized jointly
+with the transformer. With $\lambda = 1.0$, the auxiliary loss stabilizes at
+${\sim}0.0003$ --- roughly 0.02\% of the cross-entropy loss of ${\sim}1.32$.
+
+This negligible gradient signal pushes affine accuracy from 97\% to \textbf{100\%},
+exceeding even the existence test's 99\% (because the transformer jointly optimizes all
+embeddings rather than using fixed random objects). The architecture can clearly
+implement the affine solution; standard SGD simply does not find it without explicit
+pressure.
+
+\subsection{Mechanistic Analysis}
+
+A logit lens analysis reveals how the transformer implements relation-dependent mappings
+(Table~\ref{tab:logit_lens}).
+
+\begin{table}[h]
+\centering
+\caption{Logit lens: object prediction accuracy at intermediate computation stages
+(dim=16, evaluated on 32{,}000 positions).}
+\label{tab:logit_lens}
+\begin{tabular}{lcc}
+\toprule
+Stage & Description & Object accuracy \\
+\midrule
+$h_0$ & Embedding only & 17.2\% \\
+$h_0 + \text{attn}$ & Post-attention & 14.4\% \\
+$h_0 + \text{attn} + \text{MLP}$ & Full residual & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Post-attention accuracy (14.4\%) is no better than the raw embedding (17.2\%), despite
+the attention output being near-perfectly affine-predictable from the input
+($\cos(\hat{o}, o) = 0.987$). Attention routes information --- copying subject and
+relation embeddings into the prediction position --- but cannot perform the
+\emph{relation-dependent} transformation needed to select the correct object. This
+requires a multiplicative interaction between relation identity and subject embedding,
+which only the MLP's GELU nonlinearity can provide.
+
+The sublayer decomposition confirms this: the attention output is 0.987-affine in the
+input (mechanically, attention computes weighted sums of linearly-transformed inputs),
+while the MLP output is 0.773-affine. The MLP implements the essential nonlinear gating
+that selects which affine map to apply based on the relation token.
+
+\section{Graz Results}
+
+\subsection{Capacity Controls Structure vs.\ Memorization}
+
+We train the Graz model at four hidden dimensions, holding all other parameters fixed.
+Table~\ref{tab:graz_dim} and Figure~\ref{fig:dim_sweeps} (right) show the results.
+
+\begin{table}[h]
+\centering
+\caption{Graz dimension sweep (5 features, 100 entities, 10 types). All models achieve
+100\% train accuracy. Chance level is 10\%.}
+\label{tab:graz_dim}
+\begin{tabular}{lcccc}
+\toprule
+& dim=8 & dim=16 & dim=32 & dim=64 \\
+\midrule
+Held-out accuracy & 42.5\% & \textbf{90.0\%} & 85.0\% & 67.5\% \\
+$\times$ chance & 4.25$\times$ & 9.0$\times$ & 8.5$\times$ & 6.75$\times$ \\
+Contrastive ($+$/$-$) & 85.2/94.0 & 88.8/97.8 & 88.8/99.2 & 90.0/97.6 \\
+Affine probe (test) & 26.0\% & 50.0\% & 55.0\% & 63.0\% \\
+R0 partner similarity & +0.22 & +0.43 & +0.18 & +0.10 \\
+R1 partner similarity & +0.20 & +0.42 & +0.18 & +0.13 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The same non-monotonic pattern as Salzburg emerges:
+
+\begin{itemize}
+\item \textbf{dim=8 --- Capacity collapse.} Embedding overlap reaches 0.91--0.93,
+  meaning entities are nearly indistinguishable. The model cannot represent 100 distinct
+  entities in 8 dimensions while also encoding type structure. Held-out accuracy (42.5\%)
+  is well above chance but far below the structured solution.
+\item \textbf{dim=16 --- Sweet spot.} Held-out accuracy peaks at \textbf{90.0\%}
+  (9$\times$ chance). Partner similarity is highest (+0.43), indicating that
+  relation-relevant entities are tightly clustered. The information bottleneck forces
+  compact, compositional representations.
+\item \textbf{dim=32--64 --- Diminishing structure.} As capacity grows, held-out
+  accuracy monotonically decreases (85.0\% $\to$ 67.5\%). Partner similarity drops
+  (+0.18 $\to$ +0.10): with more dimensions, the model spreads representations apart
+  rather than clustering by type. Memorization becomes progressively cheaper.
+\end{itemize}
+
+\subsection{The Affine Probe Paradox}
+
+An intriguing pattern emerges in the affine probe results: \emph{the best-generalizing
+model has the worst linear readout of type information}. At dim=16, held-out accuracy is
+90\% but the affine probe achieves only 50\%. At dim=64, held-out accuracy drops to
+67.5\% but the affine probe improves to 63\%.
+
+This is not a contradiction. The affine probe measures \emph{linear accessibility} of
+type information, not its functional utility. At dim=16, the model encodes type
+information in a compact, possibly nonlinear representation that supports accurate
+relation predictions but is hard for a linear classifier to decode. At dim=64, the
+model has room to encode type information in linearly separable directions --- but
+also has room to \emph{not use} that information for predictions, relying instead on
+memorized associations.
+
+The same phenomenon appears in Salzburg: at dim=64, the model achieves 100\% object
+accuracy but only 27.5\% affine accuracy. High-dimensional representations can encode
+structure that probes detect while the model's actual computation follows a different
+path.
+
+\subsection{Embedding Structure Reflects the Bottleneck}
+
+Figure~\ref{fig:graz_detail} (right) shows partner similarity across dimensions. At
+dim=16, entities sharing a relation-relevant type have cosine similarity +0.43 ---
+they are tightly clustered. At dim=64, this drops to +0.10. The tighter clustering at
+dim=16 reflects the information bottleneck: the model must reuse representational
+dimensions across entities, and organizing by type is the most efficient strategy.
+
+At dim=8, partner similarity is moderate (+0.21) but overall embedding overlap is
+extreme (0.91--0.93): all entities are squeezed into a tiny region of the 8-dimensional
+space. The model cannot distinguish entities well enough for accurate relational
+predictions.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_dimension_sweeps.pdf}
+\caption{Non-monotonic relationship between hidden dimension and structured behavior
+in both Salzburg (left: affine accuracy) and Graz (right: held-out generalization).
+Both show a sweet spot at intermediate dimensions, with collapse at low dimensions and
+memorization at high dimensions.}
+\label{fig:dim_sweeps}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig3_graz_dim_sweep.pdf}
+\caption{Graz dimension sweep detail. (a) Held-out generalization peaks at dim=16
+while affine probe accuracy increases monotonically with dimension. (b) Embedding
+partner similarity --- cosine similarity between entities sharing a relation-relevant
+type --- is highest at dim=16, reflecting the information bottleneck.}
+\label{fig:graz_detail}
+\end{figure}
+
+\section{Discussion}
+
+\subsection{The Memorization--Structure Tradeoff}
+
+Both studies reveal the same governing principle: \emph{structured solutions emerge when
+they are the most parameter-efficient path to low loss}. At the sweet spot (dim=16--32
+for Salzburg, dim=16 for Graz), the model has enough capacity to represent the
+structured solution but not enough to memorize all facts individually. Structure is not
+an intrinsic property of the architecture --- it is an emergent consequence of the
+capacity--complexity ratio.
+
+This explains why the two studies show parallel results despite testing different forms
+of structure (affine maps vs.\ compositional types). The mechanism is the same:
+dimensional compression creates a bottleneck that makes structured representations
+cheaper than brute-force memorization.
+
+\subsection{Implications for Large Language Models}
+
+Real LLMs are massively overparameterized relative to any individual relation. A model
+with billions of parameters storing thousands of facts about a relation operates deep
+in the ``memorization is cheap'' regime (dim=64 in our experiments). Our results predict
+that such models would default to memorization rather than structured relational
+representations.
+
+However, two factors may push toward structure in practice:
+\begin{enumerate}
+\item \emph{Frequency}: Relations that appear in millions of training examples create
+  stronger gradient pressure toward efficient encoding than those appearing in hundreds.
+\item \emph{Implicit contrastive signals}: Natural language contains negation, contrast,
+  and questions (``Is Paris the capital of Germany? No.'') that provide the kind of
+  positive/negative signal our contrastive sentences supply explicitly.
+\end{enumerate}
+
+The auxiliary loss result in Salzburg is particularly suggestive: a gradient signal
+comprising just 0.02\% of the total loss suffices to reorganize internal representations
+from 97\% to 100\% affine. This implies that structured solutions, even in
+overparameterized models, may be surprisingly close to the learned solution --- reachable
+with minimal additional pressure.
+
+\subsection{Limitations}
+
+Our experiments use single-layer transformers with at most 100--200 entities.
+Deeper models, larger vocabularies, and natural-language data may exhibit different
+dynamics. The non-monotonic capacity--structure relationship may shift with scale, and
+multi-layer models could develop structure at higher dimensions than our single-layer
+models. The Graz contrastive results (Appendix~\ref{app:contrastive}) suggest that
+training objectives also matter --- an aspect we have not fully disentangled from
+capacity effects in the main experiments.
+
+\section{Conclusion}
+
+We have presented two complementary studies showing that transformers default to
+memorization when capacity is abundant. Structured solutions --- affine relation maps
+(Salzburg) and compositional type encodings (Graz) --- emerge only at a
+capacity-dependent sweet spot. Too little capacity and no good structured solution
+exists; too much and memorization is cheaper. This non-monotonic relationship is
+consistent across both relational tasks and suggests a general principle:
+\emph{the ratio of model capacity to task complexity governs whether transformers learn
+structure or memorize}.
+
+Two levers can push models toward structure: \emph{capacity constraints} (dimensional
+bottlenecks) and \emph{objective-level pressure} (auxiliary losses or contrastive
+training). Both are effective because they change the relative cost of memorization
+versus structure, tipping the balance toward generalizable representations.
+
+\appendix
+
+\section{Contrastive Learning Ablation}
+\label{app:contrastive}
+
+The Graz experiments in the main body include contrastive sentences in the training
+data. Here we present evidence from a larger-scale setup (7 features, 441 entities,
+21 types) showing that contrastive learning is a key ingredient for generalization and
+that it requires sufficient data to be effective.
+
+\subsection{Contrastive vs.\ No Contrastive}
+
+Table~\ref{tab:contrastive_ablation} compares the baseline (no contrastive sentences)
+with contrastive training at different data scales.
+
+\begin{table}[h]
+\centering
+\caption{Effect of contrastive learning (7 features, 441 entities). Contrastive
+sentences hurt with insufficient data but enable strong generalization with 10$\times$
+more data. Chance level is 4.8\%.}
+\label{tab:contrastive_ablation}
+\begin{tabular}{lccc}
+\toprule
+& No contrastive & Contrastive, 6.25K seq & Contrastive, 62.5K seq \\
+& (phase3j, dim=32) & (dim=64) & (phase3l, dim=64) \\
+\midrule
+Held-out accuracy & 50.6\% & 30.7\% & \textbf{69.3\%} \\
+$\times$ chance & 10.6$\times$ & 6.4$\times$ & 14.6$\times$ \\
+Contrastive $+$/$-$ & --- & 59\%/53\% & 91.6\%/98.6\% \\
+Affine probe (test) & 51.8\% & --- & 83.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+With insufficient data (6{,}250 sequences), the contrastive task is barely learned
+(59\%/53\%, near chance) and generalization \emph{drops} from 50.6\% to 30.7\%.
+The extra sentence type competes for model capacity without providing useful signal.
+With 10$\times$ more data (62{,}500 sequences), contrastive accuracy reaches
+91.6\%/98.6\% and generalization jumps to 69.3\%. The affine probe improves from
+51.8\% to 83.0\%, indicating that type information becomes linearly accessible.
+
+The contrastive space is quadratic: $441 \times 441 \times 2 \approx 390$K possible
+(subject, object, relation) triples. The 6{,}250-sequence dataset covers roughly 3\%
+of this space; the 62{,}500-sequence dataset covers roughly 30\%.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.55\textwidth]{figures/fig5_contrastive_scaling.pdf}
+\caption{Contrastive learning at 7 features / 441 entities. Insufficient contrastive
+data hurts generalization; 10$\times$ more data enables the contrastive task to drive
+compositional structure.}
+\label{fig:contrastive_scaling}
+\end{figure}
+
+\subsection{Exhaustive vs.\ Random Contrastive Sampling}
+
+We also tested exhaustive enumeration: pre-generating all positive contrastive examples
+(every valid (subject, relation, object) triple) with matched random negatives, then
+drawing from this pool during training (100K sequences). This \emph{hurt} performance:
+held-out accuracy dropped from 69.3\% (random sampling) to 56.3\% (exhaustive pool).
+
+The likely cause is that random sampling provides a richer learning signal: different
+negatives appear for each positive across epochs, creating natural variation that the
+model cannot exploit through simple pattern matching. The exhaustive pool pairs each
+positive with a fixed negative, reducing diversity.
+
+\subsection{More Relation Data Does Not Help}
+
+Increasing the fraction of relation sentences from $p = 0.33$ to $p = 0.50$ (with 10K
+sequences, no contrastive) also \emph{hurt} generalization: held-out accuracy dropped
+from 50.6\% to 42.6\%. More positive-only relation data enables more aggressive
+memorization without providing the negative signal needed to learn the type rule.
+
+\section{Phase Progression and Feature Reduction}
+\label{app:progression}
+
+\subsection{From Memorization to Generalization}
+
+Table~\ref{tab:progression} shows the progression of Graz experiments from pure
+memorization (Phase 2) to strong generalization (Phase 3o3).
+
+\begin{table}[h]
+\centering
+\caption{Graz experimental progression. Each row represents the best result at that
+configuration.}
+\label{tab:progression}
+\begin{tabular}{llccccc}
+\toprule
+Phase & Key change & Features & Entities & dim & Held-out & $\times$ chance \\
+\midrule
+Phase 2 & Train/test subject split & 10 & 120 & 32 & 0\% & --- \\
+Phase 3 & Held-out triples & 10 & 120 & 32 & 35\% & 42$\times$ \\
+Phase 3j & 7 features, $k{=}2$ & 7 & 441 & 32 & 50.6\% & 10.6$\times$ \\
+Phase 3l & + contrastive, dim=64 & 7 & 441 & 64 & 69.3\% & 14.6$\times$ \\
+Phase 3n & 6 features & 6 & 225 & 64 & 87.8\% & 13.2$\times$ \\
+Phase 3o3 & 5 features, dim=16 & 5 & 100 & 16 & \textbf{90.0\%} & 9.0$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig4_graz_progression.pdf}
+\caption{Progression from memorization to generalization across Graz experiments.
+Red: memorization-dominated. Orange: partial generalization. Green: strong
+generalization driven by contrastive learning and/or capacity matching.}
+\label{fig:progression}
+\end{figure}
+
+\subsection{Phase 2: Pure Memorization}
+
+In Phase 2, 80 subjects appear in relation sentences during training and 40 are held
+out entirely. The model achieves 100\% accuracy on train subjects and \emph{0\%} on
+test subjects. The affine probe also shows 0\% test accuracy
+($\cos(\hat{o}, o) \approx 0.04$ on test vs.\ 0.90 on train), confirming that
+memorization is baked into the embedding space itself.
+
+With 33{,}568 parameters and only 160 relation facts (80 subjects $\times$ 2 relations),
+the model has ${\sim}210$ parameters per fact. Memorization is trivially cheap, and the
+model has no gradient pressure to discover the compositional rule.
+
+\subsection{Phase 3: Matrix Completion}
+
+When all subjects appear in relations but 20\% of triples are held out, generalization
+rises from 0\% to 35\%. The affine probe shows a parallel improvement (0\% $\to$
+35\% test accuracy). However, the model's \emph{actual} predictions on held-out triples
+remain at 0\% --- the representations carry partial relational structure that the
+model's prediction head ignores in favor of the memorization shortcut.
+
+\subsection{Feature Reduction}
+
+Reducing the number of features from 10 to 5 progressively simplifies the type space
+(from 120 types to 10), making the compositional rule more discoverable. Combined with
+contrastive learning and dimension tuning, this path culminates in the 90\% held-out
+accuracy reported in the main body.
+
+\section{Salzburg: Additional Mechanistic Details}
+\label{app:salzburg_mech}
+
+\subsection{Sublayer Decomposition}
+
+The transformer residual decomposes as $h_1 = h_0 + \text{attn\_out} + \text{mlp\_out}$.
+Table~\ref{tab:sublayer} shows the affine predictability of each component from the
+input embedding.
+
+\begin{table}[h]
+\centering
+\caption{Sublayer decomposition (dim=16, natural context). The affine cosine similarity
+$\cos(\hat{o}, o)$ measures how well each component can be predicted as an affine
+function of the input embedding $h_0$.}
+\label{tab:sublayer}
+\begin{tabular}{lcc}
+\toprule
+Target & $\cos(\hat{o}, o)$ & Interpretation \\
+\midrule
+Attention output & 0.987 & Near-perfectly affine (mechanically linear) \\
+MLP output & 0.773 & Substantially but imperfectly affine \\
+Full $h_1$ residual & 0.735 & Harder to predict (sum of all components) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Attention is mechanically linear: for fixed attention weights, it computes a weighted
+sum of value-projected inputs, which is affine in the input. The MLP's GELU
+nonlinearity introduces the relation-dependent gating needed to select different
+transformations for different relations.
+
+\subsection{Why the MLP Is Essential}
+
+Implementing relation-dependent affine maps $a_i \mapsto W_k \cdot a_i$ requires a
+multiplicative interaction between relation identity and subject embedding. Attention
+combines its inputs \emph{additively} (weighted sum of value vectors) and applies the
+\emph{same} value projection $W_V$ regardless of the relation. Only the MLP's
+pointwise nonlinearity can implement the gating operation ``if relation = $k$, apply
+$W_k$.'' This explains why post-attention accuracy (14.4\%) is no better than chance
+despite the attention output being highly structured.
+
+\begin{thebibliography}{9}
+
+\bibitem{hernandez2024}
+E.~Hernandez, A.~S.~Sharma, T.~Haklay, K.~Meng, M.~Wattenberg, J.~Andreas,
+Y.~Belinkov, and D.~Bau.
+\newblock Linearity of relation decoding in transformer language models.
+\newblock In \emph{ICLR}, 2024.
+
+\bibitem{power2022}
+A.~Power, Y.~Burda, H.~Edwards, I.~Babuschkin, and V.~Misra.
+\newblock Grokking: Generalization beyond overfitting on small algorithmic datasets.
+\newblock \emph{arXiv preprint arXiv:2201.02177}, 2022.
+
+\bibitem{lake2018}
+B.~M.~Lake and M.~Baroni.
+\newblock Generalization without systematicity: On the compositional skills of
+  sequence-to-sequence recurrent networks.
+\newblock In \emph{ICML}, 2018.
+
+\bibitem{kim2020}
+N.~Kim and A.~Linzen.
+\newblock COGS: A compositional generalization challenge based on semantic
+  interpretation.
+\newblock In \emph{EMNLP}, 2020.
+
+\bibitem{tishby2000}
+N.~Tishby, F.~C.~Pereira, and W.~Bialek.
+\newblock The information bottleneck method.
+\newblock \emph{arXiv preprint physics/0004057}, 2000.
+
+\end{thebibliography}
+
+\end{document}

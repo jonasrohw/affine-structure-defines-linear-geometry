@@ -1,0 +1,23 @@
+CREATE A CLEAN FIGURE BASED ON sketch.pdf
+
+left panel
+three parallel equal length vectors
+LOVE LOVING
+EAT EATING
+DRINK DRINKING
+
+middle panel
+three vectors, different lengths
+MADONNA 1958-08-16
+ELVIS 1935-01-08
+STING 1951-10-02
+
+right panel
+three parallel equal length vectors
+each vector arrow is surrounded by a cloud
+  (the three clouds should be the same shape)
+the targets are at the edge of the cloud,
+  indicated in each case by an x
+GOULD PIANO
+BACH ORGAN
+JOHANN GEORG II TRUMPET

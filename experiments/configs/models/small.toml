@@ -1,0 +1,6 @@
+size = "small"
+n_layers = 1
+hidden_dim = 128
+n_heads = 4
+context_len = 128
+tie_embeddings = false

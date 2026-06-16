@@ -1,0 +1,20 @@
+seed = 42
+
+[dataset]
+name = "vienna_filler"
+
+[model]
+size = "small"
+
+[training]
+num_sequences = 5000
+seq_length = 70
+batch_size = 64
+max_epochs = 200
+learning_rate = 0.0003
+weight_decay = 0.01
+warmup_steps = 200
+grad_clip = 1.0
+eval_every = 10
+checkpoint_dir = "vienna/checkpoints"
+results_dir = "vienna/results"

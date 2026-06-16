@@ -1,0 +1,35 @@
+
+The high-level goal of this project is to find a small toy
+setup in which the linear representation hypothesis can be
+studied.
+
+The version of the linear representation hypothesis I'm
+interested in is that language models produce the answer to
+a prompt like "The capital of France is ..." by computing a
+representation of "France" in the residual stream and then
+applying an affine transformation to this representation,
+which in turn produced the representation of Paris.
+
+One idea for a minimal setup would be as follows.
+
+There is a vocabulary of 201, with 100 "subjects": a0
+.. a99. Also, 100 "objects": b0 .. b99. There also is a
+separator token, namely x.
+
+The training corpus would then consist
+of sequences of three tokens like this:
+
+x a5 b5 x a20 b20 x a81 b81 x ...
+
+These are just my first thoughts as to how to create a
+minimal setup, I welcome other ideas you might have.
+
+Part of the code that needs to be written is to implement
+the delta cos computation that is standardly used to
+determine whether a relation is linear or not.
+
+The setup you provide should contain all parts needed for
+the experiments, including synthetic data generation,
+training, affine transformation computation and evaluation.
+
+Please write a detailed plan for this project.
