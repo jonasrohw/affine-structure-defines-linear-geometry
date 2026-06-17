@@ -1,4 +1,37 @@
 
+\subsubsection*{DeepMind: Fact Finding \ldots\ Reverse
+Engineer \ldots}
+Their goal: investigate
+``how MLP layers implement a lookup table for factual
+recall''. They find that retrieval of attributes like sport played correspond
+to  linear projections (which map from
+entity to attribute).
+They seem to believe: ``the internal mechanism is just a
+look-up table with no structure to interpret.''
+``Our best guess for part of what's going on is what we term
+the `hash and lookup' hypothesis, but it's messy, false in
+its strongest form and this is only part of the story.''
+Confusingly, they seem to think of all forms of factual
+recall as memorization -- but affine transformations that
+generalize to new facts do not meet some criteria for what a
+memorization is (memorization is the oppositive of
+generalization). They find that there is a head that
+``extracts'' the sport played from the last token position
+of the sportsperson's name and writes it to the position
+where the sport is generated. The most mechanistic description of how the
+sport played is actually produced that I can find is in post
+2:
+``lookup \ldots\
+processes the
+'concatenated token representation' after layer 1 of the
+residual stream, which in itself poorly represents the
+athlete's sport (in a linear manner), and produces a
+'feature representation' later on in the residual stream,
+where sport can be easily linearly extracted \ldots''. I
+would agree with the authors that they ultimately fail in
+elucidating the mechanism of factual recall.
+
+
 \subsubsection*{Ravfogel et al.: Geometric Factual Recall Transformers}
 
 \url{https://arxiv.org/abs/2605.12426}
