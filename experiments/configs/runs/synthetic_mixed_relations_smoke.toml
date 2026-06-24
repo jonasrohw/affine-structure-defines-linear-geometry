@@ -1,0 +1,40 @@
+seed = 17
+
+[vocab]
+n_entities = 128
+n_f = 24
+n_g = 24
+delta_f = 3
+delta_g = 5
+n_relations = 2
+
+[model]
+n_layers = 2
+hidden_dim = 128
+n_heads = 4
+context_len = 8
+tie_embeddings = false
+
+[curriculum]
+n_entities = 128
+n_f = 24
+n_g = 24
+delta_f = 3
+delta_g = 5
+phase1_k = 16
+phase1_attr_repeats = 2
+phase1_triple_repeats = 32
+phase2_triples = 96
+phase2_repeats = 1
+batch_size = 32
+learning_rate = 0.001
+weight_decay = 0.0
+warmup_steps = 5
+grad_clip = 1.0
+object_loss_weight = 4.0
+structured_embedding_init = true
+init_scale = 0.2
+snapshot_every_triples = 24
+eval_limit = 32
+affine_train_limit = 48
+output_dir = "factual_recall/results/synthetic_mixed_relations_smoke"

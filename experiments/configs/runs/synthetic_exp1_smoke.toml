@@ -1,0 +1,42 @@
+seed = 7
+
+[vocab]
+n_entities = 128
+n_f = 24
+n_g = 24
+delta_f = 5
+delta_g = 7
+
+[model]
+n_layers = 1
+hidden_dim = 64
+n_heads = 4
+context_len = 8
+tie_embeddings = false
+
+[curriculum]
+n_entities = 128
+n_f = 24
+n_g = 24
+delta_f = 5
+delta_g = 7
+phase1_k = 10
+phase1_attr_repeats = 2
+phase1_triple_repeats = 24
+phase2_triples = 86
+phase2_repeats = 1
+batch_size = 32
+learning_rate = 0.001
+phase2_learning_rate = 0.001
+phase2_warmup_steps = 0
+phase2_decay = false
+weight_decay = 0.0
+warmup_steps = 5
+grad_clip = 1.0
+object_loss_weight = 1.0
+structured_embedding_init = true
+init_scale = 0.2
+snapshot_every_triples = 32
+eval_limit = 64
+affine_train_limit = 64
+output_dir = "factual_recall/results/synthetic_exp1_smoke"
