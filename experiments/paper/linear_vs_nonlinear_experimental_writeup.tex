@@ -2,17 +2,13 @@
 
 \usepackage[margin=1in]{geometry}
 \usepackage{booktabs}
-\usepackage{array}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{xcolor}
-\usepackage{amsmath}
 
-\hypersetup{
-  colorlinks=true,
-  linkcolor=blue,
-  urlcolor=blue,
-  citecolor=blue
-}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
 
 \newcommand{\sep}{\texttt{x}}
 \newcommand{\subj}[1]{\texttt{a\_#1}}
@@ -20,434 +16,150 @@
 \newcommand{\rel}[1]{\texttt{r\_#1}}
 \newcommand{\fatt}[1]{\texttt{f\_#1}}
 \newcommand{\gatt}[1]{\texttt{g\_#1}}
+\newcommand{\Rsem}{R_{\mathrm{sem}}}
+\newcommand{\Rrnd}{R_{\mathrm{rnd}}}
 
-\title{Synthetic Factual Recall Experiments: Low-Frequency Linear Relations and High-Frequency Non-Affine Memorization}
-\author{LMU CIS factual-recall-mechanisms}
-\date{Generated from repository artifacts on 2026-06-24}
+\title{Linear vs.\ Nonlinear Storage of Two Synthetic Relations\\ at Exactly Matched Frequency}
+\author{factual-recall-mechanisms}
+\date{2026-07-03}
 
 \begin{document}
 \maketitle
 
-\section{Purpose}
+\section{Question and result in one paragraph}
 
-This note documents the two synthetic setups used to test the following claims:
+One small transformer is trained for \textbf{exactly one epoch} on a synthetic corpus containing two relations with \emph{identical frequency statistics at every level} (same subjects, same 32 candidate objects, same number of triples, same number of occurrences per triple). The relations differ only in their semantics: $\Rsem$ maps each subject to the object determined by one of the subject's hidden attributes; $\Rrnd$ maps each subject to a random object. A single analysis metric is used: an affine map fitted by ordinary least-squares linear regression from subject representations to object representations, evaluated on held-out subjects. At 64 occurrences per triple both relations are recalled perfectly on their training triples, i.e.\ both are fully learned; yet the regression identifies the correct object for held-out subjects with accuracy $0.89 \pm 0.06$ for $\Rsem$ and $0.02 \pm 0.02$ ($=$ chance) for $\Rrnd$, replicated over three seeds. The semantic relation is stored in a linearly decodable, generalizing format; the random relation is memorized non-linearly. Raising the frequency of $\Rrnd$ facts from 1 to 64 occurrences never makes it linear, and the linear format of $\Rsem$ is already in place when every triple has occurred only once.
 
-\begin{enumerate}
-  \item \textbf{Low-frequency linear relation.} A relation supported by hidden attribute structure can become linear/affine even when each novel triple is seen only once.
-  \item \textbf{High-frequency non-linear/non-affine relation.} A random relation with no attribute support can be memorized when repeated often, but it does not become an affine map that generalizes to unseen subjects.
-\end{enumerate}
+\section{Data}
 
-Here ``linear'' means that an affine map fitted from subject-side representations to object-side representations generalizes on held-out pairs. ``Non-linear'' is used operationally as \emph{non-affine memorization}: the model can assign high probability to trained random triples, but affine reconstruction from the relation-conditioned representation fails and does not generalize.
+\paragraph{Vocabulary (265 tokens).}
+A separator \sep; two relation tokens \rel{0}, \rel{1}; 192 subject tokens $\subj{0},\dots,\subj{191}$; 32 object tokens $\obj{0},\dots,\obj{31}$; 32 attribute tokens $\fatt{0},\dots,\fatt{31}$; 6 attribute tokens $\gatt{0},\dots,\gatt{5}$.
 
-\section{Code and Artifacts}
+\paragraph{Entities and attributes.}
+Subject $\subj{i}$ carries the attribute pair $(f_{i \bmod 32},\ g_{\lfloor i/32\rfloor})$, so the 192 subjects realize each of the $32 \times 6$ attribute combinations exactly once. Object $\obj{j}$ carries $(f_{(j+3) \bmod 32},\ g_0)$.
 
-The experiments are implemented in:
+\paragraph{Sentences.}
+All training sentences have five tokens:
+\begin{center}
+\begin{tabular}{ll}
+attribute sentence & \sep\ $\subj{i}$\ \fatt{p}\ \gatt{q}\ \sep \quad and \quad \sep\ $\obj{j}$\ \fatt{p}\ \gatt{q}\ \sep\\
+relation triple & \sep\ $\subj{i}$\ $\rel{r}$\ $\obj{t}$\ \sep
+\end{tabular}
+\end{center}
 
-\begin{itemize}
-  \item \texttt{experiments/factual\_recall/synthetic\_curriculum.py}
-  \item CLI entry points in \texttt{experiments/factual\_recall/cli.py}
-  \item Configs in \texttt{experiments/configs/runs/}
-\end{itemize}
-
-The main result artifacts used in this writeup are:
-
-\begin{itemize}
-  \item Low-frequency affine run:
-  \texttt{experiments/factual\_recall/results/synthetic\_exp1/metrics.json}
-  \item Low-frequency affine summary:
-  \texttt{experiments/factual\_recall/results/synthetic\_exp1/summary.md}
-  \item Matched-frequency structured/random run:
-  \texttt{experiments/factual\_recall/results/synthetic\_mixed\_relations\_matched/mixed\_relations\_metrics.json}
-  \item Matched-frequency repeat sweep:
-  \texttt{experiments/factual\_recall/results/synthetic\_mixed\_relations\_matched/repeat\_sweep\_summary.md}
-\end{itemize}
-
-The focused test suite passed with:
-
-\begin{verbatim}
-cd experiments
-env UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache \
-  uv run pytest tests/test_synthetic_curriculum.py -q
-\end{verbatim}
-
-Result: \texttt{8 passed}.
-
-\section{Shared Synthetic Entity Structure}
-
-Entities are synthetic subject tokens \(\subj{i}\) and object tokens \(\obj{j}\). Each subject and object is assigned a pair of hidden attributes:
-
+\paragraph{Relations.}
 \[
-  \subj{i} \mapsto (f_i, g_i), \qquad
-  \obj{i} \mapsto (f_i + \Delta_f \bmod n_f,\; g_i + \Delta_g \bmod n_g).
+\Rsem(a_i) = b_{f(i)}, \qquad \Rrnd(a_i) = b_{\rho(i)},
 \]
+where $f(i) = i \bmod 32$ is the subject's own $f$-attribute index --- so the semantic target is the object whose $f$-attribute is the subject's, shifted by 3 --- and $\rho$ is a seed-dependent balanced random assignment onto the same 32 objects, independent of the attributes.
+Concrete example (seed 19): \subj{37} has attributes $(\fatt{5}, \gatt{1})$, so $\Rsem(\subj{37})=\obj{5}$ (whose attribute sentence reads \sep\ \obj{5}\ \fatt{8}\ \gatt{0}\ \sep), while $\Rrnd(\subj{37})=\obj{27}$. The corresponding training sentences are \sep\ \subj{37}\ \rel{0}\ \obj{5}\ \sep\ and \sep\ \subj{37}\ \rel{1}\ \obj{27}\ \sep.
 
-The implementation samples globally disjoint subject/object attribute pairs where possible, so the entity vocabulary has strong attribute geometry. Attribute tokens are \(\fatt{k}\) and \(\gatt{k}\). The separator token is \(\sep\). Training is causal language modeling: for a sequence \(t_0,\ldots,t_m\), the input is \(t_0,\ldots,t_{m-1}\) and the target is \(t_1,\ldots,t_m\).
+\paragraph{Split and exact frequency matching.}
+For every \fatt-value, 4 of its 6 subjects are \emph{trained} and 2 are \emph{held out} (128 trained, 64 held-out subjects; seed-dependent). $\rho$ is constructed balanced within both groups. Consequently, under \emph{both} relations: every trained subject occurs in exactly one triple per relation; every object is the target of exactly 4 trained and 2 held-out subjects; both relations contribute exactly 128 training triples, each repeated the same number of times ($F$). The two relations are therefore indistinguishable by any frequency statistic; only the assignment semantics differ. Held-out subjects appear in attribute sentences but never in any relation triple. These invariants are asserted by \texttt{tests/test\_linear\_shift.py}.
 
-\section{Experiment 1: Low-Frequency Structured Relation Becomes Affine}
+\section{Model and training}
 
-\subsection{Goal}
-
-Show that a relation can be learned as a linear/affine transformation even when most relation triples are low-frequency, specifically single exposure.
-
-\subsection{Configuration}
-
-Config file:
-\[
-\texttt{experiments/configs/runs/synthetic\_exp1.toml}.
-\]
-
-\begin{table}[h]
-\centering
+\begin{center}
 \begin{tabular}{ll}
 \toprule
-Quantity & Value \\
-\midrule
-Seed & 7 \\
-Entities & 1536 subjects and 1536 objects \\
-Attribute vocabulary & \(n_f=64,\ n_g=64\) \\
-Attribute shift & \(\Delta_f=7,\ \Delta_g=11\) \\
-Relations & 1 structured relation \(\rel{0}\) \\
-Model & 2 layers, hidden dimension 128, 4 heads \\
-Context length & 8 \\
-Embedding tying & false \\
-Parameters & 1,216,512 \\
+Model & causal transformer, 1 layer, hidden 64, 4 heads, context 8\\
+Embeddings & input and output embeddings untied; all weights $\mathcal{N}(0, 0.02^2)$\\
+ & \textbf{no} attribute-based initialization; nothing frozen; no loss reweighting\\
+Parameters & 84{,}288\\
+Corpus & every attribute sentence $\times A{=}128$ ($= 28{,}672$ sentences)\\
+ & $+$ 128 triples per relation, each $\times F$ ($F \in \{1,4,16,64\}$)\\
+Training & \textbf{exactly one epoch}: a single pass over the shuffled corpus\\
+Steps & 452 ($F{=}1$) to 704 ($F{=}64$) steps at batch size 64\\
+Objective & untweighted next-token cross-entropy on all positions\\
+Optimizer & AdamW, constant LR $10^{-3}$ after 5 linear warmup steps,\\
+ & weight decay 0, gradient clip 1.0\\
+Seeds & 19, 31, 47 (control data assignment, initialization, and data order)\\
 \bottomrule
 \end{tabular}
-\caption{Low-frequency affine experiment configuration.}
-\end{table}
+\end{center}
 
-\subsection{Curriculum}
+At $F{=}1$ every relation triple occurs exactly once in the entire training history of the model.
 
-\paragraph{Phase 1: attribute scaffolding plus \(k=10\) pilot triples.}
+\section{The metric}
 
-All subject/object attribute sentences are included repeatedly. The first \(k=10\) relation triples are also repeated.
+A single analysis metric is used, as an operationalization of ``the relation is an affine transformation'':
 
-\begin{itemize}
-  \item Attribute repeats: 8
-  \item Pilot relation subjects: \(i=0,\ldots,9\)
-  \item Pilot triple repeats: 256
-  \item Total phase-1 sequences: 27,136
-\end{itemize}
+\begin{quote}
+Fit $\hat W, \hat b$ by ordinary least-squares linear regression from the subject's \emph{input embedding} $s_i \in \mathbb{R}^{64}$ to the target object's \emph{output embedding} (unembedding row) $o_{R(i)} \in \mathbb{R}^{64}$, using the 128 trained pairs. For each of the 64 held-out subjects, predict $\hat W s_j + \hat b$ and select the nearest object row by cosine similarity among all 32 objects. Report the fraction of held-out subjects for which the selected object is $R(j)$. Chance is $1/32 \approx 0.03$.
+\end{quote}
 
-The concrete sentence templates are:
+This replaces all top-$k$ and accuracy-style analysis metrics of earlier drafts. The identification step avoids the earlier ambiguity objection: for every subject, exactly one object is correct under each relation. In addition, one \emph{learning check} (not an analysis metric) is recorded: greedy next-token recall of the model on prompts \sep\ $\subj{i}$\ $\rel{r}$, for trained and held-out subjects, which verifies whether the facts were learned at all.
 
-\begin{verbatim}
-x a_i f_p g_q x          subject attribute sentence
-x b_i f_r g_s x          object attribute sentence
-x a_i r_0 b_i x          structured relation triple
-\end{verbatim}
-
-Concrete examples from the saved run:
-
-\begin{verbatim}
-x a_0  f_49 g_11 x       subject a_0 attributes
-x b_0  f_56 g_22 x       object b_0 attributes
-x a_0  r_0  b_0  x       phase-1 pilot triple
-
-x a_9  f_16 g_55 x
-x b_9  f_23 g_2  x
-x a_9  r_0  b_9  x
-\end{verbatim}
-
-\paragraph{Phase 2: single-exposure novel triples.}
-
-Phase 2 uses triples not present in phase 1. Each phase-2 triple is shown once:
-
-\begin{itemize}
-  \item Unique phase-2 triples: 1024
-  \item Phase-2 repeats: 1
-  \item Never-trained held-out triples after phase 2: 502
-  \item Phase-2 learning rate: \(3 \times 10^{-4}\), constant during phase 2
-\end{itemize}
-
-Concrete examples:
-
-\begin{verbatim}
-x a_10 r_0 b_10 x        phase-2 single-exposure triple
-x a_11 r_0 b_11 x        phase-2 single-exposure triple
-x a_100 r_0 b_100 x      phase-2 single-exposure triple
-\end{verbatim}
-
-For example, the saved attributes include:
-
-\begin{verbatim}
-a_10:  f_51 g_28         b_10:  f_58 g_39
-a_11:  f_63 g_29         b_11:  f_6  g_40
-a_100: f_28 g_55         b_100: f_35 g_2
-\end{verbatim}
-
-\subsection{Metrics}
-
-Two kinds of metrics are reported.
-
-\paragraph{Behavioral recall.}
-Given prompt \(\sep,\subj{i},\rel{0}\), evaluate whether the top logit is the correct object token \(\obj{i}\).
-
-\paragraph{Affine representational map.}
-Fit an affine map on seen subject/object pairs:
-\[
-  \hat{o} = Ws + b.
-\]
-Evaluate on held-out subjects by cosine and nearest-neighbor recovery among object vectors. The run records both embedding-space and unembedding-space maps.
-
-\subsection{Results}
+\section{Results}
 
 \begin{table}[h]
 \centering
-\begin{tabular}{lcc}
+\begin{tabular}{rcccccc}
 \toprule
-Metric & Phase 1 & End of Phase 2 \\
+ & \multicolumn{2}{c}{probe accuracy (held-out)} & \multicolumn{2}{c}{recall (trained)} & \multicolumn{2}{c}{recall (held-out)}\\
+$F$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$\\
 \midrule
-Embedding affine cosine & 0.2717 & 0.9457 \\
-Unembedding affine cosine & 0.0652 & 0.9543 \\
-Embedding affine nearest-neighbor accuracy & -- & 1.0000 \\
-Unembedding affine nearest-neighbor accuracy & -- & 1.0000 \\
-Seen object top-1 accuracy & 1.0000 & 0.0059 \\
-Held-out object top-1 accuracy & 0.0000 & 0.0040 \\
+1  & $1.000 \pm .000$ & $.031 \pm .013$ & .029 & .010 & .016 & .010\\
+4  & $1.000 \pm .000$ & $.016 \pm .013$ & .055 & .034 & .057 & .031\\
+16 & $0.990 \pm .007$ & $.036 \pm .007$ & .672 & .167 & .635 & .031\\
+64 & $0.891 \pm .056$ & $.016 \pm .022$ & \textbf{1.000} & \textbf{1.000} & .995 & .031\\
+\midrule
+control: no triples & $1.000 \pm .000$ & $.021 \pm .015$ & -- & -- & .000 & .000\\
 \bottomrule
 \end{tabular}
-\caption{Low-frequency structured relation results.}
+\caption{Mean $\pm$ sd over seeds 19/31/47, at $A{=}128$ attribute-sentence occurrences. $F$ is the number of occurrences of each of the 128 triples per relation. Recall columns are the learning check.}
+\label{tab:main}
 \end{table}
 
-\paragraph{Finding.}
-The expected phase shift occurs at the representational level: the relation becomes a near-perfect affine map after the single-exposure phase. Direct next-token recall does \emph{not} emerge in this setup. Thus this run supports the claim:
-
-\[
-\text{single-exposure structured triples} \Rightarrow \text{affine relational geometry},
-\]
-
-but not:
-
-\[
-\text{single-exposure structured triples} \Rightarrow \text{reliable top-1 factual recall}.
-\]
-
-\section{Experiment 2: Structured vs Random Relations at Matched Frequency}
-
-\subsection{Goal}
-
-Test whether frequency alone explains affine structure by training two relations with identical exposure counts:
-
-\begin{itemize}
-  \item \(R_0\): structured/attribute-supported relation.
-  \item \(R_1\): random relation with no relationship to attributes.
-\end{itemize}
-
-The desired pattern is:
-
-\begin{itemize}
-  \item \(R_0\) should be more affine and more generalizable.
-  \item \(R_1\) should be memorized when frequent, but remain non-affine and fail on unseen subjects.
-\end{itemize}
-
-\subsection{Configuration}
-
-Config file:
-\[
-\texttt{experiments/configs/runs/synthetic\_mixed\_relations\_matched.toml}.
-\]
-
-\begin{table}[h]
+\begin{figure}[h]
 \centering
-\begin{tabular}{ll}
-\toprule
-Quantity & Value \\
-\midrule
-Seed & 19 \\
-Entities & 192 subjects and 192 objects \\
-Attribute vocabulary & \(n_f=32,\ n_g=32\) \\
-Attribute shift & \(\Delta_f=3,\ \Delta_g=5\) \\
-Relations & 2: structured \(R_0\), random \(R_1\) \\
-Trained subject types & 128 \\
-Never-seen evaluation subjects & 64 \\
-Model & 2 layers, hidden dimension 128, 4 heads \\
-Context length & 8 \\
-Object loss weight & 4.0 \\
-\bottomrule
-\end{tabular}
-\caption{Matched-frequency structured/random configuration.}
-\end{table}
+\includegraphics[width=\textwidth]{figures/linear_shift_results.pdf}
+\caption{(a) Held-out probe accuracy vs.\ occurrences per triple: $\Rsem$ is linear at every frequency (slightly degrading at $F{=}64$), $\Rrnd$ is never linear. (b) Probe accuracy at $F{=}1$ as a function of attribute-sentence occurrences $A$: the transition into the linear regime is sharp, and identical with 128 once-occurring triples (solid) and with no triples at all (dashed control).}
+\label{fig:results}
+\end{figure}
 
-\subsection{Relation Definitions}
+\paragraph{Finding 1: with matched frequency, semantics decides the format (Table~\ref{tab:main}, $F{=}64$).}
+Both relations reach perfect recall of all 128 training triples --- both are fully learned by the model, from data with identical frequency statistics. The affine probe transfers to held-out subjects almost perfectly for $\Rsem$ ($0.891 \pm 0.056$; and the model itself generalizes behaviorally, held-out recall $0.995$) and is at chance for $\Rrnd$ ($0.016 \pm 0.022$; held-out recall at chance). The random relation is thus stored, but stored \emph{non-linearly}: no affine map over the same representations accounts for it.
 
-\paragraph{Structured relation \(R_0\).}
-The structured target is identity in entity index:
-\[
-  R_0(\subj{i}) = \obj{i}.
-\]
-Since \(\obj{i}\)'s attributes are a fixed shift of \(\subj{i}\)'s attributes, this relation is supported by the hidden attribute geometry.
+\paragraph{Finding 2: single occurrences already put the semantic relation in the linear regime.}
+At $F{=}1$ --- every triple exactly once, in a single epoch --- the probe is already at $1.000$ for $\Rsem$ and at chance for $\Rrnd$. Increasing frequency does not create the linear format (Fig.~\ref{fig:results}a, $\Rrnd$ flat at chance) and if anything slightly erodes it for $\Rsem$ ($1.000 \rightarrow 0.891$), consistent with high-frequency memorization competing with the linear solution.
 
-\paragraph{Random relation \(R_1\).}
-\[
-  R_1(a_i) = b_{\pi(i)}
-\]
-where \(\pi\) is a random permutation generated from the run seed. This relation is not supported by the hidden attribute geometry.
+\paragraph{Finding 3: the nonlinear$\rightarrow$linear transition is driven by attribute knowledge, not by triple repetition.}
+Sweeping the number of occurrences $A$ of each attribute sentence at $F{=}1$ (Fig.~\ref{fig:results}b) produces a sharp transition of the $\Rsem$ probe from chance to ceiling ($0.05 \rightarrow 0.10 \rightarrow 0.34 \rightarrow 0.85 \rightarrow 1.00$ for $A = 2,4,8,16,24$). The control with \emph{zero} relation triples produces the same curve. Hence the affine subject$\to$object map is carried by the attribute geometry that the model builds from attribute sentences; the once-seen $\Rsem$ triples are consistent with that geometry (and at higher $F$ the relation visibly uses it: held-out behavioral recall $0.995$), whereas $\Rrnd$ triples cannot be, at any frequency.
 
-Concrete examples reconstructed from the saved matched run:
-
-\begin{verbatim}
-x a_0 r_0 b_0   x        structured
-x a_0 r_1 b_132 x        random
-
-x a_1 r_0 b_1   x        structured
-x a_1 r_1 b_148 x        random
-
-x a_5 r_0 b_5   x        structured
-x a_5 r_1 b_59  x        random
-\end{verbatim}
-
-Attribute examples from the same run:
-
-\begin{verbatim}
-a_0: f_10 g_14           b_0: f_13 g_19
-a_1: f_18 g_10           b_1: f_21 g_15
-a_5: f_9  g_7            b_5: f_12 g_12
-\end{verbatim}
-
-\subsection{Training Data}
-
-The mixed-relation run uses:
+\section{What this does and does not show}
 
 \begin{itemize}
-  \item Attribute sentences for all entities:
-  \begin{verbatim}
-  x a_i f_p g_q x
-  x b_i f_r g_s x
-  \end{verbatim}
-  \item Structured relation triples:
-  \begin{verbatim}
-  x a_i r_0 b_i x
-  \end{verbatim}
-  \item Random relation triples:
-  \begin{verbatim}
-  x a_i r_1 b_{pi(i)} x
-  \end{verbatim}
+  \item \textbf{Shown:} two relations with exactly matched frequency statistics but different semantics end up in different storage formats --- affine/generalizing vs.\ memorized/non-affine (Finding 1); a relation whose facts each occur \emph{once} can already sit in the linear regime, and frequency is not what creates linearity (Finding 2); the transition into the linear regime is sharp, but its driver is the amount of attribute (scaffold) training (Finding 3).
+  \item \textbf{Not shown:} that the relation triples themselves \emph{cause} the nonlinear$\rightarrow$linear transition when each fact occurs only once. The $A$-sweep control (Fig.~\ref{fig:results}b, dashed) demonstrates the opposite in this setting. We attempted three designs in which the probe could only succeed through triple-driven structure (a one-to-one relation requiring per-fact output rows; a relation defined by the conjunction of two attributes, up to $49{,}152$ distinct facts; both with hidden-state probes): under the strict single-occurrence, one-epoch regime none produced above-chance probe transfer, because each fact contributes exactly one gradient and per-fact structure cannot form. Also note that at $F{=}1$ the model does not yet reproduce individual triples behaviorally (recall $\approx .03$); the $F{=}1$ statement is about the representational format, not about recall.
+  \item \textbf{Superseded:} the ``single-exposure phase shift'' reported in earlier drafts of this document (probe rising $0.27 \rightarrow 0.95$ during a single-exposure phase) is an artifact and should not be cited: its regression was fitted on a growing set of pairs (10 at the first snapshot, $>$500 later) over embeddings that had been \emph{initialized} from the attribute geometry. With a fixed-size probe and standard initialization the effect disappears. All earlier experiments using \texttt{structured\_embedding\_init}, targeted-row updates, pilot-triple repetition, or top-$k$ metrics are superseded by the present setup.
 \end{itemize}
 
-The main matched run repeats both relations 32 times for the same 128 trained subjects:
+\section{Reproduction}
 
-\[
-  \text{structured repeats} = \text{random repeats} = 32.
-\]
+Implementation: \texttt{experiments/factual\_recall/linear\_shift.py} (self-contained: world, corpus, training, probe; $\sim$450 lines). Design invariants: \texttt{experiments/tests/test\_linear\_shift.py}. From \texttt{experiments/}:
 
-A sweep was also run over matched repeat counts:
-\[
-  1, 2, 4, 8, 16, 32, 64.
-\]
-
-\subsection{Main Matched-Frequency Result at 32 Repeats}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lcc}
-\toprule
-Metric & \(R_0\) structured & \(R_1\) random \\
-\midrule
-Train top-1 accuracy & 0.953 & 0.766 \\
-Train top-10 accuracy & 1.000 & 1.000 \\
-Eval top-1 accuracy & 0.031 & 0.000 \\
-Eval top-10 accuracy & 0.422 & 0.000 \\
-Eval mean rank & 27.4 & 181.0 \\
-Prompt affine cosine & 0.322 & 0.048 \\
-Prompt affine nearest-neighbor accuracy & 0.156 & 0.016 \\
-\bottomrule
-\end{tabular}
-\caption{Matched-frequency result with 32 repeats per relation.}
-\end{table}
-
-\paragraph{Interpretation.}
-At equal frequency, the structured relation is substantially more generalizable than the random relation. The random relation is partly memorized but has no held-out top-10 generalization and almost no affine structure.
-
-\subsection{Matched Repeat Sweep}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{rrrrrrrrr}
-\toprule
-Repeats & R0 train & R1 train & R0 eval@10 & R1 eval@10 & R0 aff. cos & R1 aff. cos & R0 aff. NN & R1 aff. NN \\
-\midrule
-1  & 0.031 & 0.016 & 0.000 & 0.000 & 0.919 & 0.127 & 0.953 & 0.016 \\
-2  & 0.016 & 0.031 & 0.016 & 0.047 & 0.917 & 0.120 & 0.953 & 0.000 \\
-4  & 0.094 & 0.031 & 0.047 & 0.000 & 0.730 & 0.084 & 0.922 & 0.016 \\
-8  & 0.500 & 0.125 & 0.234 & 0.000 & 0.491 & 0.046 & 0.484 & 0.000 \\
-16 & 0.750 & 0.234 & 0.391 & 0.016 & 0.369 & 0.067 & 0.250 & 0.000 \\
-32 & 0.953 & 0.766 & 0.422 & 0.000 & 0.322 & 0.048 & 0.156 & 0.016 \\
-64 & 1.000 & 1.000 & 0.375 & 0.016 & 0.215 & 0.035 & 0.016 & 0.016 \\
-\bottomrule
-\end{tabular}
-\caption{Matched-frequency sweep over relation repetitions.}
-\end{table}
-
-\paragraph{Finding.}
-The sweep separates structure from frequency:
-
-\begin{itemize}
-  \item At low matched frequency, \(R_0\) is strongly affine while \(R_1\) is not. At one repeat, \(R_0\) affine NN accuracy is 0.953, while \(R_1\) is 0.016.
-  \item As frequency rises, \(R_1\) becomes memorized. At 64 repeats, \(R_1\) train accuracy reaches 1.000.
-  \item Even when memorized, \(R_1\) remains non-affine and does not generalize: at 64 repeats, \(R_1\) eval top-10 accuracy is 0.016 and affine cosine is 0.035.
-  \item \(R_0\) generalizes better behaviorally than \(R_1\), but its prompt-space affine score declines with high repetition. This suggests repeated direct training can move even a structured relation toward a more memorized prompt representation.
-\end{itemize}
-
-\section{Overall Conclusions}
-
-\begin{enumerate}
-  \item \textbf{Low-frequency structured relations can become affine.}
-  In Experiment 1, 1024 single-exposure structured triples induce a very strong affine subject-to-object map: embedding affine cosine 0.946 and affine nearest-neighbor accuracy 1.000.
-
-  \item \textbf{Affine geometry and direct recall are separable.}
-  In Experiment 1, the affine map is strong but direct top-1 object recall remains near zero. The model learned the geometry without reliably using it as the top logit.
-
-  \item \textbf{Random relations can be memorized at high frequency without becoming affine.}
-  In the matched-frequency sweep, random \(R_1\) reaches perfect train accuracy at 64 repeats but retains near-zero affine/generalization metrics.
-
-  \item \textbf{Attribute support matters independently of frequency.}
-  At the same exposure count, structured \(R_0\) is consistently more affine and more generalizable than random \(R_1\), especially at low repetition counts.
-
-  \item \textbf{High repetition changes the mechanism.}
-  The cleanest affine signal for \(R_0\) appears at low exposure. With many repeats, \(R_0\) remains better than \(R_1\) behaviorally, but its prompt-space affine metric declines.
-\end{enumerate}
-
-\section{How to Verify}
-
-From the repository root:
-
+\begin{small}
 \begin{verbatim}
-cd experiments
+# Table 1 / Figure (a): one seed per command (19, 31, 47), ~1 min each on one GPU
+uv run python -m factual_recall.linear_shift --world category --probe embedding \
+  --seeds 19 --k-values 0,128 --occurrences 1,4,16,64 --attr-repeats 128 \
+  --device cuda --output-dir factual_recall/results/final_category_seed19
 
-# Low-frequency structured affine run
-env UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache \
-  uv run factual-recall synthetic-exp1 \
-  --config configs/runs/synthetic_exp1.toml \
-  --device cpu --quiet
+# Figure (b): attribute-exposure sweep at F=1, per seed and A
+uv run python -m factual_recall.linear_shift --world category --probe embedding \
+  --seeds 19 --k-values 0,128 --occurrences 1 --attr-repeats 8 \
+  --device cuda --output-dir factual_recall/results/final_category_arsweep_seed19_ar8
+# ... repeated for A in {2,4,8,16,24,32,48,64,128}
 
-# Matched structured-vs-random run
-env UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache \
-  OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
-  uv run factual-recall synthetic-mixed-relations \
-  --config configs/runs/synthetic_mixed_relations_matched.toml \
-  --device cpu --quiet
+# Aggregation and figure
+# factual_recall/results/final_summary/summary.json, make_figure.py
 
-# Tests
-env UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache \
-  uv run pytest tests/test_synthetic_curriculum.py -q
+# Design invariants
+uv run pytest tests/test_linear_shift.py -q
 \end{verbatim}
+\end{small}
 
-The repeat sweep was run by varying
-\texttt{structured\_relation\_repeats} and \texttt{random\_relation\_repeats}
-together over \(1,2,4,8,16,32,64\). The saved sweep summary is:
-
-\begin{verbatim}
-experiments/factual_recall/results/
-  synthetic_mixed_relations_matched/repeat_sweep_summary.md
-\end{verbatim}
-
-\section{Caveats}
-
-\begin{itemize}
-  \item The ``nonlinear'' claim is a geometric/mechanistic claim about non-affine memorization, not a proof that a specific nonlinear submodule alone stores the random relation.
-  \item The strongest positive claim is about affine representational structure, not direct top-1 factual recall.
-  \item The matched-frequency sweep shows that high repetition can reduce the measured prompt-space affine score even for the structured relation.
-  \item Runs reported here were CPU validation runs in the shared workspace. For paper-grade claims, rerun the same configs on rho1/rho2 with multiple seeds and larger settings.
-\end{itemize}
+Raw per-run metrics (including probe $R^2$/cosine and losses, recorded but not reported) are in \texttt{factual\_recall/results/final\_category\_*/linear\_shift\_metrics.json}.
 
 \end{document}

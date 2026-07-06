@@ -33,19 +33,38 @@ class StructuredVocab:
     sep_id: int = 0
     relation_id: int = 1
     n_relations: int = 1
+    attr_mode: str = "disjoint_shift"
+    attr_buckets: int = 0
     subject_attrs: tuple[tuple[int, int], ...] = field(default_factory=tuple)
     object_attrs: tuple[tuple[int, int], ...] = field(default_factory=tuple)
 
     def __post_init__(self) -> None:
         if not self.subject_attrs or not self.object_attrs:
-            subject_attrs, object_attrs = make_disjoint_relation_attrs(
-                n_entities=self.n_entities,
-                n_f=self.n_f,
-                n_g=self.n_g,
-                delta_f=self.delta_f,
-                delta_g=self.delta_g,
-                seed=self.seed,
-            )
+            if self.attr_mode == "disjoint_shift":
+                subject_attrs, object_attrs = make_disjoint_relation_attrs(
+                    n_entities=self.n_entities,
+                    n_f=self.n_f,
+                    n_g=self.n_g,
+                    delta_f=self.delta_f,
+                    delta_g=self.delta_g,
+                    seed=self.seed,
+                )
+            elif self.attr_mode == "f_bucket":
+                buckets = self.attr_buckets or self.n_f
+                if buckets > self.n_f or buckets > self.n_entities:
+                    raise ValueError("attr_buckets must be <= n_f and <= n_entities")
+                subject_attrs = [
+                    (i % buckets, (i // buckets) % self.n_g)
+                    for i in range(self.n_entities)
+                ]
+                object_attrs = []
+                for i in range(self.n_entities):
+                    if i < buckets:
+                        object_attrs.append(((i + self.delta_f) % self.n_f, 0))
+                    else:
+                        object_attrs.append((i % self.n_f, (i // self.n_f + self.delta_g) % self.n_g))
+            else:
+                raise ValueError(f"Unknown attr_mode: {self.attr_mode}")
             self.subject_attrs = tuple(subject_attrs)
             self.object_attrs = tuple(object_attrs)
 
@@ -99,11 +118,14 @@ class CurriculumConfig:
     delta_g: int = 11
     phase1_k: int = 10
     phase1_attr_repeats: int = 8
+    reverse_attr_repeats: int = 0
     phase1_triple_repeats: int = 256
     phase2_triples: int = 1014
     phase2_repeats: int = 1
     structured_relation_repeats: int | None = None
     random_relation_repeats: int | None = None
+    structured_target_mode: str = "identity"
+    structured_target_buckets: int = 0
     batch_size: int = 64
     learning_rate: float = 3e-4
     phase2_learning_rate: float | None = None
@@ -202,6 +224,11 @@ def object_attr_sequence(vocab: StructuredVocab, entity_idx: int) -> list[int]:
     return [vocab.sep_id, vocab.object_id(entity_idx), vocab.f_id(f), vocab.g_id(g), vocab.sep_id]
 
 
+def reverse_object_attr_sequence(vocab: StructuredVocab, entity_idx: int) -> list[int]:
+    f, g = vocab.object_attrs[entity_idx]
+    return [vocab.sep_id, vocab.f_id(f), vocab.g_id(g), vocab.object_id(entity_idx), vocab.sep_id]
+
+
 def triple_sequence(vocab: StructuredVocab, entity_idx: int) -> list[int]:
     return [
         vocab.sep_id,
@@ -246,6 +273,9 @@ def build_curriculum_sequences(
         for seq in (subject_attr_sequence(vocab, entity_idx), object_attr_sequence(vocab, entity_idx))
     ]
     phase1_sequences = attr_sequences * cfg.phase1_attr_repeats
+    if cfg.reverse_attr_repeats > 0:
+        reverse_sequences = [reverse_object_attr_sequence(vocab, entity_idx) for entity_idx in range(vocab.n_entities)]
+        phase1_sequences.extend(reverse_sequences * cfg.reverse_attr_repeats)
     phase1_sequences.extend(
         triple_sequence(vocab, entity_idx)
         for entity_idx in phase1_indices
@@ -470,13 +500,25 @@ def evaluate_triples(
     }
 
 
-def fit_affine(train_x: np.ndarray, train_y: np.ndarray, ridge: float = 1e-3) -> np.ndarray:
-    x_aug = np.concatenate([train_x, np.ones((train_x.shape[0], 1), dtype=train_x.dtype)], axis=1)
-    lhs = x_aug.T @ x_aug
-    lhs += ridge * np.eye(lhs.shape[0], dtype=train_x.dtype)
-    lhs[-1, -1] -= ridge
-    rhs = x_aug.T @ train_y
-    return np.linalg.solve(lhs, rhs)
+def fit_affine(train_x: np.ndarray, train_y: np.ndarray, ridge: float | None = None) -> np.ndarray:
+    """Fit an affine map with ordinary least-squares linear regression.
+
+    The returned matrix has shape ``(input_dim + 1, output_dim)``. The last row is
+    the intercept, so callers can keep using ``apply_affine``.
+
+    ``ridge`` is accepted for backwards compatibility with older call sites, but
+    affine metrics in this file intentionally use unregularized linear regression.
+    """
+    del ridge
+    from sklearn.linear_model import LinearRegression
+
+    reg = LinearRegression(fit_intercept=True)
+    reg.fit(train_x, train_y)
+    weights = np.concatenate(
+        [reg.coef_.T.astype(train_x.dtype, copy=False), reg.intercept_[None, :].astype(train_x.dtype, copy=False)],
+        axis=0,
+    )
+    return weights
 
 
 def apply_affine(x: np.ndarray, weights: np.ndarray) -> np.ndarray:
@@ -1077,6 +1119,11 @@ def train_mapped_relation(
         for entity_idx in range(cfg.vocab.n_entities)
         for seq in (subject_attr_sequence(cfg.vocab, entity_idx), object_attr_sequence(cfg.vocab, entity_idx))
     ] * cfg.curriculum.phase1_attr_repeats
+    if cfg.curriculum.reverse_attr_repeats > 0:
+        attr_sequences.extend(
+            [reverse_object_attr_sequence(cfg.vocab, entity_idx) for entity_idx in range(cfg.vocab.n_entities)]
+            * cfg.curriculum.reverse_attr_repeats
+        )
     triple_sequences = [
         mapped_triple_sequence(
             cfg.vocab,
@@ -1282,6 +1329,61 @@ def prompt_relation_metrics(
     }
 
 
+def embedding_relation_metrics(
+    model: CausalTransformer,
+    vocab: StructuredVocab,
+    target_indices: np.ndarray,
+    affine_train_indices: list[int],
+    affine_eval_indices: list[int],
+) -> dict[str, float]:
+    """Linear-regression affine metrics from subject embeddings to object vectors."""
+    token_weights = model.token_emb.weight.detach().cpu().numpy().astype(np.float64)
+    unembed_weights = model.lm_head.weight.detach().cpu().numpy().astype(np.float64)
+    subj_train = token_weights[[vocab.subject_id(i) for i in affine_train_indices]]
+    subj_eval = token_weights[[vocab.subject_id(i) for i in affine_eval_indices]]
+    train_targets = [int(target_indices[i]) for i in affine_train_indices]
+    eval_targets = [int(target_indices[i]) for i in affine_eval_indices]
+    object_embed = token_weights[[vocab.object_id(i) for i in range(vocab.n_entities)]]
+    object_unembed = unembed_weights[[vocab.object_id(i) for i in range(vocab.n_entities)]]
+
+    embed_affine = affine_metrics(
+        subj_train,
+        object_embed[train_targets],
+        subj_eval,
+        object_embed[eval_targets],
+    )
+    embed_nearest = affine_nearest_metrics(
+        subj_train,
+        object_embed[train_targets],
+        subj_eval,
+        eval_targets,
+        object_embed,
+    )
+    unembed_affine = affine_metrics(
+        subj_train,
+        object_unembed[train_targets],
+        subj_eval,
+        object_unembed[eval_targets],
+    )
+    unembed_nearest = affine_nearest_metrics(
+        subj_train,
+        object_unembed[train_targets],
+        subj_eval,
+        eval_targets,
+        object_unembed,
+    )
+    return {
+        "embedding_lr_affine_r2": embed_affine["r2"],
+        "embedding_lr_affine_cosine": embed_affine["cosine"],
+        "embedding_lr_affine_nn_accuracy": embed_nearest["accuracy"],
+        "embedding_lr_affine_nn_mean_rank": embed_nearest["mean_rank"],
+        "unembedding_lr_affine_r2": unembed_affine["r2"],
+        "unembedding_lr_affine_cosine": unembed_affine["cosine"],
+        "unembedding_lr_affine_nn_accuracy": unembed_nearest["accuracy"],
+        "unembedding_lr_affine_nn_mean_rank": unembed_nearest["mean_rank"],
+    }
+
+
 def paired_cosine(a: np.ndarray, b: np.ndarray) -> float:
     denom = np.linalg.norm(a, axis=1) * np.linalg.norm(b, axis=1)
     return float(np.mean(np.sum(a * b, axis=1) / np.maximum(denom, 1e-12)))
@@ -1313,7 +1415,18 @@ def run_mixed_relations(
     eval_n = min(cfg.curriculum.eval_limit, cfg.vocab.n_entities - train_n)
     train_subjects = sorted(int(i) for i in shuffled[:train_n])
     never_seen_subjects = sorted(int(i) for i in shuffled[train_n : train_n + eval_n])
-    structured_targets = np.arange(cfg.vocab.n_entities, dtype=np.int64)
+    if cfg.curriculum.structured_target_mode == "identity":
+        structured_targets = np.arange(cfg.vocab.n_entities, dtype=np.int64)
+    elif cfg.curriculum.structured_target_mode == "f_bucket":
+        buckets = cfg.curriculum.structured_target_buckets or cfg.vocab.n_f
+        if buckets > cfg.vocab.n_entities:
+            raise ValueError("structured_target_buckets must be <= n_entities")
+        structured_targets = np.asarray(
+            [cfg.vocab.subject_attrs[i][0] % buckets for i in range(cfg.vocab.n_entities)],
+            dtype=np.int64,
+        )
+    else:
+        raise ValueError(f"Unknown structured_target_mode: {cfg.curriculum.structured_target_mode}")
     random_targets = rng.permutation(cfg.vocab.n_entities).astype(np.int64)
     structured_repeats = (
         cfg.curriculum.structured_relation_repeats
@@ -1348,6 +1461,11 @@ def run_mixed_relations(
         for entity_idx in range(cfg.vocab.n_entities)
         for seq in (subject_attr_sequence(cfg.vocab, entity_idx), object_attr_sequence(cfg.vocab, entity_idx))
     ] * cfg.curriculum.phase1_attr_repeats
+    if cfg.curriculum.reverse_attr_repeats > 0:
+        attr_sequences.extend(
+            [reverse_object_attr_sequence(cfg.vocab, entity_idx) for entity_idx in range(cfg.vocab.n_entities)]
+            * cfg.curriculum.reverse_attr_repeats
+        )
     structured_sequences = [
         mapped_triple_sequence(cfg.vocab, subject_idx, int(structured_targets[subject_idx]), relation_idx=0)
         for _ in range(structured_repeats)
@@ -1391,6 +1509,15 @@ def run_mixed_relations(
         device=device,
         eval_limit=cfg.curriculum.eval_limit,
     )
+    structured_metrics.update(
+        embedding_relation_metrics(
+            model,
+            cfg.vocab,
+            structured_targets,
+            train_subjects,
+            never_seen_subjects,
+        )
+    )
     random_metrics = prompt_relation_metrics(
         model,
         cfg.vocab,
@@ -1400,6 +1527,15 @@ def run_mixed_relations(
         relation_idx=1,
         device=device,
         eval_limit=cfg.curriculum.eval_limit,
+    )
+    random_metrics.update(
+        embedding_relation_metrics(
+            model,
+            cfg.vocab,
+            random_targets,
+            train_subjects,
+            never_seen_subjects,
+        )
     )
     rel0_train_h = prompt_residual_vectors(model, cfg.vocab, train_subjects, 0, device)
     rel1_train_h = prompt_residual_vectors(model, cfg.vocab, train_subjects, 1, device)
