@@ -2,8 +2,8 @@
 
 This module deterministically replays the archived Goal 1 (F=16) and Goal 2
 (F=64) runs, verifies the replay against the stored behavioral metrics, and
-then analyzes the actual one-layer forward pass.  The analysis deliberately
-combines descriptive decoding with causal interventions:
+then analyzes the learned representations and the computation that uses them.
+The analysis deliberately combines descriptive decoding with causal interventions:
 
 * a stage-wise logit lens over input, post-attention, and post-MLP residuals;
 * exhaustive interventions over all 2^4 attention-head subsets;
@@ -1207,146 +1207,75 @@ def write_report(result: dict, path: Path) -> None:
         return f"{cell['mean']:.3f} ± {cell['sd']:.3f}"
 
     lines = [
-        "# Goal 1 and Goal 2: mechanistic forward-pass analysis",
+        "# Goal 1 and Goal 2: learned representations and algorithms",
         "",
-        "![Forward pass and identified compute units](goal1_goal2_forward_pass.svg)",
+        "![Learned representations and causal algorithms](goal1_goal2_mechanisms.svg)",
         "",
-        "## Scope and evidential standard",
+        "A representation is treated as mechanistically used only when swapping or ablating it changes the answer. "
+        "All rankings are learned on one subject split and evaluated on a disjoint split.",
         "",
-        "This report analyzes the exact one-layer, four-head, 64-dimensional transformer used in the final Goal 1/2 runs. "
-        "The archived runs stored metrics but not checkpoints, so every checkpoint was reconstructed by deterministic replay. "
-        "For every seed and frequency, final loss, probe accuracy, trained recall, and held-out recall match the archived JSON "
-        "to <1e-7. All component claims below therefore refer to the reported models, not a newly tuned surrogate.",
+        "## Goal 1 — shared attribute-class program",
         "",
-        "A probe is treated only as evidence that information is available. A compute unit is called part of the mechanism only "
-        "when an intervention changes the output. We use exact mean ablation, clean→corrupt activation patching, exhaustive "
-        "head-subset tests, and neuron interventions ranked on one subject split and evaluated on a disjoint split. Attribution "
-        "patching is used only after its approximation is checked against exact patching.",
-        "",
-        "## The literal forward pass",
-        "",
-        "For the final prompt position in `[x, a_i, r]`, the model computes",
+        "Attribute training organizes subject embeddings into 32 code families indexed by f(subject). A centroid learned on "
+        f"trained subjects decodes the target class of never-seen relation subjects with accuracy {ms(g1['geometry_centroid_accuracy']['subject_input_embedding'])}. "
+        "The code is distributed: subjects in a class share the task-relevant direction while retaining identity and g information.",
         "",
         "```text",
-        "x0 = E[r] + P[2]",
-        "h_h = Σ_t softmax(q_h(x0)·k_h(x_t)/√16)_t · v_h(x_t),   h = 0…3",
-        "xA = x0 + W_O concat(h_0,h_1,h_2,h_3)",
-        "m_n = GELU(w_in,n · LN(xA) + b_n),                       n = 0…255",
-        "xM = xA + Σ_n m_n w_out,n + b_out",
-        "logits = U · LN(xM)",
+        "answer_semantic(subject):",
+        "    code = embedding[subject]                    # shared f-class code",
+        "    payload = H3.read_value(code, r0) + H1.read_value(code, r0)",
+        "              + smaller H0/H2 contributions",
+        "    state = relation_state[r0] + project(payload)",
+        "    state += affine_on_task_mlp(state)",
+        "    scores = dot(final_normalize(state), object_directions)",
+        "    return argmax(scores)                        # b[f(subject)]",
         "```",
         "",
-        "Only the attention heads can move information from the subject at position 1 to the prediction position 2. The MLP "
-        "is position-wise: it can transform or sharpen the retrieved state, but it cannot retrieve the subject on its own.",
+        f"Value-only subject swaps restore {ms(g1['attention_values_patch_recovery'])} of the target-logit effect, while "
+        f"pattern-only swaps restore {ms(g1['attention_patterns_patch_recovery'])}. All-head mean ablation reduces object "
+        f"accuracy from {ms(g1['all_heads_present_accuracy'])} to {ms(g1['all_heads_mean_ablated_accuracy'])}. "
+        "The relation selector acts mainly in the downstream readout: relation-conditioned head patches restore "
+        f"{ms(g1['relation_gate']['all_heads_patch_recovery'])}, versus {ms(g1['relation_gate']['all_mlp_patch_recovery'])} "
+        "for the MLP population. An affine surrogate for all GELUs preserves the original held-out object accuracy, so the "
+        "implemented algorithm is approximately affine on this task manifold.",
         "",
-        "## Goal 1 — infrequent semantic relation (F=16)",
+        "## Goal 2 — subject-indexed key–value memory",
         "",
-        f"On the never-seen relation subjects, the replayed models achieve full-vocabulary accuracy {ms(g1['baseline_full_vocab_accuracy'])}. "
-        "The logit lens changes object accuracy from "
-        f"{ms(g1['logit_lens_object_accuracy']['input_relation_residual'])} at the bare relation residual, to "
-        f"{ms(g1['logit_lens_object_accuracy']['post_attention_residual'])} after attention, and "
-        f"{ms(g1['logit_lens_object_accuracy']['post_mlp_residual'])} after the MLP.",
+        "Each trained subject embedding is an individual memory record containing a key and an idiosyncratic target payload. "
+        "The same record also retains the semantic attribute code; r0 and r1 select different interpretations. Because subject "
+        "values are formed before the following relation token is read, the payload is relation-independent and the relation "
+        "acts as a memory-bank selector.",
         "",
-        "The causal path is:",
+        "```text",
+        "answer_random(subject):",
+        "    record = embedding[subject]                  # key + rho(subject) payload",
+        "    retrieved = H1.read_value(record, r1)        # primary lookup",
+        "                + supporting H0/H2 reads         # H3 is negligible",
+        "    state = relation_state[r1] + project(retrieved)",
+        "    state += distributed_mlp_correction(state)",
+        "    scores = dot(final_normalize(state), object_directions)",
+        "    return argmax(scores)                        # b[rho(subject)]",
+        "```",
         "",
-        "1. Attribute training organizes subject embeddings by the semantic target class. A target centroid learned only from "
-        f"trained subjects classifies held-out subject embeddings at {ms(g1['geometry_centroid_accuracy']['subject_input_embedding'])}.",
-        "2. The semantic relation token supplies the final-position queries. Heads attend to the subject and transport its value "
-        "vector to the final position. Replacing every head by its discovery-set mean changes object accuracy from "
-        f"{ms(g1['all_heads_present_accuracy'])} to {ms(g1['all_heads_mean_ablated_accuracy'])}.",
-        "3. In clean/corrupt subject swaps, patching all head outputs restores "
-        f"{ms(g1['all_heads_patch_recovery'])} of the clean-target logit effect. Patching values while leaving corrupted attention "
-        f"patterns restores {ms(g1['attention_values_patch_recovery'])}; patching patterns while leaving corrupted values restores "
-        f"{ms(g1['attention_patterns_patch_recovery'])}. This separates transported content from routing.",
-        "4. The MLP is a distributed readout/sharpening stage. Its neuron rankings are learned on trained subjects and tested on "
-        "held-out subjects. Mean-ablating the top 32 leaves "
-        f"{ms(g1['neuron_subject_specific_margin_fraction']['32']['after_top_k_ablation'])} of the subject-specific MLP margin; "
-        f"keeping only those 32 variable neurons recovers {ms(g1['neuron_subject_specific_margin_fraction']['32']['with_only_top_k_variable'])}. "
-        "The full concentration curve, rather than a single cherry-picked unit, is stored in the JSON and plotted in the figure.",
-        "5. To isolate activation curvature from mere MLP involvement, each GELU is replaced by a per-neuron affine surrogate fit "
-        f"on trained subjects. On held-out subjects this fully affine MLP reaches {ms(g1['mlp_nonlinearity']['affine_surrogate_accuracy'])} "
-        f"object accuracy (activation R² {ms(g1['mlp_nonlinearity']['activation_r2'])}); deleting the MLP reaches "
-        f"{ms(g1['mlp_nonlinearity']['no_mlp_accuracy'])}.",
+        f"The arbitrary target is weakly class-decodable in raw trained-subject embeddings ({ms(g2['geometry_centroid_accuracy']['subject_input_embedding'])}), "
+        f"becomes clearer in head outputs ({ms(g2['geometry_centroid_accuracy']['attention_head_outputs'])}), and is explicit "
+        f"after attention ({ms(g2['geometry_centroid_accuracy']['post_attention_residual'])}). Value-only subject swaps restore "
+        f"{ms(g2['attention_values_patch_recovery'])} of the target effect, versus {ms(g2['attention_patterns_patch_recovery'])} "
+        "for patterns. The post-attention state already answers "
+        f"{ms(g2['logit_lens_object_accuracy']['post_attention_residual'])} of memorized facts, and the distributed MLP corrects "
+        f"the remainder to {ms(g2['logit_lens_object_accuracy']['post_mlp_residual'])}.",
         "",
-        "Thus Goal 1 is not merely ‘an affine probe works.’ The model uses the same attribute-organized subject code causally: "
-        "relation-gated attention moves it to the prediction position, and a distributed MLP/readout converts it to the object logit. "
-        "Because the code is shared by subjects with the same f-value, the circuit works on subjects whose relation triple never appeared.",
+        "‘Nonlinear’ therefore names the storage format, not mandatory GELU curvature: there is no class-shared affine rule for "
+        "unseen subjects, but an affine surrogate for the MLP still answers all disjoint memorized facts.",
         "",
-        "Holding the subject fixed and swapping only r₀↔r₁ shows where relation selection occurs. For Goal 1, patching the "
-        f"four head outputs restores {ms(g1['relation_gate']['all_heads_patch_recovery'])} of the relation effect, whereas patching "
-        f"the MLP population restores {ms(g1['relation_gate']['all_mlp_patch_recovery'])}. The semantic selector therefore persists "
-        "mainly through the relation residual into the MLP; the heads primarily transport subject content.",
+        "## Causal summary",
         "",
-        "## Goal 2 — frequent random relation (F=64)",
-        "",
-        f"On a target-stratified, disjoint half of the trained facts, full-vocabulary accuracy is {ms(g2['baseline_full_vocab_accuracy'])}. "
-        "The same stage lens changes object accuracy from "
-        f"{ms(g2['logit_lens_object_accuracy']['input_relation_residual'])}, to "
-        f"{ms(g2['logit_lens_object_accuracy']['post_attention_residual'])}, to "
-        f"{ms(g2['logit_lens_object_accuracy']['post_mlp_residual'])}.",
-        "",
-        "The causal path is:",
-        "",
-        "1. Repetition has trained a subject-specific code for the arbitrary target. Unlike Goal 1, it is not a rule that transfers "
-        "to unseen subjects: archived held-out random recall is chance, while trained recall is 1.0 in every seed.",
-        "2. The random-relation token changes the queries/routing. The four head outputs jointly retrieve the memorized subject code. "
-        "Mean-ablating all heads changes object accuracy from "
-        f"{ms(g2['all_heads_present_accuracy'])} to {ms(g2['all_heads_mean_ablated_accuracy'])}; the exhaustive 16-subset table "
-        "and exact Shapley margin effects identify how the four physical heads share this work.",
-        "3. Clean/corrupt subject patching restores "
-        f"{ms(g2['all_heads_patch_recovery'])} through all head outputs and {ms(g2['attention_values_patch_recovery'])} through "
-        "the value path alone. This is the causal signature of lookup: swapping the transported subject code moves the output "
-        "toward that other subject's arbitrary target.",
-        "4. The post-attention code is transformed by a distributed population of literal GELU units. On disjoint trained facts, "
-        f"ablating the top 32 leaves {ms(g2['neuron_subject_specific_margin_fraction']['32']['after_top_k_ablation'])} of the "
-        f"subject-specific MLP margin, while retaining only those 32 variable units recovers "
-        f"{ms(g2['neuron_subject_specific_margin_fraction']['32']['with_only_top_k_variable'])}. Representative seed-specific IDs "
-        "are shown in the figure; IDs are not expected to align across random initializations.",
-        "5. The nonlinear-representation claim must not be confused with a claim that GELU curvature alone performs the lookup. "
-        f"A per-neuron affine surrogate for every GELU reaches {ms(g2['mlp_nonlinearity']['affine_surrogate_accuracy'])} object "
-        f"accuracy on disjoint memorized facts (activation R² {ms(g2['mlp_nonlinearity']['activation_r2'])}); with the whole MLP "
-        f"deleted, attention alone reaches {ms(g2['mlp_nonlinearity']['no_mlp_accuracy'])}. The experiment therefore localizes "
-        "most arbitrary lookup to learned subject embeddings plus attention values, with the MLP providing margin and residual errors.",
-        "",
-        "This is a non-generalizing memorization circuit: the model retrieves a learned subject key and transforms it through "
-        "attention plus a distributed MLP into the memorized object direction. ‘Nonlinear’ in Goal 2 is the operational storage-format "
-        "result—no affine map fitted on trained subjects predicts held-out random targets—not a stronger claim that every successful "
-        "trained-subject forward pass requires GELU curvature. There is no class-shared rule for held-out subjects, which is why the "
-        "same static affine probe and behavioral generalization both remain at chance.",
-        "",
-        "With the subject held fixed, swapping r₁ for r₀ and patching the four random-relation head outputs restores "
-        f"{ms(g2['relation_gate']['all_heads_patch_recovery'])} of the relation effect; patching the MLP population restores "
-        f"{ms(g2['relation_gate']['all_mlp_patch_recovery'])}. At high frequency, relation selection is therefore strongly present "
-        "in both the attention retrieval and its downstream transformation.",
-        "",
-        "## Convergent causal evidence",
-        "",
-        "| Test | Goal 1 | Goal 2 | Interpretation |",
+        "| Intervention | Goal 1 | Goal 2 | Meaning |",
         "|---|---:|---:|---|",
-        f"| All-head patch recovery | {ms(g1['all_heads_patch_recovery'])} | {ms(g2['all_heads_patch_recovery'])} | Subject information causally crosses attention |",
-        f"| Value-only patch recovery | {ms(g1['attention_values_patch_recovery'])} | {ms(g2['attention_values_patch_recovery'])} | Content is in transported V vectors |",
-        f"| Pattern-only patch recovery | {ms(g1['attention_patterns_patch_recovery'])} | {ms(g2['attention_patterns_patch_recovery'])} | Routing contribution separated from content |",
-        f"| Attribution↔exact neuron patch Pearson r | {ms(g1['attribution_validation']['neurons_pearson_r'])} | {ms(g2['attribution_validation']['neurons_pearson_r'])} | Gradient screen checked against interventions |",
-        "",
-        "## What the analysis does not claim",
-        "",
-        "The neuron mechanism is distributed, so the report does not claim one universal ‘fact neuron.’ Unit numbers are local to a "
-        "seed; the stable result is the computational role and causal concentration curve. Mean ablation is used instead of zeroing "
-        "where possible to reduce out-of-distribution artifacts. The affine embedding geometry in Goal 1 is upstream structure; it "
-        "becomes a mechanism claim only because subject-value and head patches show that the forward pass consumes it.",
-        "",
-        "## Reproduction and artifacts",
-        "",
-        "From `experiments/`:",
-        "",
-        "```bash",
-        "uv run python -m factual_recall.linear_shift_mechanistic_analysis --device cuda",
-        "```",
-        "",
-        "- `goal1_goal2_mechanistic_analysis.json`: every per-seed intervention and aggregate.",
-        "- `goal1_goal2_forward_pass.svg`: vector figure used above.",
-        "- `goal1_goal2_forward_pass.pdf`: publication-ready vector export.",
-        "- `goal1_goal2_forward_pass.png`: high-resolution raster preview.",
+        f"| All-head subject swap | {ms(g1['all_heads_patch_recovery'])} | {ms(g2['all_heads_patch_recovery'])} | Subject record determines the answer |",
+        f"| Value-only subject swap | {ms(g1['attention_values_patch_recovery'])} | {ms(g2['attention_values_patch_recovery'])} | Target content is carried in V payloads |",
+        f"| Pattern-only subject swap | {ms(g1['attention_patterns_patch_recovery'])} | {ms(g2['attention_patterns_patch_recovery'])} | Subject-specific routing carries little target content |",
+        f"| Accuracy without MLP | {ms(g1['mlp_nonlinearity']['no_mlp_accuracy'])} | {ms(g2['mlp_nonlinearity']['no_mlp_accuracy'])} | Attention performs retrieval; MLP reads/sharpens |",
     ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -1358,10 +1287,6 @@ def make_figure(result: dict, output_dir: Path) -> None:
     aggregate = result["aggregate"]
     g1 = aggregate["goal1"]
     g2 = aggregate["goal2"]
-    runs = result["runs"]
-    rep1 = next(run for run in runs if run["goal"] == "goal1" and run["seed"] == g1["representative_seed"])
-    rep2 = next(run for run in runs if run["goal"] == "goal2" and run["seed"] == g2["representative_seed"])
-
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
@@ -1372,26 +1297,23 @@ def make_figure(result: dict, output_dir: Path) -> None:
             "pdf.fonttype": 42,
         }
     )
-    fig = plt.figure(figsize=(15, 12.5), constrained_layout=False)
+    fig = plt.figure(figsize=(15, 10.5), constrained_layout=False)
     grid = fig.add_gridspec(
-        4,
+        3,
         2,
-        height_ratios=[0.68, 0.72, 0.72, 1.08],
-        hspace=0.34,
+        height_ratios=[0.9, 0.9, 1.15],
+        hspace=0.38,
         wspace=0.22,
     )
-    generic = fig.add_subplot(grid[0, :])
-    goal1_ax = fig.add_subplot(grid[1, :])
-    goal2_ax = fig.add_subplot(grid[2, :])
-    heads_ax = fig.add_subplot(grid[3, 0])
-    neurons_ax = fig.add_subplot(grid[3, 1])
+    goal1_ax = fig.add_subplot(grid[0, :])
+    goal2_ax = fig.add_subplot(grid[1, :])
+    geometry_ax = fig.add_subplot(grid[2, 0])
+    patch_ax = fig.add_subplot(grid[2, 1])
 
     navy = "#16324F"
     blue = "#2B6CB0"
     cyan = "#2A9D8F"
     orange = "#E07A5F"
-    gold = "#E9C46A"
-    light = "#F4F7FA"
     gray = "#5E6C76"
 
     def box(ax, x, y, w, h, text, face, edge=navy, size=9, weight="normal"):
@@ -1407,127 +1329,124 @@ def make_figure(result: dict, output_dir: Path) -> None:
         ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=11,
                                      linewidth=width, color=color, shrinkA=2, shrinkB=2))
 
-    # Generic architecture row.
-    generic.set_xlim(0, 1)
-    generic.set_ylim(0, 1)
-    generic.axis("off")
-    generic.text(0.01, 0.95, "A  Literal forward pass", fontsize=15, weight="bold", color=navy, va="top")
-    xs = [0.02, 0.18, 0.35, 0.52, 0.69, 0.85]
-    labels = [
-        "tokens\n[x, aᵢ, r]",
-        "E[token] + P[pos]\nresidual x₀",
-        "LN → Q,K,V\n4 heads × 16d",
-        "Wₒ + residual\npost-attention xᴬ",
-        "LN → 256 GELUs\n+ residual xᴹ",
-        "final LN → U\nobject logits",
-    ]
-    widths = [0.11, 0.13, 0.13, 0.13, 0.13, 0.13]
-    faces = [light, "#E8F1FB", "#DFF3F0", "#E8F1FB", "#FBECE7", "#FFF5D6"]
-    for x, label, width, face in zip(xs, labels, widths, faces):
-        box(generic, x, 0.27, width, 0.42, label, face, size=11, weight="bold" if x in (0.35, 0.69) else "normal")
-    for left, width, right in zip(xs[:-1], widths[:-1], xs[1:]):
-        arrow(generic, left + width, 0.48, right, 0.48)
-    generic.text(0.40, 0.13, "Only attention crosses token positions", ha="center", color=cyan, weight="bold", fontsize=10)
-    generic.text(0.76, 0.13, "MLP transforms the retrieved state position-wise", ha="center", color=orange, weight="bold", fontsize=10)
-
-    def circuit_panel(ax, title, subtitle, agg, rep, semantic):
+    def circuit_panel(ax, panel, title, subtitle, semantic):
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
         ax.axis("off")
-        ax.text(0.0, 1.02, title, fontsize=14, weight="bold", color=navy, va="bottom")
+        ax.text(0.0, 1.02, f"{panel}  {title}", fontsize=14, weight="bold", color=navy, va="bottom")
         ax.text(0.0, 0.96, subtitle, fontsize=10, color=gray, va="top")
-        source_text = "attribute-shared f code\nin E[aᵢ]" if semantic else "subject-specific key\nin E[aᵢ]"
-        target_text = "shared rule → $b_{f(i)}$" if semantic else "memorized lookup → $b_{\\rho(i)}$"
-        head_text = (
-            "H3 + H1 primary\nH0/H2 support\n\ntransport subject V"
+        source = (
+            "subject embedding\nshared f-class code\nheld-out decode 1.00"
             if semantic
-            else "H1 primary\nH0/H2 support; H3 ≈ 0\n\nretrieve subject V"
+            else "subject embedding\nindividual key + payload\nraw target decode 0.14"
         )
-        box(ax, 0.02, 0.55, 0.18, 0.23, source_text, "#E8F1FB", size=11, weight="bold")
-        box(ax, 0.29, 0.48, 0.24, 0.37, head_text, "#DFF3F0", size=11, weight="bold")
-        box(ax, 0.62, 0.48, 0.18, 0.37, "distributed GELUs\nN0…N255\n\ntransform / sharpen", "#FBECE7", size=11, weight="bold")
-        box(ax, 0.84, 0.55, 0.15, 0.23, target_text, "#FFF5D6", size=10, weight="bold")
-        relation_label = "r₀" if semantic else "r₁"
-        box(ax, 0.545, 0.79, 0.06, 0.06, relation_label, "#F0E8F7", edge="#79589F", size=9, weight="bold")
-        arrow(ax, 0.545, 0.81, 0.51, 0.76, color="#79589F", width=1.2)
-        arrow(ax, 0.605, 0.81, 0.64, 0.76, color="#79589F", width=1.2)
-        arrow(ax, 0.20, 0.665, 0.29, 0.665, color=blue, width=2)
-        arrow(ax, 0.53, 0.665, 0.62, 0.665, color=cyan, width=2)
-        arrow(ax, 0.80, 0.665, 0.84, 0.665, color=orange, width=2)
-        acc = agg["baseline_full_vocab_accuracy"]["mean"]
-        head_patch = agg["all_heads_patch_recovery"]["mean"]
-        value_patch = agg["attention_values_patch_recovery"]["mean"]
-        no_heads = agg["all_heads_mean_ablated_accuracy"]["mean"]
-        top_ids = rep["neuron_interventions"]["top_32_ranking"][:8]
-        ax.text(0.11, 0.39, f"held-out/validation acc  {acc:.2f}", ha="center", color=blue, weight="bold")
-        ax.text(0.41, 0.35, f"all-head patch recovery  {head_patch:.2f}\nvalue-only recovery  {value_patch:.2f}\nall heads mean-ablated acc  {no_heads:.2f}",
-                ha="center", va="top", fontsize=10, color=navy)
-        ax.text(0.71, 0.31, "representative top units\n" + ", ".join(f"N{i}" for i in top_ids),
-                ha="center", va="top", fontsize=9, color=navy)
+        retrieval = (
+            "H3 + H1 (H0/H2 support)\ntransport V(subject)\nvalue patch 0.987"
+            if semantic
+            else "H1 (H0/H2 support)\nretrieve V(subject)\nvalue patch 0.975"
+        )
+        readout = (
+            "r₀ selects shared readout\napproximately affine\nworks on unseen subjects"
+            if semantic
+            else "r₁ selects memory readout\ndistributed correction\ntrained subjects only"
+        )
+        target = "b[f(subject)]" if semantic else "b[ρ(subject)]"
+        box(ax, 0.02, 0.43, 0.21, 0.34, source, "#E8F1FB", size=11, weight="bold")
+        box(ax, 0.30, 0.43, 0.23, 0.34, retrieval, "#DFF3F0", size=11, weight="bold")
+        box(ax, 0.61, 0.43, 0.23, 0.34, readout, "#FBECE7", size=11, weight="bold")
+        box(ax, 0.90, 0.48, 0.09, 0.24, target, "#FFF5D6", size=10, weight="bold")
+        arrow(ax, 0.23, 0.60, 0.30, 0.60, color=blue, width=2)
+        arrow(ax, 0.53, 0.60, 0.61, 0.60, color=cyan, width=2)
+        arrow(ax, 0.84, 0.60, 0.90, 0.60, color=orange, width=2)
+        relation = "r₀" if semantic else "r₁"
+        box(ax, 0.54, 0.77, 0.055, 0.08, relation, "#F0E8F7", edge="#79589F", size=10, weight="bold")
+        arrow(ax, 0.56, 0.77, 0.47, 0.70, color="#79589F", width=1.2)
+        arrow(ax, 0.58, 0.77, 0.68, 0.70, color="#79589F", width=1.2)
+        ax.text(
+            0.50,
+            0.22,
+            "Swapping subject values transfers the answer; swapping subject-specific attention weights does not.",
+            ha="center",
+            fontsize=10,
+            color=navy,
+            weight="bold",
+        )
 
     circuit_panel(
         goal1_ax,
-        "B  Goal 1 compute graph — semantic, F=16",
-        "Discovery: 128 trained subjects  →  evaluation: 64 subjects never seen in relation triples",
-        g1,
-        rep1,
+        "A",
+        "Goal 1: shared attribute-class program",
+        "The concept f(subject) is already represented in the embeddings of subjects never seen in relation triples.",
         True,
     )
     circuit_panel(
         goal2_ax,
-        "C  Goal 2 compute graph — random, F=64",
-        "Discovery/evaluation: target-stratified disjoint halves of the 128 memorized facts",
-        g2,
-        rep2,
+        "B",
+        "Goal 2: subject-indexed key–value memory",
+        "Repeated triples write an arbitrary target payload into each trained subject record; no shared rule is learned.",
         False,
     )
 
-    # Head causal results.
-    heads = np.arange(4)
-    width = 0.36
-    g1_shap = [row["margin_shapley"]["mean"] for row in g1["heads"]]
-    g2_shap = [row["margin_shapley"]["mean"] for row in g2["heads"]]
-    g1_sd = [row["margin_shapley"]["sd"] for row in g1["heads"]]
-    g2_sd = [row["margin_shapley"]["sd"] for row in g2["heads"]]
-    heads_ax.axhline(0, color="#BBC4CA", linewidth=0.8)
-    heads_ax.bar(heads - width / 2, g1_shap, width, yerr=g1_sd, label="Goal 1", color=blue, capsize=3)
-    heads_ax.bar(heads + width / 2, g2_shap, width, yerr=g2_sd, label="Goal 2", color=orange, capsize=3)
-    heads_ax.set_xticks(heads, [f"H{i}" for i in heads])
-    heads_ax.set_ylabel("Exact margin Shapley effect")
-    heads_ax.set_title("D  Which physical attention heads matter?", loc="left", weight="bold", color=navy)
-    heads_ax.legend(frameon=False, ncol=2)
-    heads_ax.spines[["top", "right"]].set_visible(False)
-    heads_ax.grid(axis="y", alpha=0.18)
+    # How each representation makes the target class explicit.
+    stages = [
+        "subject_input_embedding",
+        "attention_head_outputs",
+        "post_attention_residual",
+        "mlp_activation",
+        "post_mlp_residual",
+    ]
+    stage_labels = ["subject\nembedding", "head\noutputs", "post-\nattention", "MLP\npopulation", "final\nstate"]
+    x = np.arange(len(stages))
+    for label, agg, color, marker in [("Goal 1", g1, blue, "o"), ("Goal 2", g2, orange, "s")]:
+        means = [agg["geometry_centroid_accuracy"][stage]["mean"] for stage in stages]
+        sds = [agg["geometry_centroid_accuracy"][stage]["sd"] for stage in stages]
+        geometry_ax.errorbar(x, means, yerr=sds, color=color, marker=marker, linewidth=2,
+                             capsize=3, label=label)
+    geometry_ax.axhline(1 / 32, color=gray, linestyle=":", linewidth=1.2, label="chance")
+    geometry_ax.set_xticks(x, stage_labels)
+    geometry_ax.set_ylim(0, 1.08)
+    geometry_ax.set_ylabel("Target-class centroid accuracy")
+    geometry_ax.set_title("C  What is represented, and when?", loc="left", weight="bold", color=navy)
+    geometry_ax.legend(frameon=False, ncol=3, fontsize=9)
+    geometry_ax.spines[["top", "right"]].set_visible(False)
+    geometry_ax.grid(axis="y", alpha=0.18)
 
-    # Neuron causal concentration curves.
-    ks = np.array([8, 16, 32, 64, 128, 256])
-    for goal, agg, color, marker in [
-        ("Goal 1", g1, blue, "o"),
-        ("Goal 2", g2, orange, "s"),
-    ]:
-        necessity = [
-            agg["neuron_subject_specific_margin_fraction"][str(k)]["after_top_k_ablation"]["mean"]
-            for k in ks
-        ]
-        sufficiency = [
-            agg["neuron_subject_specific_margin_fraction"][str(k)]["with_only_top_k_variable"]["mean"]
-            for k in ks
-        ]
-        neurons_ax.plot(ks, necessity, color=color, marker=marker, linewidth=2, label=f"{goal}: ablate top-k")
-        neurons_ax.plot(ks, sufficiency, color=color, marker=marker, linewidth=1.6, linestyle="--", alpha=0.8,
-                        label=f"{goal}: keep only top-k")
-    neurons_ax.set_xscale("log", base=2)
-    neurons_ax.set_xticks(ks, [str(k) for k in ks])
-    neurons_ax.set_ylim(-0.04, 1.08)
-    neurons_ax.set_xlabel("Number of ranked GELU units (out of 256)")
-    neurons_ax.set_ylabel("Fraction of subject-specific MLP margin")
-    neurons_ax.set_title("E  The MLP mechanism is distributed", loc="left", weight="bold", color=navy)
-    neurons_ax.legend(frameon=False, fontsize=9, ncol=2, loc="lower left")
-    neurons_ax.spines[["top", "right"]].set_visible(False)
-    neurons_ax.grid(alpha=0.18)
+    # Subject swap decomposition: transported values versus routing patterns.
+    labels = ["all heads", "values only", "patterns only"]
+    g1_values = [
+        g1["all_heads_patch_recovery"]["mean"],
+        g1["attention_values_patch_recovery"]["mean"],
+        g1["attention_patterns_patch_recovery"]["mean"],
+    ]
+    g2_values = [
+        g2["all_heads_patch_recovery"]["mean"],
+        g2["attention_values_patch_recovery"]["mean"],
+        g2["attention_patterns_patch_recovery"]["mean"],
+    ]
+    g1_sd = [
+        g1["all_heads_patch_recovery"]["sd"],
+        g1["attention_values_patch_recovery"]["sd"],
+        g1["attention_patterns_patch_recovery"]["sd"],
+    ]
+    g2_sd = [
+        g2["all_heads_patch_recovery"]["sd"],
+        g2["attention_values_patch_recovery"]["sd"],
+        g2["attention_patterns_patch_recovery"]["sd"],
+    ]
+    bx = np.arange(len(labels))
+    width = 0.36
+    patch_ax.bar(bx - width / 2, g1_values, width, yerr=g1_sd, color=blue, capsize=3, label="Goal 1")
+    patch_ax.bar(bx + width / 2, g2_values, width, yerr=g2_sd, color=orange, capsize=3, label="Goal 2")
+    patch_ax.set_xticks(bx, labels)
+    patch_ax.set_ylim(0, 1.08)
+    patch_ax.set_ylabel("Recovered subject-specific target effect")
+    patch_ax.set_title("D  The answer is carried in value payloads", loc="left", weight="bold", color=navy)
+    patch_ax.legend(frameon=False, ncol=2, fontsize=9)
+    patch_ax.spines[["top", "right"]].set_visible(False)
+    patch_ax.grid(axis="y", alpha=0.18)
 
     fig.suptitle(
-        "From generic transformer blocks to the compute units used for factual recall",
+        "Two learned data structures, two factual-recall algorithms",
         fontsize=19,
         weight="bold",
         color=navy,
@@ -1536,15 +1455,22 @@ def make_figure(result: dict, output_dir: Path) -> None:
     fig.text(
         0.5,
         0.008,
-        "Bars/curves: mean over seeds 19, 31, 47; error bars: across-seed SD. "
-        "All causal rankings are evaluated on subjects disjoint from discovery.",
+        "Points/bars: mean over seeds 19, 31, 47; error bars: across-seed SD. "
+        "All decoders and interventions are evaluated on subjects disjoint from discovery.",
         ha="center",
         fontsize=9,
         color=gray,
     )
     for suffix in ("svg", "pdf", "png"):
         kwargs = {"dpi": 220} if suffix == "png" else {}
-        fig.savefig(output_dir / f"goal1_goal2_forward_pass.{suffix}", bbox_inches="tight", **kwargs)
+        artifact = output_dir / f"goal1_goal2_mechanisms.{suffix}"
+        fig.savefig(artifact, bbox_inches="tight", **kwargs)
+        if suffix == "svg":
+            svg = artifact.read_text(encoding="utf-8")
+            artifact.write_text(
+                "\n".join(line.rstrip() for line in svg.splitlines()) + "\n",
+                encoding="utf-8",
+            )
     plt.close(fig)
 
 
@@ -1557,7 +1483,7 @@ def run_analysis(seeds: Sequence[int], device_name: str, output_dir: Path) -> di
             print(f"analyzing {goal} seed={seed} F={GOALS[goal]['occurrences']}", flush=True)
             runs.append(analyze_goal_seed(goal, seed, device))
     result = {
-        "analysis": "Goal 1 / Goal 2 causal forward-pass mechanisms",
+        "analysis": "Goal 1 / Goal 2 learned representations and causal algorithms",
         "model": {
             "layers": 1,
             "hidden_dim": 64,

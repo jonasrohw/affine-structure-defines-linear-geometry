@@ -123,23 +123,42 @@ $\Rsem$, trained in the same model from data with \emph{identical} frequency sta
 \paragraph{Finding 3: high frequency slightly erodes the linear format of the semantic relation.}
 $\Rsem$'s probe declines from $1.000$ ($F \le 4$) to $0.891 \pm .056$ ($F{=}64$), consistent with high-frequency memorization beginning to compete with the linear solution, while remaining far from the random relation's chance level.
 
-\section{Mechanistic forward-pass analysis}
+\section{Learned representation and exact algorithm}
 
-The failed held-out affine probe establishes an operationally nonlinear, non-generalizing storage format, but does not identify the computation that recalls the 128 trained random facts.  We therefore reconstructed every $F{=}64$ checkpoint by deterministic replay, requiring final loss, probe accuracy, trained recall, and held-out recall to match the archived JSON to $<10^{-7}$.  For each seed, the 128 trained facts were split into target-stratified discovery and evaluation halves.  All head/neuron selection used the discovery half; every number below is computed on the disjoint evaluation half.
+The random facts are stored as a subject-indexed memory, not as a shared relation rule.  Every subject token has its own learned embedding.  Repeated random triples write subject-specific target information into that embedding, while shared key/value projections and the output readout learn how to retrieve it.  The embedding is a multiplexed record: it still carries the attribute-supported semantic code, but it also contains an idiosyncratic payload for $\rho(i)$.  Because the subject's value vectors are computed before the following relation token is read, the values themselves are relation-independent; $\rel{0}$ and $\rel{1}$ select different uses of the same subject record through their queries and downstream residuals.
 
-At the final prompt position of \sep\ $\subj{i}$ $\rel{1}$, the model computes four attention-head outputs, adds their projected sum to the relation residual, applies 256 GELU neurons position-wise, and unembeds the final normalized residual.  A logit lens localizes the recall computation: object accuracy is $.031\pm.000$ at the bare $\rel{1}$ residual, $.927\pm.052$ immediately after attention, and $1.000\pm.000$ after the MLP.
+This representation is visibly different from Goal~1.  A target centroid fitted on one target-stratified half of the memorized subjects decodes $\rho(i)$ from the other half's raw subject embeddings with only $.141\pm.058$ accuracy (chance $.031$), compared with $1.000\pm.000$ for the shared semantic code in Goal~1.  The random target becomes increasingly explicit as the record is read: centroid accuracy is $.766\pm.175$ over the concatenated head outputs and $1.000\pm.000$ after their projection.  No corresponding payload is learned for subjects absent from relation triples, so both held-out recall and the held-out affine probe remain at chance.
 
-\paragraph{The used circuit.}
-Mean-ablating all four heads drops object accuracy from $1.000\pm.000$ to $.031\pm.000$.  Exhaustive evaluation of all $2^4$ head subsets and exact margin Shapley values identify H1 as the stable primary lookup head, H0/H2 as seed-variable supporting heads, and H3 as causally negligible.  In clean/corrupt subject swaps, patching all head outputs restores $1.000\pm.000$ of the clean-target logit effect.  Patching only the value vectors restores $.975\pm.020$, while patching only the attention patterns restores $.023\pm.014$.  Thus the arbitrary fact is encoded in the subject-dependent value content, not in a subject-specific routing pattern: swapping the transported value code moves the output toward the other subject's arbitrary target.
+The computation on a trained subject is equivalent to the following lookup procedure:
 
-The post-attention state already recalls most facts, and a distributed MLP sharpens the result.  Mean-ablating the 32 highest-ranked neurons leaves $.826\pm.014$ of the subject-specific MLP margin, while keeping only those 32 variable neurons recovers $.478\pm.022$.  There is no universal single fact neuron, and physical neuron IDs vary by initialization.  Holding the subject fixed and swapping only $\rel{1}\leftrightarrow\rel{0}$ shows that relation selection is present in both stages: patching the four random-relation head outputs restores $.922\pm.024$ of the relation effect, and patching the MLP population restores $.841\pm.032$.
+\begin{small}
+\begin{verbatim}
+def answer_random(subject):
+    # Learned representation: one memory record per trained subject.
+    record = embedding[subject]              # key + target payload
 
-Crucially, ``nonlinear storage'' must not be strengthened into an unsupported claim that GELU curvature itself performs the lookup.  A per-neuron affine surrogate fitted to the GELUs on discovery subjects attains $1.000\pm.000$ object accuracy on the disjoint memorized facts (activation $R^2=.924\pm.006$); deleting the MLP still leaves $.927\pm.052$.  Most trained-fact lookup therefore resides in learned subject keys and their attention value paths, with the MLP adding margin and correcting residual errors.  The storage is called nonlinear in the precise sense tested in this paper: an affine map fitted from trained subject embeddings to object rows is at chance on held-out subjects, and the behavior itself fails to generalize.  It is not a claim that the finite trained lookup cannot be locally approximated by affine operations.
+    # r1 selects the random-relation read. H1 is primary;
+    # H0/H2 provide seed-dependent support and H3 is negligible.
+    retrieved = sum(head[h].read_value(record, relation=r1)
+                    for h in [H0, H1, H2])
+
+    state = relation_state[r1] + project(retrieved)
+    state += distributed_mlp_correction(state)
+    object_scores = dot(final_normalize(state), object_directions)
+    return argmax(object_scores)              # b[rho(subject)]
+\end{verbatim}
+\end{small}
+
+Each \texttt{read\_value} multiplies a projection of the subject record by that head's attention weight, and the final \texttt{dot} compares the retrieved state with the 32 learned object-output directions.  This is a genuine causal lookup.  Replacing all head outputs by their mean destroys the subject identity and reduces accuracy from $1.000\pm.000$ to chance.  Swapping the head outputs between two subjects transfers the clean subject's target-logit effect completely.  Swapping only the subject-derived value payload transfers $.975\pm.020$ of that effect; swapping only the two subjects' attention weights transfers $.023\pm.014$.  The key operation is therefore ``read the content stored in this subject's value projections,'' not ``route each subject along a unique attention pattern.''
+
+The relation token is the memory-bank selector.  With the subject fixed, replacing $\rel{0}$ by $\rel{1}$ changes both the retrieval and its interpretation: head-output patching restores $.922\pm.024$ of the relation effect and MLP-population patching restores $.841\pm.032$ (the effects overlap and are not additive).  H1 is the stable primary retrieval head, H0/H2 supply seed-dependent support, and H3 has approximately zero causal contribution.
+
+Most lookup is complete before the MLP: the object is already correct at $.927\pm.052$ after attention and at $1.000\pm.000$ after the MLP.  The latter is a distributed correction rather than a bank of individual fact neurons: keeping only the 32 highest-ranked variable units recovers $.478\pm.022$ of its subject-specific margin, while ablating them leaves $.826\pm.014$.  An affine surrogate for all GELUs still obtains $1.000\pm.000$ on disjoint memorized facts.  Thus ``nonlinear'' describes the storage format---there is no affine rule that transfers $\rho$ to new subjects---not a requirement for GELU curvature during each trained-subject lookup.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{../factual_recall/results/final_mechanistic_analysis/goal1_goal2_forward_pass.pdf}
-\caption{Top: the literal forward pass. Middle: generic attention and MLP blocks replaced by the causally identified Goal~1 and Goal~2 compute units. Bottom: exact head Shapley effects and discovery/evaluation-split neuron concentration curves, aggregated over seeds 19/31/47.}
+\includegraphics[width=\textwidth]{../factual_recall/results/final_mechanistic_analysis/goal1_goal2_mechanisms.pdf}
+\caption{The learned data structures and equivalent algorithms for both goals.  Goal~1 transports a shared $f$-class code into an approximately affine class-to-object readout; Goal~2 retrieves a subject-specific memory payload.  The lower panels show how target identity becomes decodable and establish that subject information is carried by attention values rather than subject-specific attention weights.}
 \label{fig:goal12mechanism}
 \end{figure}
 
@@ -152,24 +171,5 @@ The frequent random relation is therefore recalled by a non-generalizing key--va
   \item \textbf{Qualification:} ``frequent $\Rightarrow$ nonlinear'' holds for the relation without attribute support. Frequency alone does not force nonlinearity: the frequent \emph{semantic} relation remains largely linear (with mild erosion at $F{=}64$). The precise claim supported is: at matched high frequency, an attribute-supported relation is stored linearly and an unsupported one non-linearly.
   \item \textbf{Superseded:} earlier drafts' high-frequency results used attribute-initialized embeddings (\texttt{structured\_embedding\_init}), targeted-row updates, and top-$k$ metrics; they are replaced by the present end-to-end setup with a single OLS metric.
 \end{itemize}
-
-\section{Reproduction}
-
-Implementation: \texttt{experiments/factual\_recall/linear\_shift.py} (self-contained). Design invariants: \texttt{experiments/tests/test\_linear\_shift.py}. From \texttt{experiments/}:
-
-\begin{small}
-\begin{verbatim}
-# Table 1 / Figure: one seed per command (19, 31, 47), ~1 min each on one GPU
-uv run python -m factual_recall.linear_shift --world category --probe embedding \
-  --seeds 19 --k-values 0,128 --occurrences 1,4,16,64 --attr-repeats 128 \
-  --device cuda --output-dir factual_recall/results/final_category_seed19
-
-# Aggregation/figures: factual_recall/results/final_summary/
-uv run python -m factual_recall.linear_shift_mechanistic_analysis --device cuda
-uv run pytest tests/test_linear_shift.py -q
-\end{verbatim}
-\end{small}
-
-Raw per-run metrics (including probe $R^2$/cosine and losses) are in \texttt{factual\_recall/results/final\_category\_*/linear\_shift\_metrics.json}. The companion document \texttt{goal1\_infrequent\_relation\_linear.pdf} covers the infrequent/linear claim on the same runs.
 
 \end{document}

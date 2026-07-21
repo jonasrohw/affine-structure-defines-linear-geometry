@@ -1,5 +1,5 @@
 {
-  "analysis": "Goal 1 / Goal 2 causal forward-pass mechanisms",
+  "analysis": "Goal 1 / Goal 2 learned representations and causal algorithms",
   "model": {
     "layers": 1,
     "hidden_dim": 64,
