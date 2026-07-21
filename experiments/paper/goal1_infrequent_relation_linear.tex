@@ -124,6 +124,33 @@ At $F{=}1$ the probe is already $1.000$ for $\Rsem$ and at chance for $\Rrnd$. T
 \paragraph{Finding 3: the nonlinear$\rightarrow$linear transition is sharp and is driven by attribute knowledge.}
 Sweeping the number of occurrences $A$ of each attribute sentence at $F{=}1$ (Fig.~\ref{fig:transition}) produces a sharp transition of the $\Rsem$ probe from chance to ceiling ($0.05 \rightarrow 0.10 \rightarrow 0.34 \rightarrow 0.85 \rightarrow 1.00$ for $A = 2,4,8,16,24$). The control with \emph{zero} relation triples produces the same curve: the affine subject$\to$object map is carried by the attribute geometry built from attribute sentences, with which the once-seen $\Rsem$ triples are consistent (and which the relation visibly uses once learned, cf.\ held-out recall).
 
+\section{Mechanistic forward-pass analysis}
+
+The embedding probe above establishes that a linear format is available, but does not by itself establish that the forward pass uses it.  We therefore reconstructed the $F{=}16$ checkpoint for every seed by deterministic replay and required its final loss, probe accuracy, trained recall, and held-out recall to match the archived JSON to $<10^{-7}$.  We then intervened on the literal compute units of the one-layer model: four 16-dimensional attention heads and 256 GELU neurons.  Head and neuron rankings were obtained on the 128 trained subjects and evaluated only on the 64 subjects whose relation triples were never shown.
+
+At the final prompt position of \sep\ $\subj{i}$ $\rel{0}$, the exact computation is
+\begin{align*}
+h_h &= \sum_t \operatorname{softmax}\!\left(q_h^\top k_t/\sqrt{16}\right)_t v_{h,t},\quad h=0,\ldots,3,\\
+x_A &= x_0 + W_O[h_0;h_1;h_2;h_3],\\
+x_M &= x_A + \sum_{n=0}^{255}\operatorname{GELU}(w_n^\top\operatorname{LN}(x_A)+b_n)u_n+b,\\
+\mathrm{logits} &= U\operatorname{LN}(x_M).
+\end{align*}
+Only attention can move the subject representation at position 1 to the prediction position 2; the MLP is position-wise.
+
+\paragraph{The used circuit.}
+Attribute training puts the semantic target class directly into the subject code: a nearest-centroid classifier fitted to the trained subject embeddings identifies the target class of held-out subject embeddings with accuracy $1.000\pm.000$.  A logit lens has object accuracy $.031\pm.000$ at the bare relation-token residual, $.552\pm.064$ after attention, and $.729\pm.094$ after the MLP.  Replacing all four head outputs by their training-set means drops the final object accuracy from $.729\pm.094$ to $.031\pm.000$.  In clean/corrupt subject swaps, patching all head outputs restores $1.000\pm.000$ of the clean-target logit effect.  Patching only attention values while retaining the corrupt attention pattern restores $.987\pm.008$, whereas patching only the pattern restores $.013\pm.007$: the facts are carried almost entirely in the value vectors, under a nearly subject-invariant routing pattern.  Heads H3 and H1 have the largest stable causal effects, while H0/H2 provide smaller, seed-variable support.
+
+The MLP supplies a distributed readout and margin correction rather than a single ``fact neuron.''  Rankings learned on trained subjects transfer to held-out subjects: mean-ablating the top 32 neurons leaves $.790\pm.032$ of the subject-specific MLP margin, while retaining only those 32 variable neurons recovers $.498\pm.029$.  Replacing every GELU by a per-neuron affine surrogate fitted on trained preactivations retains held-out object accuracy $.729\pm.092$ (activation $R^2=.962\pm.001$); deleting the MLP yields $.552\pm.064$.  Thus the semantic computation is approximately affine on the task manifold even though the physical MLP contains GELUs.  When the subject is fixed and only $\rel{0}\leftrightarrow\rel{1}$ is swapped, head-output patching restores $.070\pm.007$ of the relation effect and MLP-activation patching restores $.850\pm.017$: the relation selector persists mainly in the residual stream into the MLP, while the heads transport subject content.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../factual_recall/results/final_mechanistic_analysis/goal1_goal2_forward_pass.pdf}
+\caption{Top: the literal forward pass. Middle: generic attention and MLP blocks replaced by the compute units causally used for Goal~1 and Goal~2. Bottom: exact head Shapley effects and discovery/evaluation-split neuron concentration curves. Bars and curves are means over seeds 19/31/47; error bars are across-seed standard deviations.}
+\label{fig:goal12mechanism}
+\end{figure}
+
+The convergent result is stronger than probe success: the shared $f$-organized code is present in held-out subject embeddings, is transported through the identified subject-value paths, and is converted to the correct object direction by a distributed, approximately affine MLP/readout.  This is the causal mechanism by which the infrequent semantic relation generalizes.
+
 \section{What this does and does not show}
 
 \begin{itemize}
@@ -149,6 +176,7 @@ uv run python -m factual_recall.linear_shift --world category --probe embedding 
   --device cuda --output-dir factual_recall/results/final_category_arsweep_seed19_ar8
 
 # Aggregation/figures: factual_recall/results/final_summary/
+uv run python -m factual_recall.linear_shift_mechanistic_analysis --device cuda
 uv run pytest tests/test_linear_shift.py -q
 \end{verbatim}
 \end{small}
