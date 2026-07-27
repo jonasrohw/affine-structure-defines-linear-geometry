@@ -27,8 +27,11 @@
 
 \section{Claim and result in one paragraph}
 
-A small transformer is trained for \textbf{exactly one epoch} on a synthetic corpus containing a semantically supported relation $\Rsem$ and, as a frequency-matched control, a random relation $\Rrnd$. At \emph{low} fact frequency ($F{=}16$ occurrences per triple, a single epoch), $\Rsem$ is genuinely \emph{learned} --- recall $0.672$ on trained triples and $0.635$ on held-out subjects never seen in any triple --- and what is learned is \emph{linear}: an affine map fitted by ordinary least-squares regression from subject representations to object representations identifies the correct object for held-out subjects with accuracy $0.990 \pm 0.007$ (chance $0.03$; three seeds). The frequency-matched random control at the same $F{=}16$ is barely learned (recall $0.167$) and shows no linear structure (probe at chance). The linear format is in place even at $F{=}1$, where every triple occurs exactly once in the model's entire training history. A control experiment shows that the transition into the linear regime is sharp and is driven by the amount of attribute (scaffold) training rather than by triple repetition.
-
+A small transformer is trained for \textbf{exactly one epoch} on a synthetic corpus containing a semantically supported relation $\Rsem$ and, as a frequency-matched control, a random relation $\Rrnd$. At \emph{low} fact frequency ($F{=}16$ occurrences per triple, a single epoch), $\Rsem$ is genuinely \emph{learned} --- recall $0.672$ on trained triples and $0.635$ on held-out subjects 
+\enote{hs}{but the important question is whether the object
+  of
+  a held-out triple is correctly predicted, not the subject?}
+never seen in any triple --- and what is learned is \emph{linear}: an affine map fitted by ordinary least-squares regression from subject representations to object representations identifies the correct object for held-out subjects with accuracy $0.990 \pm 0.007$ (chance $0.03$; three seeds). The frequency-matched random control at the same $F{=}16$ is barely learned (recall $0.167$) and shows no linear structure (probe at chance). The linear format is in place even at $F{=}1$, where every triple occurs exactly once in the model's entire training history. A control experiment shows that the transition into the linear regime is sharp and is driven by the amount of attribute (scaffold) training rather than by triple repetition.
 \section{Data}
 
 \paragraph{Vocabulary (265 tokens).}
@@ -77,6 +80,8 @@ Seeds & 19, 31, 47 (control data assignment, initialization, and data order)\\
 \end{center}
 
 At $F{=}1$ every relation triple occurs exactly once in the entire training history of the model.
+
+\enote{hs}{i didn't understand what steps are}
 
 \section{The metric}
 

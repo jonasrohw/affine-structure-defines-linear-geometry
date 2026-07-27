@@ -27,6 +27,17 @@
 \let\linearwriteupdate\date
 \makeatother
 
+\newcounter{notecounter}
+\newcommand{\enotesoff}{\long\gdef\enote##1##2{}}
+\newcommand{\enoteson}{\long\gdef\enote##1##2{{
+\stepcounter{notecounter}
+{\large\bf
+\hspace{0cm}\arabic{notecounter} $<<<$ ##1: ##2
+$>>>$\hspace{1cm}}}}}
+
+\enoteson
+%\enotesoff
+
 \begin{document}
 
 \title{Goal 1: An Infrequent Relation Is Learned as Linear}
