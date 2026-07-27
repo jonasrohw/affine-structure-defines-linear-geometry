@@ -30,7 +30,8 @@
 A small transformer is trained for \textbf{exactly one epoch} on a synthetic corpus containing a semantically supported relation $\Rsem$ and, as a frequency-matched control, a random relation $\Rrnd$. At \emph{low} fact frequency ($F{=}16$ occurrences per triple, a single epoch), $\Rsem$ is genuinely \emph{learned} --- recall $0.672$ on trained triples and $0.635$ on held-out subjects 
 \enote{hs}{but the important question is whether the object
   of
-  a held-out triple is correctly predicted, not the subject?}
+  a held-out triple is correctly predicted, not the subject?
+  -- now i understand. nice!}
 never seen in any triple --- and what is learned is \emph{linear}: an affine map fitted by ordinary least-squares regression from subject representations to object representations identifies the correct object for held-out subjects with accuracy $0.990 \pm 0.007$ (chance $0.03$; three seeds). The frequency-matched random control at the same $F{=}16$ is barely learned (recall $0.167$) and shows no linear structure (probe at chance). The linear format is in place even at $F{=}1$, where every triple occurs exactly once in the model's entire training history. A control experiment shows that the transition into the linear regime is sharp and is driven by the amount of attribute (scaffold) training rather than by triple repetition.
 \section{Data}
 
@@ -169,6 +170,8 @@ The final conversion is distributed rather than localized in a ``fact neuron.'' 
 
 The convergent result is stronger than probe success: the shared $f$-organized code is present in held-out subject embeddings, is transported through the identified subject-value paths, and is converted to the correct object direction by a distributed, approximately affine MLP/readout.  This is the causal mechanism by which the infrequent semantic relation generalizes.
 
+\enote{hs}{affine replacement of gelus: interesting. discuss}
+
 \section{What this does and does not show}
 
 \begin{itemize}
@@ -177,6 +180,6 @@ The convergent result is stronger than probe success: the shared $f$-organized c
   \item \textbf{Superseded:} the ``single-exposure phase shift'' in earlier drafts (probe rising $0.27 \rightarrow 0.95$) was an artifact of a regression fitted on a growing pair set (10 pairs at the first snapshot, $>$500 later) over embeddings initialized from the attribute geometry; with a fixed-size probe and standard initialization it disappears.
 \end{itemize}
 
-\enote{hs}{mechanism? causality?}
+
 
 \end{document}
