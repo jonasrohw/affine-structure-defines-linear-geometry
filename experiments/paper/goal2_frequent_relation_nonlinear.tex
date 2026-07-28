@@ -155,6 +155,10 @@ The relation token is the memory-bank selector.  With the subject fixed, replaci
 
 Most lookup is complete before the MLP: the object is already correct at $.927\pm.052$ after attention and at $1.000\pm.000$ after the MLP.  The latter is a distributed correction rather than a bank of individual fact neurons: keeping only the 32 highest-ranked variable units recovers $.478\pm.022$ of its subject-specific margin, while ablating them leaves $.826\pm.014$.  An affine surrogate for all GELUs still obtains $1.000\pm.000$ on disjoint memorized facts.  Thus ``nonlinear'' describes the storage format---there is no affine rule that transfers $\rho$ to new subjects---not a requirement for GELU curvature during each trained-subject lookup.
 
+\enote{hs}{so the ``nonlinear'' relation is both linear and
+  nonlinear? can we really argue that this is counterexample
+  to Merullo, Smith, Wiegreffe, Elazar?}
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{../factual_recall/results/final_mechanistic_analysis/goal1_goal2_mechanisms.pdf}
