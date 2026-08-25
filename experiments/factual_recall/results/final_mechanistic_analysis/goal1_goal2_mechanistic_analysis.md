@@ -14,12 +14,12 @@ answer_semantic(subject):
     payload = H3.read_value(code, r0) + H1.read_value(code, r0)
               + smaller H0/H2 contributions
     state = relation_state[r0] + project(payload)
-    state += affine_on_task_mlp(state)
+    state += distributed_class_readout(state)
     scores = dot(final_normalize(state), object_directions)
     return argmax(scores)                        # b[f(subject)]
 ```
 
-Value-only subject swaps restore 0.987 ± 0.008 of the target-logit effect, while pattern-only swaps restore 0.013 ± 0.007. All-head mean ablation reduces object accuracy from 0.729 ± 0.094 to 0.031 ± 0.000. The relation selector acts mainly in the downstream readout: relation-conditioned head patches restore 0.070 ± 0.007, versus 0.850 ± 0.017 for the MLP population. An affine surrogate for all GELUs preserves the original held-out object accuracy, so the implemented algorithm is approximately affine on this task manifold.
+Value-only subject swaps restore 0.987 ± 0.008 of the target-logit effect, while pattern-only swaps restore 0.013 ± 0.007. All-head mean ablation reduces object accuracy from 0.729 ± 0.094 to 0.031 ± 0.000. The relation selector acts mainly in the downstream readout: relation-conditioned head patches restore 0.070 ± 0.007, versus 0.850 ± 0.017 for the MLP population. An affine surrogate for all GELUs preserves the original held-out object accuracy, which establishes decision equivalence but not equality of transformations. Direct midpoint and exact-Jacobian tests of Goal 1 are reported in `results/final_linearity_goal1/goal1_linearity_analysis.md`.
 
 ## Goal 2 — subject-indexed key–value memory
 
@@ -38,7 +38,7 @@ answer_random(subject):
 
 The arbitrary target is weakly class-decodable in raw trained-subject embeddings (0.141 ± 0.058), becomes clearer in head outputs (0.766 ± 0.175), and is explicit after attention (1.000 ± 0.000). Value-only subject swaps restore 0.975 ± 0.020 of the target effect, versus 0.023 ± 0.014 for patterns. The post-attention state already answers 0.927 ± 0.052 of memorized facts, and the distributed MLP corrects the remainder to 1.000 ± 0.000.
 
-‘Nonlinear’ therefore names the storage format, not mandatory GELU curvature: there is no class-shared affine rule for unseen subjects, but an affine surrogate for the MLP still answers all disjoint memorized facts.
+The architecture-aware affine GELU surrogate still answers all disjoint memorized facts, which establishes decision equivalence but not equality of transformations. Direct midpoint and exact-Jacobian tests of attention, MLP, readout, and the full lookup are reported separately in `results/final_linearity_analysis/goal2_linearity_analysis.md`.
 
 ## Causal summary
 

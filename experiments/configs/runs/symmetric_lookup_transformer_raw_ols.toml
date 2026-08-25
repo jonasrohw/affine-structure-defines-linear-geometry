@@ -1,0 +1,44 @@
+# Stronger transformer test: OLS is evaluated on the raw entity-token rows.
+# The model architecture stays GPT-like and parameter-free auxiliary dot-product
+# supervision keeps the fully trainable embeddings aligned with the attributes.
+
+[experiment]
+n_entities = 64
+n_attributes = 10
+hidden_dim = 24
+n_layers = 6
+n_heads = 4
+tie_embeddings = true
+positive_fraction = 0.1
+positive_label_loss_weight = 9.0
+arbitrary_relation_fraction = 0.5
+batch_size = 1024
+attribute_batch_size = 640
+phase1_steps = 8000
+arbitrary_steps = 8000
+joint_steps = 8000
+joint_refinement_steps = 12000
+joint_refinement_learning_rate = 0.0003
+learning_rate = 0.001
+weight_decay = 0.0
+attribute_loss_weight = 1.0
+embedding_attribute_loss_weight = 1.0
+embedding_attribute_target_scale = 0.5
+embedding_attribute_target_mse = 0.0025
+ols_representation = "input_embedding"
+grad_clip = 1.0
+warmup_steps = 100
+eval_every = 200
+target_accuracy = 0.995
+ols_folds = 4
+graph_swaps_per_edge = 40
+output_dir = "factual_recall/results/symmetric_lookup_transformer_raw_ols"
+
+[sweep]
+seeds = [19, 31, 47]
+hidden_dims = [24]
+n_layers = [6]
+n_heads = [4]
+min_structured_ols_r2 = 0.95
+max_arbitrary_ols_r2 = 0.50
+require_all_seeds = true
