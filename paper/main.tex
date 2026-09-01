@@ -195,6 +195,18 @@ generalization and memorization \citep{cheng2026balancing}. We use probes only f
 representation claims and causal interventions for claims about the forward
 computation.
 
+\paragraph{Decodability and executed algorithms.}
+A transformer can itself implement regression-like computation:
+\citet{vonoswald2023transformers} construct a linear self-attention layer whose
+data transformation is equivalent to a gradient step on a regression loss. That
+is a claim about the algorithm executed during a forward pass, whereas our OLS
+maps are post hoc tests of a named representation. The distinction also appears
+in controlled formal-language models. \citet{sharma2026dissociating} find that
+several stack variables are linearly decodable from Dyck-language transformers,
+but interventions assign them different causal roles. We therefore pair
+decodability measurements with direct tests or interventions on the trained
+computation.
+
 \section{Controlled experimental design}
 \label{sec:design}
 
@@ -225,6 +237,14 @@ frequency effect. Direct metric values should be compared within each experiment
 not across their different target representations.}
 \label{tab:design}
 \end{table}
+
+The affine metrics differ deliberately. Experiment~1 asks whether shared geometry
+transfers to subjects absent from relation training, so held-out nearest-object
+accuracy is the relevant test. Experiment~2 uses a finite random table with no
+rule for unseen entries. Its primary test therefore asks whether one
+overdetermined affine map reconstructs all rows that the model has memorized,
+which is measured by full-data $R^2$. Numerical values should be compared within
+an experiment, not between these two targets.
 
 \subsection{Experiment 1: attribute-defined and random relations}
 
@@ -303,7 +323,11 @@ For relation $r$, the affine target is the centroid of positive object embedding
 \end{equation}
 OLS fits $c_r(s)\approx M_re(s)+b_r$ on all 64 entities. We report multivariate
 $R^2$. The same representation, target, intercept, and solver are used for all
-eleven relations.
+eleven relations. The centroid encodes the complete positive-object set as one
+vector per subject and gives the equality relations an analytic affine target. A
+linear classifier on concatenated subject and object rows would instead test an
+additive pair score, which cannot express equality without interaction terms and
+would not provide the intended structured affine control.
 
 \section{Low exposure is compatible with affine geometry}
 \label{sec:goal1-results}
@@ -501,7 +525,9 @@ and output object rows. Experiment~2 uses raw tied entity embeddings and positiv
 object centroids. The results do not rule out an affine random-relation feature at
 some hidden layer or under a different target construction. They do show that the
 proposed raw subject-to-object map cannot approximate the learned random table at
-the level achieved by the matched structured controls.
+the level achieved by the matched structured controls. We did not conduct a
+systematic affine-probe search over intermediate layers, so the claim should not
+be read as layer-independent.
 
 \paragraph{Representation and computation are distinct.}
 Experiment~1 has excellent affine transfer while direct midpoint and Jacobian tests
@@ -520,9 +546,12 @@ entities or facts.
 The inverse attribute examples in Experiment~2 deliberately organize the tied raw
 embeddings. They are standard next-token examples rather than a direct embedding
 penalty, but generic language-model pretraining need not supply an equivalent
-signal. The architecture is a compact successful configuration, not a proof of
-global minimality. Larger models, natural text, other relation arities, and hidden
-representations remain open settings.
+signal. We did not ablate these examples after selecting the final configuration;
+the near-perfect structured raw-embedding fits are therefore conditional on this
+curriculum. Whether the random relation's raw-embedding $R^2$ changes without that
+signal remains untested. The architecture is a compact successful configuration,
+not a proof of global minimality. Larger models, natural text, other relation
+arities, and hidden representations remain open settings.
 
 \paragraph{The experiments establish existence, not a frequency curve.}
 Occurrence counts are meaningful within each controlled corpus but are not directly
@@ -631,7 +660,7 @@ Full lookup & $.965\pm.010$ & $.185\pm.027$ & $.750\pm.056$ & $.352\pm.011$ & $.
 \bottomrule
 \end{tabular}
 \caption{Transformation-level tests for $\Rsem$ at $F=16$. Affine fits use four
-target-stratified folds. A genuinely affine map has zero midpoint defect and zero
+target-stratified folds. An exactly affine map has zero midpoint defect and zero
 Jacobian dispersion. The affine decision column evaluates the classifier after
 replacing a map output by its affine prediction; decision preservation does not
 establish exact affinity.}
@@ -699,6 +728,33 @@ representation-level OLS separation.
 \section{Metric details}
 \label{app:metrics}
 
+For an Experiment~1 stage map $h$, write $z_i=h(x_i)$. Midpoint defect is
+\begin{equation}
+  D_{\mathrm{mid}}=
+  \frac{\left(\sum_{(i,j)\in\mathcal P}
+  \left\|h\left(\tfrac{x_i+x_j}{2}\right)
+  -\tfrac{z_i+z_j}{2}\right\|_2^2\right)^{1/2}}
+  {\left(\sum_{(i,j)\in\mathcal P}
+  \left\|\tfrac{z_i-z_j}{2}\right\|_2^2\right)^{1/2}}.
+\end{equation}
+The diagnostic fold contains one trained subject for each of the 32 targets, and
+$\mathcal P$ contains all 496 unordered pairs with different targets. We compute
+each midpoint through the continuous residual-stream extension of the trained
+network while holding the separator and relation token fixed.
+
+Let $J_i=\partial h/\partial x\vert_{x_i}$ and
+$\bar J=32^{-1}\sum_iJ_i$. The reported Jacobian dispersion is
+\begin{equation}
+  D_J=\frac{\left(\sum_i\|J_i-\bar J\|_F^2\right)^{1/2}}
+  {\left(\sum_i\|J_i\|_F^2\right)^{1/2}}.
+\end{equation}
+Jacobians are exact automatic-differentiation Jacobians, not finite-difference
+estimates, evaluated at all 32 subjects in that fold. Tangent dispersion applies
+the same formula to $J_iQ$, where the columns of $Q$ span the empirical subject
+difference subspace retained at singular values above $10^{-6}$ of the largest.
+We use the first target-stratified fold for these diagnostics and replicate the
+calculation across the three training seeds; we did not resample diagnostic folds.
+
 For Experiment~2, OLS minimizes
 \begin{equation}
   (\widehat M_r,\widehat b_r)=\arg\min_{M,b}\sum_{s=0}^{63}
@@ -711,7 +767,12 @@ The reported coefficient of determination is
        {\sum_s\|c_r(s)-\overline c_r\|_2^2}.
 \end{equation}
 All output coordinates are pooled in the numerator and denominator. Relative
-reconstruction error is $\sqrt{1-R^2}$.
+reconstruction error is $\sqrt{1-R^2}$. Since OLS is the unconstrained minimizer
+of this full-data residual, ridge regularization or a low-rank constraint cannot
+increase the primary training-set $R^2$. They can change cross-validated behavior,
+which is not the non-affinity test used here. A bilinear head or a linear
+classifier over explicit subject-object interaction features tests a different
+representation class rather than another affine map from $e(s)$ to $c_r(s)$.
 
 For residual patching in Experiment~2, a clean prompt uses a correctly classified
 positive subject and a corrupted prompt uses a correctly classified negative
