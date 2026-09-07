@@ -1,0 +1,63 @@
+\section{Pretrained-model aggregation details}
+\label{app:lment-frequency}
+
+The source analysis uses seed 42 and an object-coverage-balanced ordering to
+choose eight LRE estimation examples per relation. These examples are excluded
+from evaluation and supply the in-context demonstrations for evaluation prompts.
+The filter retains a sample when the model's decoded top-1 token, stripped of
+whitespace and lowercased, is a nonempty prefix of the gold label. This is a
+first-token criterion and does not certify the full answer. Candidate subject
+states are residual states after blocks $\{0,3,6,9,12,15\}$, indexed from zero.
+The archived scale sweep uses $\{1,2,3,4,5,6,8,10\}$ and maximizes the macro mean
+of each relation's best-layer faithfulness. It selects $\beta=4$. Layer and scale
+selection both use the reported evaluation outcomes; the estimation split does
+not supply an independent model-selection test set.
+
+For each relation and frequency axis, let $q_{.25}$ and $q_{.75}$ be empirical
+quartiles computed by linear interpolation between adjacent sorted observations.
+The lower group contains every fact with $f\leq q_{.25}$ and the upper group every
+fact with $f\geq q_{.75}$. We require $q_{.25}<q_{.75}$ so that these groups are
+disjoint. Discrete counts can produce groups larger than one quarter of the
+relation; we retain all tied observations. The difference is
+\begin{equation}
+  \Delta_r=100\left(
+    \frac{\sum_{i:f_i\geq q_{.75}} y_i}{|\{i:f_i\geq q_{.75}\}|}
+    -\frac{\sum_{i:f_i\leq q_{.25}} y_i}{|\{i:f_i\leq q_{.25}\}|}
+  \right),
+\end{equation}
+where $y_i$ is the binary faithfulness outcome. We average $\Delta_r$ with equal
+weight per eligible relation. The pooled Spearman correlations instead give
+every evaluated fact equal weight and use average ranks for ties. No independence
+test or uncertainty estimate over model seeds is implied by these summaries.
+
+Ten relations, totaling 505 evaluated facts, have only one distinct model-predicted
+answer token. All have perfect LRE faithfulness. In particular, all 203
+person-employer answers and all 154 person-educated-at answers begin with
+\texttt{University}. A constant decoder would match the model on these sets.
+We retain them in the all-fact reproduction of the source curves, but exclude
+them from the within-relation comparison. Removing all ten leaves 4,883 facts
+across 48 relations with $46.0\%$ pooled faithfulness. The pooled rank correlations
+then become $0.073$, $0.008$, and $-0.033$ for subject, subject--object, and
+subject--relation frequency. The change in the subject--object correlation shows
+why the pooled statistic alone is insufficient. Token imbalance within the
+remaining relations can still affect the comparisons.
+
+The presence of decreases is not specific to the ten-fact tail threshold. With
+at least five facts per tail, the numbers of decreases are $15/34$, $14/33$, and
+$11/26$ eligible relations for the three axes. With at least twenty, they are
+$9/20$, $9/20$, and $7/14$. These thresholds were checked during the aggregation;
+they were not preregistered. Eligibility depends on frequency variation and sample
+size, so these proportions describe the retained relations rather than an
+estimate for all natural-language relations.
+
+The paper's \texttt{analyze\_lment\_frequency.py} script rebuilds the figures and
+tables from \texttt{data/lment\_frequency/facts.csv}. The snapshot joins predictions
+to document counts by relation, subject, and object, with a one-to-one merge and
+no missing counts. Its provenance manifest records input hashes and the original
+evaluation and counting configurations. We checked every exact-frequency count
+against all 174 raw curves in the original browser payload and verified that
+estimation facts do not overlap evaluation facts. The analysis files include
+per-bin denominators, every relation's quartile cutoffs and scores, and the tail
+size sensitivity results. No model was retrained or re-evaluated for this
+aggregation. The pretrained evidence is limited to this checkpoint; the synthetic
+interventions remain the causal tests of the frequency-only explanation.

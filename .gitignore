@@ -6,4 +6,5 @@
 *.log
 *.out
 *.pdf
+!paper/figures/lment_frequency_aggregate.pdf
 *.synctex.gz

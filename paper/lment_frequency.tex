@@ -1,0 +1,108 @@
+\section{Frequency and affine decoding in a pretrained language model}
+\label{sec:lment-frequency}
+
+In pretrained LMEnt-1B-1E, more frequent facts sometimes have lower affine-decoder
+faithfulness within the same relation. We aggregate the existing frequency
+curves at checkpoint \texttt{step109672}. LMEnt supplies a pretrained language
+model and an entity-annotated corpus that lets us connect its predictions to
+document counts \citep{gottesman2025lment}. This analysis tests whether the measured
+frequency orders decoder faithfulness in the observed data.
+
+\paragraph{Model, data, and decoder.}
+The checkpoint uses an 18-block OLMo2 architecture with residual width 2,048.
+The factual subset of our triplet dataset contains 60 relation types; 58 have
+enough accepted examples for the eight-example LRE protocol. After filtering to
+prompts where the model predicts a nonempty prefix of the gold answer, the
+evaluation contains 5,388 facts. We use the mean-Jacobian affine linear relational
+embedding (LRE) of \citet{hernandez2024linearity}, estimated from eight separate
+examples per relation. The map takes the subject's hidden state to a predicted
+output state, which the model's output head decodes. Faithfulness is exact
+agreement between the LRE's top-1 token and the full model's top-1 token. Overall
+faithfulness is $2{,}751/5{,}388=51.1\%$ when weighting facts equally and $54.4\%$
+when weighting relations equally. The archived evaluation selects a layer per
+relation and a shared scale $\beta=4$ on the reported evaluation set. Its scores
+can therefore overestimate performance on a new test set.
+
+\paragraph{Frequency measurements.}
+We retain all three axes from the original graphs. Subject frequency counts
+distinct corpus documents or chunks linked to the subject's Wikidata identifier.
+Subject--object frequency restricts this count to documents containing the gold
+object label, matched case-insensitively at word boundaries with the recorded
+country and continent demonym aliases. Subject--relation frequency instead
+requires one of the recorded lexical cues for the relation. These are corpus
+proxies: a co-occurrence need not express the fact, and a cue match need not
+connect the subject to the gold object. Zero means that the counting procedure
+found no matching document, rather than establishing zero training exposure.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{lment_frequency_aggregate.pdf}
+  \caption{Aggregation of the LMEnt frequency curves. \textbf{A:} Raw
+  fact-weighted faithfulness in five document-count bins, using all 5,388 evaluated
+  facts. Connecting lines guide the eye; these are unsmoothed bin means. Relation
+  composition changes across bins. \textbf{B:} Within each eligible relation,
+  faithfulness in the upper frequency quartile minus faithfulness in the lower
+  quartile. Ties stay together, each tail contains at least ten facts, and the
+  relation has at least two distinct predicted answer tokens. All eligible
+  relations are shown, with equal weight; diamonds show their mean differences.
+  The counts above each column give decreases, equal scores, and increases.
+  Both panels describe one selected decoder per relation at one checkpoint.}
+  \label{fig:lment-frequency}
+\end{figure}
+
+\paragraph{Aggregate results.}
+Pooled frequency has little rank association with faithfulness
+(Table~\ref{tab:lment-aggregate}). To avoid attributing changes in relation
+composition to frequency, we also compare the upper and lower frequency
+quartiles within each relation. We keep ties together and require distinct
+quartile cutoffs, at least ten facts in each tail, and at least two distinct
+model-predicted tokens across the relation. This leaves 27 relations for subject
+and subject--object frequency, and 21 for subject--relation frequency.
+For subject--object counts, 11 relations have lower faithfulness in the upper
+quartile, three have equal scores, and 13 have higher scores. The mean difference
+across relations is $-0.4$ percentage points. The corresponding means for subject
+and subject--relation counts are $+1.4$ and $-1.5$ points.
+Figure~\ref{fig:lment-frequency} shows that these small means combine differences
+in both directions.
+
+\begin{table}[t]
+  \centering
+  \small
+  \input{data/lment_frequency/aggregate_table.tex}
+  \caption{Pooled rank correlations over all 5,388 facts and counts of eligible
+  relations with lower, equal, or higher faithfulness in the upper frequency
+  quartile. These are descriptive associations, not tests of statistical
+  independence or counts of significant effects.}
+  \label{tab:lment-aggregate}
+\end{table}
+
+\paragraph{Examples with opposite frequency trends.}
+The official-language relation has $84.4\%$ faithfulness among facts with at most
+four subject--object document matches and $50.6\%$ among facts with at least 129
+matches (Table~\ref{tab:lment-examples}). Organization headquarters and landmark
+country also decline, from $33.3\%$ to $7.1\%$ and from $25.3\%$ to $8.2\%$.
+All three have negative quartile differences on the other two frequency axes as
+well. Country currency provides a positive comparison: faithfulness rises from
+$42.3\%$ to $69.0\%$ with subject--object frequency and increases on both other
+axes. We selected these examples to illustrate the different directions; the
+aggregate includes every relation meeting the stated criteria.
+
+\begin{table}[t]
+  \centering
+  \small
+  \input{data/lment_frequency/examples_table.tex}
+  \caption{Illustrative lower- and upper-quartile comparisons using
+  subject--object document counts. Fractions give faithful predictions divided by
+  evaluated facts. Each comparison uses the same relation-specific LRE for both
+  frequency groups.}
+  \label{tab:lment-examples}
+\end{table}
+
+These observations connect the controlled experiments to a pretrained model:
+the measured frequency does not consistently order affine-decoder performance.
+They do not establish that frequency has no predictive information, or that a
+low-scoring relation lacks every possible affine representation. The metric
+tests a particular mean-Jacobian decoder and only the first answer token.
+Answer-token distributions, prompt choice, and filtering can affect its score.
+Appendix~\ref{app:lment-frequency} reports the aggregation details and checks for
+constant answer tokens and small frequency groups.

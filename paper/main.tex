@@ -46,9 +46,9 @@ Random-relation accuracy is
 only 0.383 of target variance, compared with a mean per-seed minimum of 0.996 for
 the structured controls. Component interventions show that the forward computation requires
 content-dependent attention and GELU MLPs. These results give controlled
-counterexamples to a frequency-only account. Attribute structure, training
-signals, and the chosen representation determine whether learned relations admit
-affine descriptions.
+counterexamples to a frequency-only account. An aggregation of 5,388 LMEnt-1B
+predictions likewise finds mixed associations between corpus frequency and
+affine-decoder faithfulness.
 \end{abstract}
 
 \begin{figure}[h]
@@ -121,6 +121,14 @@ The experiments support three conclusions:
 The result does not dispute a correlation between corpus frequency and linear
 decodability in natural language models. It shows that frequency cannot, by
 itself, explain that correlation.
+
+We also connect these controlled settings to the frequency curves of pretrained
+LMEnt-1B (Section~\ref{sec:lment-frequency}). Across 58 factual relations, pooled
+frequency has little rank association with affine-decoder faithfulness. Comparisons
+within relations show both increases and decreases as frequency rises, including
+decreases for official language and organization headquarters. This observational
+analysis uses the same first-token decoder metric as the source curves; the
+synthetic experiments supply the controlled tests of representation geometry.
 
 \section{Three levels of relational linearity}
 \label{sec:definitions}
@@ -507,6 +515,8 @@ trained forward computation uses nonlinear components, but they do not by
 themselves distinguish how the two relation types are represented. The full-data
 raw-embedding OLS comparison supplies that relation-specific evidence.
 
+\input{lment_frequency.tex}
+
 \section{Discussion and limitations}
 
 \paragraph{Frequency is a correlate, not a complete mechanism.}
@@ -518,6 +528,10 @@ to the structured affine controls. Natural corpora can couple frequency to many
 other properties, including shared attributes, paraphrase diversity, and entity
 coverage. Any causal account of observed relational linearity must model those
 signals as well.
+The LMEnt aggregation finds the corresponding variation in natural-language
+predictions: relations with increasing and decreasing decoder faithfulness
+coexist under the same frequency measurement. Its proxy counts and selected
+decoders support an observational comparison, not a causal estimate of exposure.
 
 \paragraph{The representation must be named.}
 Our conclusions concern explicit maps. Experiment~1 uses input subject embeddings
@@ -550,10 +564,12 @@ signal. We did not ablate these examples after selecting the final configuration
 the near-perfect structured raw-embedding fits are therefore conditional on this
 curriculum. Whether the random relation's raw-embedding $R^2$ changes without that
 signal remains untested. The architecture is a compact successful configuration,
-not a proof of global minimality. Larger models, natural text, other relation
-arities, and hidden representations remain open settings.
+not a proof of global minimality. The LMEnt analysis adds natural text and hidden
+representations at one pretrained checkpoint, but does not reproduce these
+curriculum interventions. Broader model coverage, other relation arities, and
+causal tests during natural-language pretraining remain open settings.
 
-\paragraph{The experiments establish existence, not a frequency curve.}
+\paragraph{The controlled experiments establish existence, not a frequency curve.}
 Occurrence counts are meaningful within each controlled corpus but are not directly
 comparable across the two tokenizations and optimization schedules. The study shows
 that low exposure can coexist with affine geometry and that high relative exposure
@@ -568,7 +584,9 @@ how often each outcome occurs.
 Exposure frequency alone does not determine whether a transformer relation admits
 an affine representation. Shared attribute training can create affine geometry
 before a relation is recalled, while a highly sampled arbitrary relation can be
-memorized without a comparably accurate affine map in raw entity space. Careful
+memorized without a comparably accurate affine map in raw entity space. In
+pretrained LMEnt-1B, the measured corpus frequencies also fail to consistently
+order mean-Jacobian decoder faithfulness within relations. Careful
 claims about relational linearity should state the behavior being learned, the
 representations connected by the proposed map, and whether the evidence concerns a
 decoder or the executed computation.
@@ -589,6 +607,9 @@ training curricula, metrics, and interventions. The appendix gives optimization
 details, per-seed results, and the complete affine tests. The supplementary code
 contains deterministic data generators, saved configurations, result manifests,
 and figure scripts for seeds 19, 31, and 47.
+Section~\ref{sec:lment-frequency} and Appendix~\ref{app:lment-frequency} describe
+the pretrained-model aggregation, with a saved prediction/count snapshot, source
+hashes, and a script that reproduces its tables and figure.
 
 \bibliography{references}
 \bibliographystyle{iclr2027_conference}
@@ -785,5 +806,7 @@ $m=\ell_{\texttt{y}}-\ell_{\texttt{n}}$, recovery at residual boundary $k$ is
 \end{equation}
 Patching copies either the clean subject-position state or the clean
 object-position state into the corrupted run, then executes all remaining blocks.
+
+\input{lment_frequency_appendix.tex}
 
 \end{document}
