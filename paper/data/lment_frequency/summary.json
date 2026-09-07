@@ -23,6 +23,26 @@
     "subject-object": 0.008123255175337794,
     "subject-relation": -0.032849555231212
   },
+  "relation_level_correlations": {
+    "all": {
+      "n_relations": 58,
+      "pearson_log1p": -0.07526920043360502,
+      "n_positive_frequency_relations": 57,
+      "pearson_log_positive": -0.03757642080990085
+    },
+    "variable_tokens": {
+      "n_relations": 48,
+      "pearson_log1p": 0.09536224799959592,
+      "n_positive_frequency_relations": 48,
+      "pearson_log_positive": 0.09992152983079304
+    },
+    "variable_tokens_n_ge_20": {
+      "n_relations": 33,
+      "pearson_log1p": 0.2138527196424466,
+      "n_positive_frequency_relations": 33,
+      "pearson_log_positive": 0.20527914391058855
+    }
+  },
   "metrics": [
     {
       "metric": "subject",

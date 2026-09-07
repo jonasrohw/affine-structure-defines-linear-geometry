@@ -1,6 +1,6 @@
 # LMEnt frequency aggregation
 
-This directory contains the observations behind Section 8, its figure, and the
+This directory contains the observations behind the motivation section, its figure, and the
 pretrained-model appendix. The input is the existing LMEnt-1B-1E `step109672`
 analysis in `/mounts/work/jonas/triplets-dataset`, created on 2026-09-04.
 The OLMo-7B result directories in that project do not supply these frequency
@@ -28,19 +28,27 @@ and object-label aliases. Refreshing checks unique joins, complete counts, the
 evaluation totals, estimation/evaluation separation, and all 174 original curves.
 
 The script writes `summary.json`, `binned_faithfulness.csv`,
-`relation_contrasts.csv`, `tail_size_sensitivity.csv`, two LaTeX tables, and the
+`relation_contrasts.csv`, `relation_means.csv`, `tail_size_sensitivity.csv`, two LaTeX tables, and the
 PDF/PNG figure in `paper/figures`. Rebuilding from the saved snapshot requires
 neither a model nor the adjacent project.
 
-Pooled bins weight facts equally and retain all relations. Quartile comparisons
+The main figure compares mean subject–object counts and faithfulness across
+relations and shows within-relation quartile differences. The relation-level
+Pearson correlation uses log(1 + mean count), equal weight per relation, and
+excludes relations with a constant predicted answer token. The summary also
+reports all-relation and minimum-size sensitivity checks. Merullo et al.'s main
+correlation uses intervention-based causality, so this is a test of the broader
+frequency explanation, not a replication of their metric.
+
+The saved pooled bins weight facts equally and retain all relations. Quartile comparisons
 keep ties together, require distinct cutoffs and at least ten facts per tail,
 and exclude relations with a constant full-model answer token. Each eligible
 relation gets equal weight. Every relation and axis, including ineligible cases,
 is retained in `relation_contrasts.csv`; use its `eligible` column for the paper's
 comparison. Five- and twenty-fact tail thresholds are sensitivity checks.
 
-The example table deliberately illustrates three decreases and one increase.
-The aggregate figure and counts include all eligible relations. These are
+The appendix example table deliberately illustrates three decreases and one increase.
+The figure and aggregate counts include all eligible relations. These are
 descriptive results from a selected decoder at one checkpoint. They do not test
 statistical independence, prove the absence of other affine maps, or measure
 full-answer correctness. The model's layer and scale were selected using the

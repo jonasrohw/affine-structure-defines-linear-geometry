@@ -1,6 +1,20 @@
 \section{Pretrained-model aggregation details}
 \label{app:lment-frequency}
 
+The LMEnt evaluation covers 5,388 facts across 58 of the factual dataset's 60
+relation types; two lack enough accepted examples for the eight-example
+protocol. The model has 18 OLMo2 blocks and residual width 2,048. Overall
+faithfulness is $51.1\%$ with equal weight per fact and $54.4\%$ with equal weight
+per relation.
+
+Subject frequency counts distinct corpus documents or chunks linked to a
+subject's Wikidata identifier. Subject--object frequency requires the gold object
+label in the same document, matched case-insensitively at word boundaries with
+recorded country and continent demonym aliases. Subject--relation frequency
+instead requires a recorded lexical cue. These counts are proxies for factual
+exposure: co-occurrences and cues need not express the target fact, and zero
+matches do not establish zero training exposure.
+
 The source analysis uses seed 42 and an object-coverage-balanced ordering to
 choose eight LRE estimation examples per relation. These examples are excluded
 from evaluation and supply the in-context demonstrations for evaluation prompts.
@@ -12,6 +26,18 @@ The archived scale sweep uses $\{1,2,3,4,5,6,8,10\}$ and maximizes the macro mea
 of each relation's best-layer faithfulness. It selects $\beta=4$. Layer and scale
 selection both use the reported evaluation outcomes; the estimation split does
 not supply an independent model-selection test set.
+
+For the relation-level comparison, we average subject--object counts over the
+evaluated facts of each relation and correlate $\log(1+\bar f_r)$ with its
+faithfulness. Each relation gets equal weight. Pearson correlation is $-0.075$
+over all 58 relations, $0.095$ over the 48 with varying answer tokens, and $0.214$
+over the 33 that also contain at least twenty facts. Using $\log\bar f_r$ and
+excluding zero-frequency relations gives $0.100$ for the varying-token subset.
+The comparison with \citet{merullo2025frequency} concerns the scope of the
+frequency association: their main score is intervention-based causality, their
+OLMo counts use tokenized training sequences, and they select a separate scale
+per relation. Our faithfulness scores and document counts do not reproduce that
+protocol.
 
 For each relation and frequency axis, let $q_{.25}$ and $q_{.75}$ be empirical
 quartiles computed by linear interpolation between adjacent sorted observations.
@@ -49,6 +75,26 @@ $9/20$, $9/20$, and $7/14$. These thresholds were checked during the aggregation
 they were not preregistered. Eligibility depends on frequency variation and sample
 size, so these proportions describe the retained relations rather than an
 estimate for all natural-language relations.
+
+\begin{table}[t]
+  \centering
+  \small
+  \input{data/lment_frequency/aggregate_table.tex}
+  \caption{Fact-level Spearman correlations and numbers of eligible relations
+  with lower, equal, or higher upper-quartile faithfulness. Counts describe
+  observed differences, not statistically significant effects.}
+  \label{tab:lment-aggregate}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \small
+  \input{data/lment_frequency/examples_table.tex}
+  \caption{Illustrative subject--object frequency quartiles. Fractions give
+  faithful predictions divided by evaluated facts. The same relation-specific
+  decoder is used for both groups.}
+  \label{tab:lment-examples}
+\end{table}
 
 The paper's \texttt{analyze\_lment\_frequency.py} script rebuilds the figures and
 tables from \texttt{data/lment\_frequency/facts.csv}. The snapshot joins predictions

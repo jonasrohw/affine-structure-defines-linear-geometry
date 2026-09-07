@@ -183,6 +183,26 @@ def main():
     pd.DataFrame(sensitivity).to_csv(DATA / "tail_size_sensitivity.csv", index=False)
     token_counts = facts.groupby("relation").lm_prediction_token_id.nunique()
     variable = facts[~facts.relation.isin(token_counts[token_counts == 1].index)]
+    relation_means = facts.groupby("relation").agg(
+        n=("faithful", "size"), faithfulness=("faithful", "mean"),
+        mean_frequency=("subject_object_document_count", "mean"),
+        n_tokens=("lm_prediction_token_id", "nunique"),
+    )
+    relation_means.to_csv(DATA / "relation_means.csv")
+    relation_correlations = {}
+    for name, group in {
+        "all": relation_means,
+        "variable_tokens": relation_means[relation_means.n_tokens >= 2],
+        "variable_tokens_n_ge_20": relation_means[
+            (relation_means.n_tokens >= 2) & (relation_means.n >= 20)],
+    }.items():
+        positive = group[group.mean_frequency > 0]
+        relation_correlations[name] = {
+            "n_relations": len(group),
+            "pearson_log1p": np.log1p(group.mean_frequency).corr(group.faithfulness),
+            "n_positive_frequency_relations": len(positive),
+            "pearson_log_positive": np.log(positive.mean_frequency).corr(positive.faithfulness),
+        }
     summary = dict(n_facts=len(facts), n_faithful=int(facts.faithful.sum()),
                    relations=facts.relation.nunique(),
                    micro_faithfulness=facts.faithful.mean(),
@@ -192,6 +212,7 @@ def main():
                    variable_token_faithfulness=variable.faithful.mean(),
                    variable_token_rho={metric: variable[column].rank().corr(variable.faithful.rank())
                                        for metric, (column, _) in AXES.items()},
+                   relation_level_correlations=relation_correlations,
                    metrics=stats)
     (DATA / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
 
@@ -218,15 +239,22 @@ def main():
                          "pdf.fonttype": 42, "ps.fonttype": 42})
     fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.85), layout="constrained")
     colors = ["#176B8A", "#B84A3A", "#807143"]
-    for (metric, (_, label)), color, marker in zip(AXES.items(), colors, ["o", "s", "^"]):
-        group = binned[binned.metric == metric]
-        axes[0].plot(range(5), 100 * group.faithfulness, color=color,
-                     marker=marker, ms=4, lw=1.2, label=label)
-    axes[0].set(xticks=range(5), xticklabels=[b[2] for b in bins], ylim=(0, 100),
-                ylabel="LRE faithfulness (%)", xlabel="Document count (pooled facts)")
+    group = relation_means[relation_means.n_tokens >= 2]
+    axes[0].scatter(1 + group.mean_frequency, 100 * group.faithfulness,
+                    color=colors[0], s=20, alpha=.8, edgecolors="white", linewidths=.3)
+    axes[0].set(xscale="log", ylim=(-3, 105),
+                ylabel="LRE faithfulness (%)",
+                xlabel="1 + mean subject–object document count")
+    axes[0].text(.97, .95, f"48 relations; Pearson r = {relation_correlations['variable_tokens']['pearson_log1p']:.3f}",
+                 transform=axes[0].transAxes, fontsize=7, ha="right", va="top")
+    for relation, offset in [("country continent", (-7, -16)),
+                             ("country official language", (-6, 10))]:
+        row = group.loc[relation]
+        axes[0].annotate(relation, (1 + row.mean_frequency, 100 * row.faithfulness),
+                         xytext=offset, textcoords="offset points", fontsize=6.3,
+                         ha="right", arrowprops={"arrowstyle": "-", "color": "#777777", "lw": .5})
     axes[0].tick_params(axis="x", labelsize=7)
-    axes[0].set_title("A  Pooled frequency curves", loc="left", fontsize=9)
-    axes[0].legend(frameon=False, fontsize=7, loc="lower left")
+    axes[0].set_title("A  Frequency and faithfulness across relations", loc="left", fontsize=9)
     axes[0].grid(axis="y", alpha=0.2)
     rng = np.random.default_rng(42)
     for x, (metric, (_, label)) in enumerate(AXES.items()):

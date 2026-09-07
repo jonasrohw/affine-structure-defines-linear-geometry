@@ -81,7 +81,10 @@ therefore be a causal driver of relational geometry. It could also be a proxy fo
 structure in the facts, shared attributes, or the supervision induced by the rest
 of the corpus.
 
-We test the frequency-only explanation in a setting where these factors can be
+Our observations in LMEnt-1B motivate testing the scope of this explanation:
+higher corpus frequency does not consistently predict higher affine-decoder
+faithfulness (Section~\ref{sec:lment-frequency}). We therefore test the
+frequency-only explanation in settings where exposure and structure can be
 controlled. The key difficulty is definitional. A model can answer a relation
 correctly without storing it in an affine map. Conversely, an affine map can decode
 entity embeddings even when the trained forward pass is nonlinear. We therefore
@@ -121,14 +124,6 @@ The experiments support three conclusions:
 The result does not dispute a correlation between corpus frequency and linear
 decodability in natural language models. It shows that frequency cannot, by
 itself, explain that correlation.
-
-We also connect these controlled settings to the frequency curves of pretrained
-LMEnt-1B (Section~\ref{sec:lment-frequency}). Across 58 factual relations, pooled
-frequency has little rank association with affine-decoder faithfulness. Comparisons
-within relations show both increases and decreases as frequency rises, including
-decreases for official language and organization headquarters. This observational
-analysis uses the same first-token decoder metric as the source curves; the
-synthetic experiments supply the controlled tests of representation geometry.
 
 \section{Three levels of relational linearity}
 \label{sec:definitions}
@@ -214,6 +209,8 @@ several stack variables are linearly decodable from Dyck-language transformers,
 but interventions assign them different causal roles. We therefore pair
 decodability measurements with direct tests or interventions on the trained
 computation.
+
+\input{lment_frequency.tex}
 
 \section{Controlled experimental design}
 \label{sec:design}
@@ -514,8 +511,6 @@ The interventions also damage the structured relations. They establish that the
 trained forward computation uses nonlinear components, but they do not by
 themselves distinguish how the two relation types are represented. The full-data
 raw-embedding OLS comparison supplies that relation-specific evidence.
-
-\input{lment_frequency.tex}
 
 \section{Discussion and limitations}
 
