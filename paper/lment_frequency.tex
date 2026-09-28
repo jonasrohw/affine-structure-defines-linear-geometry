@@ -22,9 +22,16 @@ decodes the top-1 token. Our score is first-token faithfulness,
 $\phi_r=\Pr[\hat o_r(s)=o_{\mathrm{LM}}(s,r)]$; frequency counts subject-linked
 corpus documents containing the gold object label.
 
-Here the relation-level association is weak:
-$\operatorname{corr}_r(\log(1+\bar f_r),\phi_r)=0.095$ across the 48 relations
-with at least two distinct predicted answer tokens (Figure~\ref{fig:lment-frequency}A).
+For a separate held-out intervention evaluation of the custom dataset,
+Figure~\ref{fig:lment-frequency}A reports a causal success rate on $[0,1]$:
+the fraction of LRE edits for which the target object's first-token probability
+exceeds that of the original object. Across 56 eligible relations and 15,874 test
+trials over three split seeds, its correlation with $\log(1+\bar f_r)$
+is $0.393$. Operators are selected on validation data; counts
+measure literal subject--object co-occurrence in corpus documents.
+The historical faithfulness evaluation above instead gives
+$\operatorname{corr}_r(\log(1+\bar f_r),\phi_r)=0.095$ across 48 relations
+with at least two distinct predicted answer tokens.
 Within relations, higher frequency can also accompany lower faithfulness.
 Comparing upper and lower subject--object frequency quartiles, 11 of 27 eligible
 relations decrease, three are unchanged, and 13 increase. Official-language
@@ -32,7 +39,7 @@ faithfulness falls from $84.4\%$ to $50.6\%$, whereas country currency rises fro
 $42.3\%$ to $69.0\%$ (Figure~\ref{fig:lment-frequency}B).
 
 Thus, frequency does not consistently predict affine-decoder faithfulness in
-this model. Our metric and corpus counts differ from those underlying
+this model. The historical faithfulness metric and corpus counts differ from those underlying
 Equation~\ref{eq:merullo-frequency}, so this is evidence against a universal
 frequency-only explanation, rather than a refutation of their measured
 correlation. This motivates our controlled experiments: can low exposure support
@@ -42,11 +49,13 @@ Appendix~\ref{app:lment-frequency} gives the evaluation and aggregation details.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{lment_frequency_aggregate.pdf}
-  \caption{Frequency and LRE faithfulness in LMEnt-1B.
-  \textbf{A:} Mean subject--object count versus faithfulness for 48 relations with
-  varying answer tokens; each relation has equal weight in the correlation.
+  \caption{Frequency, LRE causality, and faithfulness in LMEnt-1B.
+  \textbf{A:} Mean subject--object document count versus pairwise intervention
+  success for 56 relations in the held-out causal evaluation; each relation has
+  equal weight in the correlation. The score is on $[0,1]$ and does not measure
+  exact full-object generation.
   \textbf{B:} Upper-minus-lower-quartile faithfulness for every eligible relation
-  on three frequency axes. Each tail has at least ten facts. Diamonds show means;
+  in the historical evaluation on three frequency axes. Each tail has at least ten facts. Diamonds show means;
   counts above columns give decreases, ties, and increases.}
   \label{fig:lment-frequency}
 \end{figure}

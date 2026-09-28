@@ -239,22 +239,25 @@ def main():
                          "pdf.fonttype": 42, "ps.fonttype": 42})
     fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.85), layout="constrained")
     colors = ["#176B8A", "#B84A3A", "#807143"]
-    group = relation_means[relation_means.n_tokens >= 2]
-    axes[0].scatter(1 + group.mean_frequency, 100 * group.faithfulness,
+    # Panel A uses actual held-out interventions; panel B retains the historical
+    # faithfulness analysis. The two cohorts must not be treated as identical.
+    causal_data = ROOT / "data/lment_causality"
+    causal_provenance = json.loads((causal_data / "provenance.json").read_text())
+    assert sha256(causal_data / "relation_means.csv") == causal_provenance["snapshot_sha256"]
+    group = pd.read_csv(causal_data / "relation_means.csv")
+    assert len(group) == group.relation_id.nunique() == 56
+    assert group.value.between(0, 1).all() and group.mean_count.ge(0).all()
+    assert (group.metric == "causal_pairwise_success").all()
+    correlation = np.log1p(group.mean_count).corr(group.value)
+    axes[0].scatter(1 + group.mean_count, group.value,
                     color=colors[0], s=20, alpha=.8, edgecolors="white", linewidths=.3)
-    axes[0].set(xscale="log", ylim=(-3, 105),
-                ylabel="LRE faithfulness (%)",
+    axes[0].set(xscale="log", ylim=(0, 1), yticks=np.linspace(0, 1, 6),
+                ylabel="Causality (pairwise intervention success)",
                 xlabel="1 + mean subject–object document count")
-    axes[0].text(.97, .95, f"48 relations; Pearson r = {relation_correlations['variable_tokens']['pearson_log1p']:.3f}",
+    axes[0].text(.97, .95, f"{len(group)} relations; Pearson r = {correlation:.3f}",
                  transform=axes[0].transAxes, fontsize=7, ha="right", va="top")
-    for relation, offset in [("country continent", (-7, -16)),
-                             ("country official language", (-6, 10))]:
-        row = group.loc[relation]
-        axes[0].annotate(relation, (1 + row.mean_frequency, 100 * row.faithfulness),
-                         xytext=offset, textcoords="offset points", fontsize=6.3,
-                         ha="right", arrowprops={"arrowstyle": "-", "color": "#777777", "lw": .5})
     axes[0].tick_params(axis="x", labelsize=7)
-    axes[0].set_title("A  Frequency and faithfulness across relations", loc="left", fontsize=9)
+    axes[0].set_title("A  Frequency and causality across relations", loc="left", fontsize=9)
     axes[0].grid(axis="y", alpha=0.2)
     rng = np.random.default_rng(42)
     for x, (metric, (_, label)) in enumerate(AXES.items()):
