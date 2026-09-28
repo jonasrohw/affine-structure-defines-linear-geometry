@@ -1,7 +1,13 @@
-\documentclass{article}
+\documentclass[11pt]{article}
 
-\usepackage{iclr2027_conference,times}
-\input{math_commands.tex}
+% NAACL 2027 submissions use the official ACL/ARR review format.
+% Change review to final only for the camera-ready version.
+\usepackage[review]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{inconsolata}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -18,11 +24,8 @@
 
 \title{Frequency Alone Does Not Determine Affine Relation Geometry in Transformers}
 
-% Author identities remain hidden while \iclrfinalcopy is commented out.
+% The ACL review option anonymizes the author block.
 \author{Anonymous authors}
-
-% Uncomment only for a camera-ready version.
-% \iclrfinalcopy
 
 \begin{document}
 
@@ -51,9 +54,9 @@ predictions likewise finds mixed associations between corpus frequency and
 affine-decoder faithfulness.
 \end{abstract}
 
-\begin{figure}[h]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{frequency_not_enough.pdf}
+  \includegraphics[width=.9\textwidth]{frequency_not_enough.pdf}
   \caption{Frequency does not determine affine relation geometry in the two
   controlled settings. \textbf{A:} At 16 occurrences per trained triple, the
   attribute-defined relation generalizes and an OLS map transfers to subjects
@@ -67,7 +70,7 @@ affine-decoder faithfulness.
   nearest-object accuracy in A and overdetermined full-data $R^2$ in B. Neither
   metric asserts that the transformer's forward computation is affine.}
   \label{fig:summary}
-\end{figure}
+\end{figure*}
 
 \section{Introduction}
 
@@ -220,7 +223,7 @@ ordinary next-token cross-entropy. All parameters, including token embeddings,
 remain trainable. We report means and sample standard deviations across seeds 19,
 31, and 47.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \small
 \begin{tabular}{lll}
@@ -241,7 +244,7 @@ Primary affine test & held-out OLS accuracy & full-data OLS $R^2$ \\
 frequency effect. Direct metric values should be compared within each experiment,
 not across their different target representations.}
 \label{tab:design}
-\end{table}
+\end{table*}
 
 The affine metrics differ deliberately. Experiment~1 asks whether shared geometry
 transfers to subjects absent from relation training, so held-out nearest-object
@@ -344,7 +347,7 @@ with $0.990\pm0.007$ accuracy. The frequency-matched random relation reaches onl
 relation has structure that both the model and the affine map can reuse; frequency
 matching alone does not provide it.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \small
 \begin{tabular}{rcccccc}
@@ -364,7 +367,7 @@ $F$ is the number of occurrences of each trained relation triple. OLS is fitted 
 the 128 trained subjects and evaluated on the 64 subjects excluded from all
 relation triples.}
 \label{tab:goal1}
-\end{table}
+\end{table*}
 
 The affine geometry appears before reliable relation behavior. At $F=1$, OLS
 transfer is perfect even though semantic recall is near chance. Varying the
@@ -375,7 +378,7 @@ the single relation exposure, therefore create the affine-decodable geometry.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=.72\textwidth]{linear_shift_transition.pdf}
+  \includegraphics[width=\linewidth]{linear_shift_transition.pdf}
   \caption{Attribute training creates the affine-decodability transition in
   Experiment 1. Each semantic triple occurs once in the solid curve; the dashed
   curve contains no relation triples. Both use a fixed 128-pair OLS fit and 64
@@ -418,9 +421,11 @@ trade random-table memorization for loss of the structured facts.
 \begin{table}[t]
 \centering
 \small
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{lrrrr}
 \toprule
-Seed & Min. structured acc. & Random acc. & Min. structured $R^2$ & Random $R^2$ \\
+ & \multicolumn{2}{c}{Accuracy} & \multicolumn{2}{c}{Affine $R^2$} \\
+Seed & Min. struct. & Random & Min. struct. & Random \\
 \midrule
 19 & .99951 & .99780 & .99595 & .33058 \\
 31 & .99927 & .99805 & .99642 & .40353 \\
@@ -479,9 +484,9 @@ learned affine weights and residual additions remain unchanged in the GELU
 intervention, so nonlinear activation is causally necessary for the trained
 computation.
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{goal2_raw_transformer_mechanism.pdf}
+  \includegraphics[width=.85\textwidth]{goal2_raw_transformer_mechanism.pdf}
   \caption{The frequent random relation is implemented by distributed transformer
   computation. \textbf{A:} A logit lens reads the random answer mainly in the last
   two blocks. \textbf{B:} Global interventions on GELU, attention routing, MLP
@@ -491,7 +496,7 @@ computation.
   recall, but no single layer contains the entire lookup. Lines and bars show means
   over three seeds; bands and error bars show one sample standard deviation.}
   \label{fig:goal2-mechanism}
-\end{figure}
+\end{figure*}
 
 Layerwise diagnostics locate the computation (Figure~\ref{fig:goal2-mechanism}). A
 logit lens remains near chance through block 2, reaches .560 after block 3, .702
@@ -512,7 +517,7 @@ trained forward computation uses nonlinear components, but they do not by
 themselves distinguish how the two relation types are represented. The full-data
 raw-embedding OLS comparison supplies that relation-specific evidence.
 
-\section{Discussion and limitations}
+\section{Discussion}
 
 \paragraph{Frequency is a correlate, not a complete mechanism.}
 The two experiments reverse the expected association in controlled settings. In
@@ -545,6 +550,20 @@ affine fit with causal dependence on GELU and content-dependent attention. These
 measurements answer different questions. Probe performance alone should not be
 used to label an entire circuit linear or nonlinear.
 
+\section{Conclusion}
+
+Exposure frequency alone does not determine whether a transformer relation admits
+an affine representation. Shared attribute training can create affine geometry
+before a relation is recalled, while a highly sampled arbitrary relation can be
+memorized without a comparably accurate affine map in raw entity space. In
+pretrained LMEnt-1B, the measured corpus frequencies also fail to consistently
+order mean-Jacobian decoder faithfulness within relations. Careful
+claims about relational linearity should state the behavior being learned, the
+representations connected by the proposed map, and whether the evidence concerns a
+decoder or the executed computation.
+
+\section*{Limitations}
+
 \paragraph{The random relation tests memory, not generalization.}
 The model repeatedly samples a finite random graph and evaluation enumerates that
 graph. There is no latent rule for unseen random edges. This setting isolates how a
@@ -574,18 +593,6 @@ evaluated over three seeds. The large within-setting separations are stable acro
 those seeds, but broader architecture and seed sweeps would be needed to estimate
 how often each outcome occurs.
 
-\section{Conclusion}
-
-Exposure frequency alone does not determine whether a transformer relation admits
-an affine representation. Shared attribute training can create affine geometry
-before a relation is recalled, while a highly sampled arbitrary relation can be
-memorized without a comparably accurate affine map in raw entity space. In
-pretrained LMEnt-1B, the measured corpus frequencies also fail to consistently
-order mean-Jacobian decoder faithfulness within relations. Careful
-claims about relational linearity should state the behavior being learned, the
-representations connected by the proposed map, and whether the evidence concerns a
-decoder or the executed computation.
-
 \subsubsection*{AI use statement}
 Generative AI tools were used to help design and critique the synthetic
 experiments, implement and edit software, generate synthetic data and plots,
@@ -596,7 +603,12 @@ archived result files, reviewed the cited primary sources, and revised the
 resulting text. The authors take responsibility for the paper's claims and
 contents.
 
-\subsubsection*{Reproducibility statement}
+\bibliography{references}
+
+\clearpage
+\appendix
+
+\section{Reproducibility statement}
 Sections~\ref{sec:design}--\ref{sec:mechanism} define the datasets, architectures,
 training curricula, metrics, and interventions. The appendix gives optimization
 details, per-seed results, and the complete affine tests. The supplementary code
@@ -606,10 +618,6 @@ Section~\ref{sec:lment-frequency} and Appendix~\ref{app:lment-frequency} describ
 the pretrained-model aggregation, with a saved prediction/count snapshot, source
 hashes, and a script that reproduces its tables and figure.
 
-\bibliography{references}
-\bibliographystyle{iclr2027_conference}
-
-\appendix
 
 \section{Complete training protocols}
 \label{app:training}
@@ -659,7 +667,7 @@ symmetry, and structured-geometry gates.
 \section{Additional Experiment 1 results}
 \label{app:goal1-extra}
 
-\begin{table}[h]
+\begin{table*}[t]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3.6pt}
@@ -681,7 +689,7 @@ Jacobian dispersion. The affine decision column evaluates the classifier after
 replacing a map output by its affine prediction; decision preservation does not
 establish exact affinity.}
 \label{tab:goal1-transformations}
-\end{table}
+\end{table*}
 
 At $F=64$, the random relation reaches perfect trained-subject recall but remains
 at chance on held-out random targets and under the held-out affine probe. This
@@ -700,7 +708,7 @@ ablating them still leaves $.790\pm.032$ of the effect. The readout is distribut
 \section{Additional Experiment 2 results}
 \label{app:goal2-extra}
 
-\begin{table}[h]
+\begin{table*}[t]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{2.8pt}
@@ -719,9 +727,9 @@ Mean & 1.00000 & .99951 & .99845 & .99691 & .99568 & .38291 & $-.68240$ \\
 column is a secondary fit-stability diagnostic, not evidence that a random lookup
 is non-affine.}
 \label{tab:goal2-complete}
-\end{table}
+\end{table*}
 
-\begin{figure}[h]
+\begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{goal2_raw_transformer_results.pdf}
   \caption{Training and affine-fit diagnostics for Experiment 2. Filled OLS points
@@ -729,7 +737,7 @@ is non-affine.}
   included only to diagnose fit stability. Dashed lines mark the prespecified
   behavioral and structured-geometry gates.}
   \label{fig:goal2-complete}
-\end{figure}
+\end{figure*}
 
 For the component interventions, structured-relation mean accuracy is
 $0.99993\pm0.00005$ in the trained model, $0.57194\pm0.06142$ after replacing GELU

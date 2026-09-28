@@ -27,7 +27,7 @@ writing resources:
   of vague qualifiers.
 
 Advice about citation mechanics was not applied when it differed from the
-conference rules. Citations and references follow the ICLR 2027 author kit.
+conference rules. Citations and references follow the ACL author kit used for NAACL 2027.
 
 The revision incorporated the review's requests that could be answered from the
 existing evidence:
@@ -51,4 +51,4 @@ existing evidence:
 Suggestions that require new experiments, including a full inverse-supervision
 ablation, architecture sweep, and layer-wise probe sweep, were not converted into
 claims without evidence. They are recorded as limitations or open tests in the
-manuscript. Citation formatting continues to follow the ICLR 2027 author kit.
+manuscript. Citation formatting continues to follow the ACL author kit used for NAACL 2027.

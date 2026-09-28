@@ -5,8 +5,10 @@
 subject--object co-occurrences have better linear relational embeddings (LREs).
 Writing their OLMo-7B relation-level comparison as
 \begin{equation}
-  \bar f_r=\frac{1}{|\mathcal D_r|}\sum_{(s,o)\in\mathcal D_r}n(s,o),
-  \qquad \operatorname{corr}_r(\log\bar f_r,C_r)\approx0.82,
+  \begin{gathered}
+    \bar f_r=\frac{1}{|\mathcal D_r|}\sum_{(s,o)\in\mathcal D_r}n(s,o), \\
+    \operatorname{corr}_r(\log\bar f_r,C_r)\approx0.82,
+  \end{gathered}
   \label{eq:merullo-frequency}
 \end{equation}
 $n(s,o)$ counts co-occurrences and $C_r$ measures how successfully LRE-based
@@ -46,7 +48,7 @@ correlation. This motivates our controlled experiments: can low exposure support
 affine geometry, and can high exposure fail to produce it?
 Appendix~\ref{app:lment-frequency} gives the evaluation and aggregation details.
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{lment_frequency_aggregate.pdf}
   \caption{Frequency, LRE causality, and faithfulness in LMEnt-1B.
@@ -58,4 +60,4 @@ Appendix~\ref{app:lment-frequency} gives the evaluation and aggregation details.
   in the historical evaluation on three frequency axes. Each tail has at least ten facts. Diamonds show means;
   counts above columns give decreases, ties, and increases.}
   \label{fig:lment-frequency}
-\end{figure}
+\end{figure*}

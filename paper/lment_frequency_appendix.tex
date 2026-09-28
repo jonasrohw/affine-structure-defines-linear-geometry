@@ -46,10 +46,10 @@ fact with $f\geq q_{.75}$. We require $q_{.25}<q_{.75}$ so that these groups are
 disjoint. Discrete counts can produce groups larger than one quarter of the
 relation; we retain all tied observations. The difference is
 \begin{equation}
-  \Delta_r=100\left(
+  \Delta_r=100\Bigl(
     \frac{\sum_{i:f_i\geq q_{.75}} y_i}{|\{i:f_i\geq q_{.75}\}|}
     -\frac{\sum_{i:f_i\leq q_{.25}} y_i}{|\{i:f_i\leq q_{.25}\}|}
-  \right),
+  \Bigr),
 \end{equation}
 where $y_i$ is the binary faithfulness outcome. We average $\Delta_r$ with equal
 weight per eligible relation. The pooled Spearman correlations instead give
@@ -76,7 +76,7 @@ they were not preregistered. Eligibility depends on frequency variation and samp
 size, so these proportions describe the retained relations rather than an
 estimate for all natural-language relations.
 
-\begin{table}[t]
+\begin{table*}[t]
   \centering
   \small
   \input{data/lment_frequency/aggregate_table.tex}
@@ -84,9 +84,9 @@ estimate for all natural-language relations.
   with lower, equal, or higher upper-quartile faithfulness. Counts describe
   observed differences, not statistically significant effects.}
   \label{tab:lment-aggregate}
-\end{table}
+\end{table*}
 
-\begin{table}[t]
+\begin{table*}[t]
   \centering
   \small
   \input{data/lment_frequency/examples_table.tex}
@@ -94,7 +94,7 @@ estimate for all natural-language relations.
   faithful predictions divided by evaluated facts. The same relation-specific
   decoder is used for both groups.}
   \label{tab:lment-examples}
-\end{table}
+\end{table*}
 
 The paper's \texttt{analyze\_lment\_frequency.py} script rebuilds the figures and
 tables from \texttt{data/lment\_frequency/facts.csv}. The snapshot joins predictions
