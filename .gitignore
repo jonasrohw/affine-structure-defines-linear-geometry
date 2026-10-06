@@ -7,4 +7,5 @@
 *.out
 *.pdf
 !paper/figures/lment_frequency_aggregate.pdf
+!figure-drafts/synthetic_dataset_generation.pdf
 *.synctex.gz

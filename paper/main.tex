@@ -218,33 +218,27 @@ computation.
 \section{Controlled experimental design}
 \label{sec:design}
 
-Table~\ref{tab:design} summarizes the two settings. Both use synthetic tokens and
-ordinary next-token cross-entropy. All parameters, including token embeddings,
-remain trainable. We report means and sample standard deviations across seeds 19,
+Figure~\ref{fig:dataset-generation} illustrates the two dataset constructions;
+Table~\ref{tab:design} in Appendix~\ref{app:training} summarizes the experiment
+configurations. Both use synthetic tokens and ordinary next-token cross-entropy.
+All parameters, including token embeddings, remain trainable. We report means and sample standard deviations across seeds 19,
 31, and 47.
 
-\begin{table*}[t]
+\begin{figure*}[t]
 \centering
-\small
-\begin{tabular}{lll}
-\toprule
- & Experiment 1 & Experiment 2 \\
-\midrule
-Question & low-exposure affine geometry & frequent non-affine relation \\
-Entities & 192 subjects, 32 objects & 64 entities \\
-Structure & 2 categorical attributes & 10 balanced binary attributes \\
-Relations & semantic + matched random & 10 equality + symmetric random \\
-Model & 1 block, width 64 & 8 blocks, width 20 \\
-Parameters & 84,288 & 41,760 \\
-Embedding setup & untied, trainable & tied, trainable \\
-Primary affine test & held-out OLS accuracy & full-data OLS $R^2$ \\
-\bottomrule
-\end{tabular}
-\caption{The two experiments target different directions of the proposed
-frequency effect. Direct metric values should be compared within each experiment,
-not across their different target representations.}
-\label{tab:design}
-\end{table*}
+\includegraphics[width=\textwidth]{../figure-drafts/synthetic_dataset_generation.pdf}
+\caption{Generating the two controlled synthetic datasets (seed 19).
+\textbf{A:} Categorical attributes define a fixed-shift object relation, paired
+with a balanced random assignment. Filled and hollow circles mark relation-trained
+and held-out subjects; both retain attribute supervision. The corpus shown uses
+$F=16$. \textbf{B:} Balanced binary attributes define ten equality relations;
+degree-preserving graph randomization supplies a symmetric random control.
+The tables show the same six-entity excerpt from the full 64-entity dataset.
+During joint training, the random relation receives ten times the sampling mass
+of each equality relation. Table~\ref{tab:design} in
+Appendix~\ref{app:training} gives the experiment configurations.}
+\label{fig:dataset-generation}
+\end{figure*}
 
 The affine metrics differ deliberately. Experiment~1 asks whether shared geometry
 transfers to subjects absent from relation training, so held-out nearest-object
@@ -621,6 +615,29 @@ hashes, and a script that reproduces its tables and figure.
 
 \section{Complete training protocols}
 \label{app:training}
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+ & Experiment 1 & Experiment 2 \\
+\midrule
+Question & low-exposure affine geometry & frequent non-affine relation \\
+Entities & 192 subjects, 32 objects & 64 entities \\
+Structure & 2 categorical attributes & 10 balanced binary attributes \\
+Relations & semantic + matched random & 10 equality + symmetric random \\
+Model & 1 block, width 64 & 8 blocks, width 20 \\
+Parameters & 84,288 & 41,760 \\
+Embedding setup & untied, trainable & tied, trainable \\
+Primary affine test & held-out OLS accuracy & full-data OLS $R^2$ \\
+\bottomrule
+\end{tabular}
+\caption{The two experiments target different directions of the proposed
+frequency effect. Direct metric values should be compared within each experiment,
+not across their different target representations.}
+\label{tab:design}
+\end{table*}
 
 \subsection{Experiment 1}
 
