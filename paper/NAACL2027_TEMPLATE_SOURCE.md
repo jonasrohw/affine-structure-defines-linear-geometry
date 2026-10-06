@@ -24,6 +24,17 @@ for anonymous, two-column review with line numbers. Bibliographies use
 `natbib`. Wide figures and tables span both columns; appendix text remains in
 two columns. The existing limitations have their own section after the conclusion.
 
+The paper also vendors unmodified `lineno.sty` v5.9 from
+[upstream commit `77c180f128728e2a897970598a0571e6e6bc6401`](https://github.com/latex-lineno/lineno/blob/77c180f128728e2a897970598a0571e6e6bc6401/lineno.sty).
+This fixes the [v5.7 two-column regression](https://github.com/latex-lineno/lineno/issues/26)
+that placed review line numbers inside the text on the local TeX installation.
+Loading the corrected dependency locally preserves the official ACL style,
+including its margins, line-number spacing, and font. Its SHA-256 digest is:
+
+```text
+e12f4151f6e86448168fad536850c641c789e8a11babd9d7e8dbe36a38965f37  lineno.sty
+```
+
 Long-paper submissions allow eight pages of main content, plus limitations,
 references, and appendices under the ARR rules. Accepted long papers receive one
 additional content page. The review setting should change to `final` only when
@@ -37,6 +48,10 @@ From the repository root:
 cd paper
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 ```
+
+After changing the line-number package, run the same command with `-gg` once to
+clear old auxiliary column records and force a complete rebuild. Let `latexmk`
+finish all passes so the column-side references converge.
 
 The manuscript source is `main.tex`, and the compiled manuscript is `main.pdf`.
 The migrated PDF has eight pages of main content through the conclusion;
