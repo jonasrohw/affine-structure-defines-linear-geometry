@@ -1,13 +1,13 @@
 """Generate paper-specific summary figures from archived aggregate results."""
 
 from pathlib import Path
+import argparse
+import json
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-OUT = Path(__file__).resolve().parent / "figures"
-OUT.mkdir(exist_ok=True)
 
 BLUE = "#176B8A"
 RED = "#B84A3A"
@@ -30,6 +30,19 @@ def add_labels(ax, bars, digits=3):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--results", type=Path, required=True)
+    args = parser.parse_args()
+    output = args.results / "paper/figures"
+    output.mkdir(parents=True, exist_ok=True)
+    sweep = json.loads((args.results / "experiment1/sweep.json").read_text())
+    selected = [r for r in sweep if r["config"]["occurrences"] == 16 and r["config"]["attr_repeats"] == 128]
+    lookup = json.loads((args.results / "experiment2/analysis.json").read_text())
+    def scores(relation):
+        return np.mean([[r["relations"][relation]["trained_check"]["recall"],
+                         r["relations"][relation]["heldout_check"]["recall"],
+                         r["relations"][relation]["probe_accuracy"]] for r in selected], axis=0)
+
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
@@ -50,8 +63,8 @@ def main():
 
     ax = axes[0]
     metrics = ["trained\nrecall", "held-out\nrecall", "held-out\nOLS accuracy"]
-    structured = np.array([0.672, 0.635, 0.990])
-    random = np.array([0.167, 0.031, 0.036])
+    structured = scores("semantic")
+    random = scores("random")
     x = np.arange(len(metrics))
     width = 0.34
     b1 = ax.bar(
@@ -83,8 +96,8 @@ def main():
 
     ax = axes[1]
     metrics = ["complete-table\naccuracy", "full-data\nOLS $R^2$"]
-    structured = np.array([0.99951, 0.99568])
-    random = np.array([0.99845, 0.38291])
+    structured = np.array([lookup["summary"][k]["mean"] for k in ("min_structured_accuracy", "min_structured_full_r2")])
+    random = np.array([lookup["summary"][k]["mean"] for k in ("arbitrary_accuracy", "arbitrary_full_r2")])
     x = np.arange(len(metrics))
     b1 = ax.bar(
         x - width / 2,
@@ -110,9 +123,33 @@ def main():
     ax.set_title("B  Random relation, 10$\\times$/control (joint)", loc="left", fontweight="bold")
     ax.grid(axis="y", alpha=0.2)
 
-    fig.savefig(OUT / "frequency_not_enough.pdf", bbox_inches="tight")
-    fig.savefig(OUT / "frequency_not_enough.png", dpi=240, bbox_inches="tight")
+    fig.savefig(output / "frequency_not_enough.pdf", bbox_inches="tight")
+    fig.savefig(output / "frequency_not_enough.png", dpi=240, bbox_inches="tight")
     plt.close(fig)
+    fig, ax = plt.subplots(figsize=(3.4, 2.5), constrained_layout=True)
+    for triples, style, label in ((128, "-", "one occurrence"), (0, "--", "no relation triples")):
+        points = []
+        for repeats in (2, 4, 8, 16, 24):
+            rows = [r for r in sweep if r["config"]["n_triples"] == triples
+                    and r["config"]["attr_repeats"] == repeats]
+            values = [r["relations"]["semantic"]["probe_accuracy"] for r in rows]
+            points.append((repeats, np.mean(values), np.std(values, ddof=1) if len(values) > 1 else 0.0))
+        x, y, sd = np.array(points).T
+        ax.plot(x, y, style, color=BLUE, marker="o", label=label)
+        ax.fill_between(x, y - sd, y + sd, color=BLUE, alpha=.12)
+    ax.axhline(1 / 32, color=GRAY, linestyle=":")
+    ax.set(xlabel="Attribute sentence repetitions", ylabel="Held-out OLS accuracy", ylim=(0, 1.05))
+    ax.legend(frameon=False)
+    for suffix in ("pdf", "png"):
+        fig.savefig(output / f"linear_shift_transition.{suffix}", dpi=240)
+    plt.close(fig)
+    from factual_recall.symmetric_lookup_transformer_raw_analysis import plot_results, plot_mechanism
+    plot_results(lookup["seeds"], output / "goal2_raw_transformer_results",
+                 {int(seed): history for seed, history in lookup["histories"].items()})
+    plot_mechanism(lookup["seeds"], output / "goal2_raw_transformer_mechanism")
+    from factual_recall.paper_audit import write_tables
+    write_tables(args.results)
+
 
 
 if __name__ == "__main__":

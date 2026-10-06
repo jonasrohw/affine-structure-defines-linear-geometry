@@ -1,0 +1,5486 @@
+{
+  "analysis": "Goal 1 / Goal 2 learned representations and causal algorithms",
+  "model": {
+    "layers": 1,
+    "hidden_dim": 64,
+    "attention_heads": 4,
+    "head_dim": 16,
+    "mlp_neurons": 256
+  },
+  "seeds": [
+    19,
+    31,
+    47
+  ],
+  "goals": {
+    "goal1": {
+      "occurrences": 16,
+      "relation": "semantic"
+    }
+  },
+  "runs": [
+    {
+      "goal": "goal1",
+      "seed": 19,
+      "occurrences_per_triple": 16,
+      "relation": "semantic",
+      "discovery_subjects": 128,
+      "evaluation_subjects": 64,
+      "evaluation_split": "never-seen relation subjects",
+      "replay_verification": {
+        "verified_exactly": true,
+        "reference_path": "factual_recall/results/final_category_seed19/linear_shift_metrics.json",
+        "errors": {
+          "last_train_loss_abs_error": 0.0,
+          "semantic_probe_abs_error": 0.0,
+          "semantic_train_recall_abs_error": 0.0,
+          "semantic_heldout_recall_abs_error": 0.0,
+          "random_probe_abs_error": 0.0,
+          "random_train_recall_abs_error": 0.0,
+          "random_heldout_recall_abs_error": 0.0
+        },
+        "replay": {
+          "train_steps": 512,
+          "last_train_loss": 1.5958598852157593,
+          "relations": {
+            "semantic": {
+              "probe_accuracy": 0.984375,
+              "probe_r2": 0.36844920162633454,
+              "probe_cosine": 0.9279135353154233,
+              "trained_check": {
+                "recall": 0.59375,
+                "loss": 2.40852689743042
+              },
+              "heldout_check": {
+                "recall": 0.390625,
+                "loss": 2.6810431480407715
+              }
+            },
+            "random": {
+              "probe_accuracy": 0.046875,
+              "probe_r2": -2.7566900156495127,
+              "probe_cosine": 0.6101760052168095,
+              "trained_check": {
+                "recall": 0.1953125,
+                "loss": 3.0042176246643066
+              },
+              "heldout_check": {
+                "recall": 0.03125,
+                "loss": 3.8396384716033936
+              }
+            }
+          }
+        }
+      },
+      "stage_analysis": {
+        "manual_forward_max_abs_error": 0.0,
+        "baseline": {
+          "full_vocab_accuracy": 0.390625,
+          "object_accuracy": 0.640625,
+          "object_mean_rank": 2.046875,
+          "mean_target_logit": 4.046399116516113,
+          "mean_object_margin": 0.1623656451702118,
+          "mean_object_probability": 0.11312863230705261,
+          "cross_entropy": 2.6810431480407715
+        },
+        "logit_lens": {
+          "input_relation_residual": {
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 2.5562124252319336,
+            "mean_object_margin": -0.5118486881256104,
+            "mean_object_probability": 0.03125,
+            "cross_entropy": 3.8564772605895996
+          },
+          "post_attention_residual": {
+            "full_vocab_accuracy": 0.328125,
+            "object_accuracy": 0.5625,
+            "object_mean_rank": 2.640625,
+            "mean_target_logit": 2.8987538814544678,
+            "mean_object_margin": 0.01405772939324379,
+            "mean_object_probability": 0.06487932801246643,
+            "cross_entropy": 3.329946279525757
+          },
+          "post_mlp_residual": {
+            "full_vocab_accuracy": 0.390625,
+            "object_accuracy": 0.640625,
+            "object_mean_rank": 2.046875,
+            "mean_target_logit": 4.046399116516113,
+            "mean_object_margin": 0.1623656451702118,
+            "mean_object_probability": 0.11312863230705261,
+            "cross_entropy": 2.6810431480407715
+          }
+        },
+        "attention_heads": [
+          {
+            "head": 0,
+            "mean_attention": {
+              "separator": 0.20647379755973816,
+              "subject": 0.7292160391807556,
+              "relation": 0.06431020796298981
+            },
+            "mean_output_norm": 0.5971550941467285,
+            "mean_subject_value_contribution_norm": 0.58582603931427
+          },
+          {
+            "head": 1,
+            "mean_attention": {
+              "separator": 0.2403956800699234,
+              "subject": 0.5602810382843018,
+              "relation": 0.19932326674461365
+            },
+            "mean_output_norm": 0.5457308292388916,
+            "mean_subject_value_contribution_norm": 0.52647864818573
+          },
+          {
+            "head": 2,
+            "mean_attention": {
+              "separator": 0.48985832929611206,
+              "subject": 0.23934556543827057,
+              "relation": 0.2707960605621338
+            },
+            "mean_output_norm": 0.2869420647621155,
+            "mean_subject_value_contribution_norm": 0.21925994753837585
+          },
+          {
+            "head": 3,
+            "mean_attention": {
+              "separator": 0.17040573060512543,
+              "subject": 0.8059935569763184,
+              "relation": 0.023600677028298378
+            },
+            "mean_output_norm": 0.699015200138092,
+            "mean_subject_value_contribution_norm": 0.6975501179695129
+          }
+        ]
+      },
+      "matched_relation_stage_control": {
+        "relation": "random",
+        "manual_forward_max_abs_error": 0.0,
+        "baseline": {
+          "full_vocab_accuracy": 0.03125,
+          "object_accuracy": 0.03125,
+          "object_mean_rank": 16.703125,
+          "mean_target_logit": 3.310983180999756,
+          "mean_object_margin": -1.2431700229644775,
+          "mean_object_probability": 0.031248042359948158,
+          "cross_entropy": 3.8396384716033936
+        },
+        "logit_lens": {
+          "input_relation_residual": {
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 2.3566720485687256,
+            "mean_object_margin": -0.5409362316131592,
+            "mean_object_probability": 0.03125,
+            "cross_entropy": 3.853863000869751
+          },
+          "post_attention_residual": {
+            "full_vocab_accuracy": 0.015625,
+            "object_accuracy": 0.015625,
+            "object_mean_rank": 16.828125,
+            "mean_target_logit": 1.9905383586883545,
+            "mean_object_margin": -0.8627508282661438,
+            "mean_object_probability": 0.03133276477456093,
+            "cross_entropy": 4.1110124588012695
+          },
+          "post_mlp_residual": {
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.703125,
+            "mean_target_logit": 3.310983180999756,
+            "mean_object_margin": -1.2431700229644775,
+            "mean_object_probability": 0.031248042359948158,
+            "cross_entropy": 3.8396384716033936
+          }
+        },
+        "attention_heads": [
+          {
+            "head": 0,
+            "mean_attention": {
+              "separator": 0.24029940366744995,
+              "subject": 0.6761177778244019,
+              "relation": 0.083582803606987
+            },
+            "mean_output_norm": 0.560794472694397,
+            "mean_subject_value_contribution_norm": 0.543076753616333
+          },
+          {
+            "head": 1,
+            "mean_attention": {
+              "separator": 0.1351277083158493,
+              "subject": 0.7971241474151611,
+              "relation": 0.06774809956550598
+            },
+            "mean_output_norm": 0.7466875314712524,
+            "mean_subject_value_contribution_norm": 0.7512133717536926
+          },
+          {
+            "head": 2,
+            "mean_attention": {
+              "separator": 0.43939706683158875,
+              "subject": 0.3759002089500427,
+              "relation": 0.18470272421836853
+            },
+            "mean_output_norm": 0.37335285544395447,
+            "mean_subject_value_contribution_norm": 0.34434807300567627
+          },
+          {
+            "head": 3,
+            "mean_attention": {
+              "separator": 0.23127342760562897,
+              "subject": 0.7282930612564087,
+              "relation": 0.04043349623680115
+            },
+            "mean_output_norm": 0.6344017386436462,
+            "mean_subject_value_contribution_norm": 0.6309484243392944
+          }
+        ]
+      },
+      "random_heldout_control": null,
+      "representation_geometry": {
+        "subject_input_embedding": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.7643504417949285
+        },
+        "attention_head_outputs": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.8012012350431776
+        },
+        "post_attention_residual": {
+          "centroid_cosine_accuracy": 0.984375,
+          "class_eta_squared": 0.8150803207532332
+        },
+        "mlp_activation": {
+          "centroid_cosine_accuracy": 0.953125,
+          "class_eta_squared": 0.8179481277267111
+        },
+        "post_mlp_residual": {
+          "centroid_cosine_accuracy": 0.984375,
+          "class_eta_squared": 0.8507345585920527
+        }
+      },
+      "head_interventions": {
+        "intervention": "Heads outside kept_heads are replaced by their discovery-set mean activation.",
+        "head_reference_subjects": 128,
+        "evaluation_subjects": 64,
+        "baseline": {
+          "full_vocab_accuracy": 0.390625,
+          "object_accuracy": 0.640625,
+          "object_mean_rank": 2.046875,
+          "mean_target_logit": 4.046399116516113,
+          "mean_object_margin": 0.1623656451702118,
+          "mean_object_probability": 0.11312863230705261,
+          "cross_entropy": 2.6810431480407715
+        },
+        "subsets": [
+          {
+            "kept_heads": [],
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 4.104002952575684,
+            "mean_object_margin": -0.5765479207038879,
+            "mean_object_probability": 0.03125,
+            "cross_entropy": 3.577190637588501
+          },
+          {
+            "kept_heads": [
+              0
+            ],
+            "full_vocab_accuracy": 0.265625,
+            "object_accuracy": 0.265625,
+            "object_mean_rank": 7.3125,
+            "mean_target_logit": 4.299746036529541,
+            "mean_object_margin": -0.27050554752349854,
+            "mean_object_probability": 0.048948124051094055,
+            "cross_entropy": 3.18988299369812
+          },
+          {
+            "kept_heads": [
+              1
+            ],
+            "full_vocab_accuracy": 0.046875,
+            "object_accuracy": 0.0625,
+            "object_mean_rank": 9.0625,
+            "mean_target_logit": 4.005576133728027,
+            "mean_object_margin": -0.4784829318523407,
+            "mean_object_probability": 0.04333161562681198,
+            "cross_entropy": 3.324622392654419
+          },
+          {
+            "kept_heads": [
+              0,
+              1
+            ],
+            "full_vocab_accuracy": 0.203125,
+            "object_accuracy": 0.265625,
+            "object_mean_rank": 4.578125,
+            "mean_target_logit": 4.1040825843811035,
+            "mean_object_margin": -0.2013576477766037,
+            "mean_object_probability": 0.06315618753433228,
+            "cross_entropy": 3.0354628562927246
+          },
+          {
+            "kept_heads": [
+              2
+            ],
+            "full_vocab_accuracy": 0.046875,
+            "object_accuracy": 0.046875,
+            "object_mean_rank": 14.234375,
+            "mean_target_logit": 4.18326473236084,
+            "mean_object_margin": -0.5420223474502563,
+            "mean_object_probability": 0.03425740450620651,
+            "cross_entropy": 3.491267204284668
+          },
+          {
+            "kept_heads": [
+              0,
+              2
+            ],
+            "full_vocab_accuracy": 0.28125,
+            "object_accuracy": 0.28125,
+            "object_mean_rank": 6.171875,
+            "mean_target_logit": 4.327164173126221,
+            "mean_object_margin": -0.1991376429796219,
+            "mean_object_probability": 0.05305030941963196,
+            "cross_entropy": 3.128190517425537
+          },
+          {
+            "kept_heads": [
+              1,
+              2
+            ],
+            "full_vocab_accuracy": 0.09375,
+            "object_accuracy": 0.109375,
+            "object_mean_rank": 8.34375,
+            "mean_target_logit": 3.9844608306884766,
+            "mean_object_margin": -0.47746655344963074,
+            "mean_object_probability": 0.046464599668979645,
+            "cross_entropy": 3.289904832839966
+          },
+          {
+            "kept_heads": [
+              0,
+              1,
+              2
+            ],
+            "full_vocab_accuracy": 0.21875,
+            "object_accuracy": 0.296875,
+            "object_mean_rank": 4.453125,
+            "mean_target_logit": 4.051420211791992,
+            "mean_object_margin": -0.18750804662704468,
+            "mean_object_probability": 0.06632979959249496,
+            "cross_entropy": 3.0275237560272217
+          },
+          {
+            "kept_heads": [
+              3
+            ],
+            "full_vocab_accuracy": 0.359375,
+            "object_accuracy": 0.359375,
+            "object_mean_rank": 3.4375,
+            "mean_target_logit": 4.459258079528809,
+            "mean_object_margin": -0.07923164963722229,
+            "mean_object_probability": 0.07447442412376404,
+            "cross_entropy": 2.823605537414551
+          },
+          {
+            "kept_heads": [
+              0,
+              3
+            ],
+            "full_vocab_accuracy": 0.578125,
+            "object_accuracy": 0.609375,
+            "object_mean_rank": 2.234375,
+            "mean_target_logit": 4.43646240234375,
+            "mean_object_margin": 0.14532777667045593,
+            "mean_object_probability": 0.09767239540815353,
+            "cross_entropy": 2.6375985145568848
+          },
+          {
+            "kept_heads": [
+              1,
+              3
+            ],
+            "full_vocab_accuracy": 0.390625,
+            "object_accuracy": 0.484375,
+            "object_mean_rank": 2.953125,
+            "mean_target_logit": 4.179387092590332,
+            "mean_object_margin": -0.023290015757083893,
+            "mean_object_probability": 0.0904775857925415,
+            "cross_entropy": 2.738980770111084
+          },
+          {
+            "kept_heads": [
+              0,
+              1,
+              3
+            ],
+            "full_vocab_accuracy": 0.46875,
+            "object_accuracy": 0.609375,
+            "object_mean_rank": 2.078125,
+            "mean_target_logit": 4.124096393585205,
+            "mean_object_margin": 0.15531085431575775,
+            "mean_object_probability": 0.11154615879058838,
+            "cross_entropy": 2.644439458847046
+          },
+          {
+            "kept_heads": [
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.40625,
+            "object_accuracy": 0.40625,
+            "object_mean_rank": 3.03125,
+            "mean_target_logit": 4.46403694152832,
+            "mean_object_margin": -0.01236654445528984,
+            "mean_object_probability": 0.07927051186561584,
+            "cross_entropy": 2.77677583694458
+          },
+          {
+            "kept_heads": [
+              0,
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.59375,
+            "object_accuracy": 0.640625,
+            "object_mean_rank": 2.03125,
+            "mean_target_logit": 4.408140182495117,
+            "mean_object_margin": 0.18993696570396423,
+            "mean_object_probability": 0.10174565017223358,
+            "cross_entropy": 2.62211275100708
+          },
+          {
+            "kept_heads": [
+              1,
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.34375,
+            "object_accuracy": 0.484375,
+            "object_mean_rank": 2.828125,
+            "mean_target_logit": 4.113638877868652,
+            "mean_object_margin": -0.005706619471311569,
+            "mean_object_probability": 0.09349363297224045,
+            "cross_entropy": 2.7545289993286133
+          },
+          {
+            "kept_heads": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.390625,
+            "object_accuracy": 0.640625,
+            "object_mean_rank": 2.046875,
+            "mean_target_logit": 4.046399116516113,
+            "mean_object_margin": 0.1623656451702118,
+            "mean_object_probability": 0.11312863230705261,
+            "cross_entropy": 2.6810431480407715
+          }
+        ],
+        "margin_shapley": [
+          {
+            "head": 0,
+            "margin_shapley": 0.24481468461453915
+          },
+          {
+            "head": 1,
+            "margin_shapley": 0.03578324429690837
+          },
+          {
+            "head": 2,
+            "margin_shapley": 0.0283360555768013
+          },
+          {
+            "head": 3,
+            "margin_shapley": 0.4299795813858509
+          }
+        ]
+      },
+      "neuron_interventions": {
+        "intervention": "Neuron activations are mean-ablated using discovery-set means. Rankings are learned on discovery subjects and all curves are evaluated on disjoint subjects.",
+        "baseline": {
+          "full_vocab_accuracy": 0.390625,
+          "object_accuracy": 0.640625,
+          "object_mean_rank": 2.046875,
+          "mean_target_logit": 4.046399116516113,
+          "mean_object_margin": 0.1623656451702118,
+          "mean_object_probability": 0.11312863230705261,
+          "cross_entropy": 2.6810431480407715
+        },
+        "top_32_ranking": [
+          196,
+          223,
+          181,
+          71,
+          158,
+          10,
+          45,
+          42,
+          63,
+          48,
+          233,
+          152,
+          6,
+          90,
+          104,
+          156,
+          242,
+          173,
+          28,
+          128,
+          207,
+          184,
+          13,
+          153,
+          141,
+          32,
+          232,
+          92,
+          199,
+          52,
+          255,
+          38
+        ],
+        "curves": [
+          {
+            "k": 1,
+            "top_neurons": [
+              196
+            ],
+            "necessity_mean_margin": 0.15428289771080017,
+            "necessity_object_accuracy": 0.640625,
+            "sufficiency_mean_margin": -0.19433674216270447,
+            "sufficiency_object_accuracy": 0.21875,
+            "random_ablation_margin": {
+              "mean": 0.16280244439840316,
+              "sd": 0.004366155210670089,
+              "min": 0.15380501747131348,
+              "max": 0.1780608594417572
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.63359375,
+              "sd": 0.010452412625202852,
+              "min": 0.609375,
+              "max": 0.640625
+            }
+          },
+          {
+            "k": 2,
+            "top_neurons": [
+              196,
+              223
+            ],
+            "necessity_mean_margin": 0.15246495604515076,
+            "necessity_object_accuracy": 0.625,
+            "sufficiency_mean_margin": -0.1783502697944641,
+            "sufficiency_object_accuracy": 0.25,
+            "random_ablation_margin": {
+              "mean": 0.1606791913509369,
+              "sd": 0.0016333881885449279,
+              "min": 0.15775209665298462,
+              "max": 0.16368794441223145
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.64140625,
+              "sd": 0.009210801658243435,
+              "min": 0.625,
+              "max": 0.65625
+            }
+          },
+          {
+            "k": 4,
+            "top_neurons": [
+              196,
+              223,
+              181,
+              71
+            ],
+            "necessity_mean_margin": 0.1395469605922699,
+            "necessity_object_accuracy": 0.609375,
+            "sufficiency_mean_margin": -0.15894892811775208,
+            "sufficiency_object_accuracy": 0.28125,
+            "random_ablation_margin": {
+              "mean": 0.16176745668053627,
+              "sd": 0.0059907913087983815,
+              "min": 0.15506470203399658,
+              "max": 0.1778906136751175
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.63828125,
+              "sd": 0.013327126647837483,
+              "min": 0.609375,
+              "max": 0.65625
+            }
+          },
+          {
+            "k": 8,
+            "top_neurons": [
+              196,
+              223,
+              181,
+              71,
+              158,
+              10,
+              45,
+              42
+            ],
+            "necessity_mean_margin": 0.1271565705537796,
+            "necessity_object_accuracy": 0.609375,
+            "sufficiency_mean_margin": -0.13887181878089905,
+            "sufficiency_object_accuracy": 0.328125,
+            "random_ablation_margin": {
+              "mean": 0.15766394063830375,
+              "sd": 0.005444394626897317,
+              "min": 0.14865583181381226,
+              "max": 0.17034819722175598
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.63671875,
+              "sd": 0.017729383934234715,
+              "min": 0.609375,
+              "max": 0.671875
+            }
+          },
+          {
+            "k": 16,
+            "top_neurons": [
+              196,
+              223,
+              181,
+              71,
+              158,
+              10,
+              45,
+              42,
+              63,
+              48,
+              233,
+              152,
+              6,
+              90,
+              104,
+              156
+            ],
+            "necessity_mean_margin": 0.1095348596572876,
+            "necessity_object_accuracy": 0.625,
+            "sufficiency_mean_margin": -0.08490796387195587,
+            "sufficiency_object_accuracy": 0.40625,
+            "random_ablation_margin": {
+              "mean": 0.1549930453300476,
+              "sd": 0.01232133181702644,
+              "min": 0.133931964635849,
+              "max": 0.18416231870651245
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.63828125,
+              "sd": 0.02224848572796585,
+              "min": 0.59375,
+              "max": 0.6875
+            }
+          },
+          {
+            "k": 32,
+            "top_neurons": [
+              196,
+              223,
+              181,
+              71,
+              158,
+              10,
+              45,
+              42,
+              63,
+              48,
+              233,
+              152,
+              6,
+              90,
+              104,
+              156,
+              242,
+              173,
+              28,
+              128,
+              207,
+              184,
+              13,
+              153,
+              141,
+              32,
+              232,
+              92,
+              199,
+              52,
+              255,
+              38
+            ],
+            "necessity_mean_margin": 0.07417576014995575,
+            "necessity_object_accuracy": 0.578125,
+            "sufficiency_mean_margin": -0.017820362001657486,
+            "sufficiency_object_accuracy": 0.40625,
+            "random_ablation_margin": {
+              "mean": 0.14162724688649178,
+              "sd": 0.011649805427568738,
+              "min": 0.12208220362663269,
+              "max": 0.1618489921092987
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.63359375,
+              "sd": 0.02342447554775773,
+              "min": 0.578125,
+              "max": 0.671875
+            }
+          },
+          {
+            "k": 64,
+            "top_neurons": [
+              196,
+              223,
+              181,
+              71,
+              158,
+              10,
+              45,
+              42,
+              63,
+              48,
+              233,
+              152,
+              6,
+              90,
+              104,
+              156,
+              242,
+              173,
+              28,
+              128,
+              207,
+              184,
+              13,
+              153,
+              141,
+              32,
+              232,
+              92,
+              199,
+              52,
+              255,
+              38,
+              47,
+              226,
+              147,
+              4,
+              180,
+              193,
+              201,
+              243,
+              75,
+              88,
+              91,
+              111,
+              124,
+              96,
+              129,
+              249,
+              224,
+              250,
+              155,
+              117,
+              148,
+              218,
+              94,
+              248,
+              15,
+              150,
+              80,
+              171,
+              203,
+              169,
+              62,
+              187
+            ],
+            "necessity_mean_margin": 0.00928422436118126,
+            "necessity_object_accuracy": 0.515625,
+            "sufficiency_mean_margin": 0.06677569448947906,
+            "sufficiency_object_accuracy": 0.5625,
+            "random_ablation_margin": {
+              "mean": 0.12334862761199475,
+              "sd": 0.01787202929582904,
+              "min": 0.07480158656835556,
+              "max": 0.1537659913301468
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.61484375,
+              "sd": 0.025804913382677725,
+              "min": 0.5625,
+              "max": 0.65625
+            }
+          },
+          {
+            "k": 128,
+            "top_neurons": [
+              196,
+              223,
+              181,
+              71,
+              158,
+              10,
+              45,
+              42,
+              63,
+              48,
+              233,
+              152,
+              6,
+              90,
+              104,
+              156,
+              242,
+              173,
+              28,
+              128,
+              207,
+              184,
+              13,
+              153,
+              141,
+              32,
+              232,
+              92,
+              199,
+              52,
+              255,
+              38,
+              47,
+              226,
+              147,
+              4,
+              180,
+              193,
+              201,
+              243,
+              75,
+              88,
+              91,
+              111,
+              124,
+              96,
+              129,
+              249,
+              224,
+              250,
+              155,
+              117,
+              148,
+              218,
+              94,
+              248,
+              15,
+              150,
+              80,
+              171,
+              203,
+              169,
+              62,
+              187,
+              18,
+              140,
+              231,
+              116,
+              106,
+              146,
+              186,
+              54,
+              206,
+              168,
+              95,
+              2,
+              175,
+              118,
+              220,
+              244,
+              135,
+              11,
+              239,
+              3,
+              217,
+              166,
+              98,
+              16,
+              123,
+              222,
+              44,
+              174,
+              14,
+              216,
+              23,
+              67,
+              205,
+              122,
+              1,
+              143,
+              162,
+              108,
+              20,
+              194,
+              46,
+              209,
+              51,
+              149,
+              5,
+              134,
+              252,
+              50,
+              26,
+              41,
+              126,
+              83,
+              228,
+              56,
+              84,
+              164,
+              210,
+              97,
+              85,
+              137,
+              70,
+              157,
+              197,
+              177
+            ],
+            "necessity_mean_margin": -0.08088460564613342,
+            "necessity_object_accuracy": 0.390625,
+            "sufficiency_mean_margin": 0.17560406029224396,
+            "sufficiency_object_accuracy": 0.625,
+            "random_ablation_margin": {
+              "mean": 0.06723080333322287,
+              "sd": 0.023463544632430583,
+              "min": 0.01923038810491562,
+              "max": 0.10714197158813477
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.5609375,
+              "sd": 0.03887454782695228,
+              "min": 0.5,
+              "max": 0.65625
+            }
+          },
+          {
+            "k": 256,
+            "top_neurons": [
+              196,
+              223,
+              181,
+              71,
+              158,
+              10,
+              45,
+              42,
+              63,
+              48,
+              233,
+              152,
+              6,
+              90,
+              104,
+              156,
+              242,
+              173,
+              28,
+              128,
+              207,
+              184,
+              13,
+              153,
+              141,
+              32,
+              232,
+              92,
+              199,
+              52,
+              255,
+              38,
+              47,
+              226,
+              147,
+              4,
+              180,
+              193,
+              201,
+              243,
+              75,
+              88,
+              91,
+              111,
+              124,
+              96,
+              129,
+              249,
+              224,
+              250,
+              155,
+              117,
+              148,
+              218,
+              94,
+              248,
+              15,
+              150,
+              80,
+              171,
+              203,
+              169,
+              62,
+              187,
+              18,
+              140,
+              231,
+              116,
+              106,
+              146,
+              186,
+              54,
+              206,
+              168,
+              95,
+              2,
+              175,
+              118,
+              220,
+              244,
+              135,
+              11,
+              239,
+              3,
+              217,
+              166,
+              98,
+              16,
+              123,
+              222,
+              44,
+              174,
+              14,
+              216,
+              23,
+              67,
+              205,
+              122,
+              1,
+              143,
+              162,
+              108,
+              20,
+              194,
+              46,
+              209,
+              51,
+              149,
+              5,
+              134,
+              252,
+              50,
+              26,
+              41,
+              126,
+              83,
+              228,
+              56,
+              84,
+              164,
+              210,
+              97,
+              85,
+              137,
+              70,
+              157,
+              197,
+              177,
+              202,
+              69,
+              30,
+              132,
+              17,
+              25,
+              102,
+              57,
+              37,
+              253,
+              0,
+              139,
+              211,
+              127,
+              234,
+              246,
+              238,
+              107,
+              213,
+              142,
+              100,
+              182,
+              160,
+              219,
+              9,
+              121,
+              34,
+              87,
+              165,
+              39,
+              73,
+              215,
+              19,
+              120,
+              64,
+              161,
+              49,
+              172,
+              208,
+              195,
+              241,
+              43,
+              24,
+              110,
+              176,
+              115,
+              58,
+              237,
+              82,
+              61,
+              185,
+              105,
+              133,
+              179,
+              72,
+              254,
+              81,
+              159,
+              33,
+              79,
+              35,
+              40,
+              130,
+              59,
+              101,
+              136,
+              151,
+              183,
+              212,
+              138,
+              29,
+              114,
+              225,
+              77,
+              7,
+              66,
+              192,
+              198,
+              93,
+              200,
+              214,
+              236,
+              145,
+              89,
+              204,
+              78,
+              240,
+              154,
+              230,
+              235,
+              86,
+              8,
+              113,
+              74,
+              221,
+              144,
+              53,
+              21,
+              178,
+              68,
+              109,
+              112,
+              189,
+              191,
+              65,
+              227,
+              31,
+              55,
+              163,
+              247,
+              167,
+              229,
+              131,
+              12,
+              103,
+              188,
+              190,
+              245,
+              119,
+              27,
+              60,
+              251,
+              36,
+              22,
+              76,
+              99,
+              125,
+              170
+            ],
+            "necessity_mean_margin": -0.20569708943367004,
+            "necessity_object_accuracy": 0.1875,
+            "sufficiency_mean_margin": 0.1623656451702118,
+            "sufficiency_object_accuracy": 0.640625,
+            "random_ablation_margin": {
+              "mean": -0.20569708943367004,
+              "sd": 0.0,
+              "min": -0.20569708943367004,
+              "max": -0.20569708943367004
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.1875,
+              "sd": 0.0,
+              "min": 0.1875,
+              "max": 0.1875
+            }
+          }
+        ],
+        "discovery_top_20_individual_ablations": [
+          {
+            "neuron": 196,
+            "causal_margin_drop": 0.007891595363616943,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 223,
+            "causal_margin_drop": 0.006546646356582642,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 181,
+            "causal_margin_drop": 0.006374776363372803,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 71,
+            "causal_margin_drop": 0.005160093307495117,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 158,
+            "causal_margin_drop": 0.004737973213195801,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 10,
+            "causal_margin_drop": 0.0037462711334228516,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 45,
+            "causal_margin_drop": 0.003725707530975342,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 42,
+            "causal_margin_drop": 0.0035723447799682617,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 63,
+            "causal_margin_drop": 0.0033735930919647217,
+            "ablated_object_accuracy": 0.7109375
+          },
+          {
+            "neuron": 48,
+            "causal_margin_drop": 0.0032637715339660645,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 233,
+            "causal_margin_drop": 0.0030322670936584473,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 152,
+            "causal_margin_drop": 0.0025388002395629883,
+            "ablated_object_accuracy": 0.7109375
+          },
+          {
+            "neuron": 6,
+            "causal_margin_drop": 0.002500295639038086,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 90,
+            "causal_margin_drop": 0.002429872751235962,
+            "ablated_object_accuracy": 0.7109375
+          },
+          {
+            "neuron": 104,
+            "causal_margin_drop": 0.0024214982986450195,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 156,
+            "causal_margin_drop": 0.0023527145385742188,
+            "ablated_object_accuracy": 0.7109375
+          },
+          {
+            "neuron": 242,
+            "causal_margin_drop": 0.0023072361946105957,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 173,
+            "causal_margin_drop": 0.002290666103363037,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 28,
+            "causal_margin_drop": 0.002234518527984619,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 128,
+            "causal_margin_drop": 0.0022123754024505615,
+            "ablated_object_accuracy": 0.703125
+          }
+        ]
+      },
+      "mlp_nonlinearity": {
+        "method": "Per-neuron affine GELU surrogates are fit on discovery preactivations and evaluated on disjoint subjects; the resulting whole MLP is affine on its input.",
+        "activation_r2": 0.9644055262578481,
+        "mlp_output_relative_l2_error": 0.07630196768054183,
+        "baseline": {
+          "full_vocab_accuracy": 0.390625,
+          "object_accuracy": 0.640625,
+          "object_mean_rank": 2.046875,
+          "mean_target_logit": 4.046399116516113,
+          "mean_object_margin": 0.1623656451702118,
+          "mean_object_probability": 0.11312863230705261,
+          "cross_entropy": 2.6810431480407715
+        },
+        "affine_gelu_surrogate": {
+          "full_vocab_accuracy": 0.484375,
+          "object_accuracy": 0.65625,
+          "object_mean_rank": 1.984375,
+          "mean_target_logit": 4.071049690246582,
+          "mean_object_margin": 0.16017752885818481,
+          "mean_object_probability": 0.11246071010828018,
+          "cross_entropy": 2.6478874683380127
+        },
+        "discovery_mean_mlp_activation": {
+          "full_vocab_accuracy": 0.1875,
+          "object_accuracy": 0.1875,
+          "object_mean_rank": 6.5625,
+          "mean_target_logit": 4.129247188568115,
+          "mean_object_margin": -0.20569708943367004,
+          "mean_object_probability": 0.0451982319355011,
+          "cross_entropy": 3.2208900451660156
+        },
+        "no_mlp_residual_only": {
+          "full_vocab_accuracy": 0.328125,
+          "object_accuracy": 0.5625,
+          "object_mean_rank": 2.640625,
+          "mean_target_logit": 2.8987538814544678,
+          "mean_object_margin": 0.01405772939324379,
+          "mean_object_probability": 0.06487932801246643,
+          "cross_entropy": 3.329946279525757
+        }
+      },
+      "subject_swap_patching": {
+        "pair_count": 64,
+        "metric": "mean logit(clean target) - logit(corrupt target)",
+        "clean_mean_logit_difference": 1.3774349689483643,
+        "corrupt_mean_logit_difference": -1.4093122482299805,
+        "total_effect": 2.7867472171783447,
+        "components": {
+          "subject_input_embedding": {
+            "patched_mean_logit_difference": 1.3774349689483643,
+            "absolute_restoration": 2.7867472171783447,
+            "normalized_restoration": 1.0
+          },
+          "all_attention_heads": {
+            "patched_mean_logit_difference": 1.3774349689483643,
+            "absolute_restoration": 2.7867472171783447,
+            "normalized_restoration": 1.0
+          },
+          "all_mlp_neurons": {
+            "patched_mean_logit_difference": 0.8722078800201416,
+            "absolute_restoration": 2.281520128250122,
+            "normalized_restoration": 0.8187036535592997
+          },
+          "attention_patterns_only": {
+            "patched_mean_logit_difference": -1.34716796875,
+            "absolute_restoration": 0.06214427947998047,
+            "normalized_restoration": 0.022299934165863525
+          },
+          "attention_values_only": {
+            "patched_mean_logit_difference": 1.309386968612671,
+            "absolute_restoration": 2.7186992168426514,
+            "normalized_restoration": 0.9755815669551134
+          }
+        },
+        "heads": [
+          {
+            "head": 0,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -0.8069735765457153,
+              "absolute_restoration": 0.6023386716842651,
+              "normalized_restoration": 0.21614399324462194
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -0.8243818879127502,
+              "absolute_restoration": 0.5849303603172302,
+              "normalized_restoration": 0.20989717212653672
+            }
+          },
+          {
+            "head": 1,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -0.8739771842956543,
+              "absolute_restoration": 0.5353350639343262,
+              "normalized_restoration": 0.19210033139509763
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -0.8942577838897705,
+              "absolute_restoration": 0.51505446434021,
+              "normalized_restoration": 0.18482281462963698
+            }
+          },
+          {
+            "head": 2,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -1.3013479709625244,
+              "absolute_restoration": 0.10796427726745605,
+              "normalized_restoration": 0.03874204183355128
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -1.3026437759399414,
+              "absolute_restoration": 0.10666847229003906,
+              "normalized_restoration": 0.03827705348820397
+            }
+          },
+          {
+            "head": 3,
+            "full_head_patch": {
+              "patched_mean_logit_difference": 0.04107922315597534,
+              "absolute_restoration": 1.4503914713859558,
+              "normalized_restoration": 0.5204603641282238
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": 0.030952148139476776,
+              "absolute_restoration": 1.4402643963694572,
+              "normalized_restoration": 0.5168263513429693
+            }
+          }
+        ],
+        "top_exact_neurons": [
+          {
+            "neuron": 36,
+            "exact_absolute_restoration": 0.036577701568603516,
+            "exact_normalized_restoration": 0.013125590058232625,
+            "attribution_estimate": 0.03353777527809143
+          },
+          {
+            "neuron": 76,
+            "exact_absolute_restoration": 0.03241848945617676,
+            "exact_normalized_restoration": 0.01163309296815279,
+            "attribution_estimate": 0.028993722051382065
+          },
+          {
+            "neuron": 233,
+            "exact_absolute_restoration": 0.028567075729370117,
+            "exact_normalized_restoration": 0.010251046651549198,
+            "attribution_estimate": 0.027165193110704422
+          },
+          {
+            "neuron": 223,
+            "exact_absolute_restoration": 0.02806854248046875,
+            "exact_normalized_restoration": 0.010072152331379697,
+            "attribution_estimate": 0.026107773184776306
+          },
+          {
+            "neuron": 128,
+            "exact_absolute_restoration": 0.026600241661071777,
+            "exact_normalized_restoration": 0.009545265353491669,
+            "attribution_estimate": 0.024897465482354164
+          },
+          {
+            "neuron": 31,
+            "exact_absolute_restoration": 0.025528550148010254,
+            "exact_normalized_restoration": 0.00916069817550893,
+            "attribution_estimate": 0.024052338674664497
+          },
+          {
+            "neuron": 181,
+            "exact_absolute_restoration": 0.02466106414794922,
+            "exact_normalized_restoration": 0.008849408369704662,
+            "attribution_estimate": 0.02328592911362648
+          },
+          {
+            "neuron": 6,
+            "exact_absolute_restoration": 0.02379298210144043,
+            "exact_normalized_restoration": 0.008537904677816977,
+            "attribution_estimate": 0.02173055335879326
+          },
+          {
+            "neuron": 66,
+            "exact_absolute_restoration": 0.023425698280334473,
+            "exact_normalized_restoration": 0.008406108073215773,
+            "attribution_estimate": 0.022529009729623795
+          },
+          {
+            "neuron": 84,
+            "exact_absolute_restoration": 0.021945476531982422,
+            "exact_normalized_restoration": 0.007874943373659415,
+            "attribution_estimate": 0.019631195813417435
+          },
+          {
+            "neuron": 142,
+            "exact_absolute_restoration": 0.02114558219909668,
+            "exact_normalized_restoration": 0.007587908249714569,
+            "attribution_estimate": 0.02022361382842064
+          },
+          {
+            "neuron": 196,
+            "exact_absolute_restoration": 0.020469069480895996,
+            "exact_normalized_restoration": 0.007345147545036923,
+            "attribution_estimate": 0.019156549125909805
+          },
+          {
+            "neuron": 125,
+            "exact_absolute_restoration": 0.019060134887695312,
+            "exact_normalized_restoration": 0.006839563621057171,
+            "attribution_estimate": 0.01766042970120907
+          },
+          {
+            "neuron": 251,
+            "exact_absolute_restoration": 0.01870274543762207,
+            "exact_normalized_restoration": 0.00671131752544068,
+            "attribution_estimate": 0.017716476693749428
+          },
+          {
+            "neuron": 27,
+            "exact_absolute_restoration": 0.018130183219909668,
+            "exact_normalized_restoration": 0.006505858553710859,
+            "attribution_estimate": 0.017121944576501846
+          },
+          {
+            "neuron": 170,
+            "exact_absolute_restoration": 0.017507553100585938,
+            "exact_normalized_restoration": 0.006282433150974058,
+            "attribution_estimate": 0.01646673120558262
+          },
+          {
+            "neuron": 22,
+            "exact_absolute_restoration": 0.017314791679382324,
+            "exact_normalized_restoration": 0.006213262391597186,
+            "attribution_estimate": 0.01660313457250595
+          },
+          {
+            "neuron": 131,
+            "exact_absolute_restoration": 0.017304420471191406,
+            "exact_normalized_restoration": 0.00620954077374574,
+            "attribution_estimate": 0.016467135399580002
+          },
+          {
+            "neuron": 10,
+            "exact_absolute_restoration": 0.016937732696533203,
+            "exact_normalized_restoration": 0.006077958055227954,
+            "attribution_estimate": 0.01620495691895485
+          },
+          {
+            "neuron": 150,
+            "exact_absolute_restoration": 0.016752123832702637,
+            "exact_normalized_restoration": 0.006011353928852077,
+            "attribution_estimate": 0.015989338979125023
+          }
+        ],
+        "attribution_validation": {
+          "heads_pearson_r": 0.9994693556526559,
+          "heads_spearman_r": 1.0,
+          "neurons_pearson_r": 0.9993414663023287,
+          "neurons_spearman_r": 0.9990994792858777,
+          "head_attribution_estimates": [
+            0.49125662446022034,
+            0.47115737199783325,
+            0.0983676090836525,
+            1.1874433755874634
+          ],
+          "head_exact_restorations": [
+            0.6023386716842651,
+            0.5353350639343262,
+            0.10796427726745605,
+            1.4503914713859558
+          ]
+        }
+      },
+      "relation_gate_patching": {
+        "clean_relation": "semantic",
+        "corrupt_relation": "random",
+        "clean_mean_logit_difference": 1.393946647644043,
+        "corrupt_mean_logit_difference": 1.0691591501235962,
+        "total_effect": 0.3247874975204468,
+        "relation_token_embedding": {
+          "patched_mean_logit_difference": 1.393946647644043,
+          "absolute_restoration": 0.3247874975204468,
+          "normalized_restoration": 1.0
+        },
+        "all_attention_heads": {
+          "patched_mean_logit_difference": 1.0912425518035889,
+          "absolute_restoration": 0.022083401679992676,
+          "normalized_restoration": 0.06799338597878889
+        },
+        "all_mlp_neurons": {
+          "patched_mean_logit_difference": 1.352430820465088,
+          "absolute_restoration": 0.2832716703414917,
+          "normalized_restoration": 0.8721754147068377
+        },
+        "heads": [
+          {
+            "head": 0,
+            "patched_mean_logit_difference": 1.0826669931411743,
+            "absolute_restoration": 0.013507843017578125,
+            "normalized_restoration": 0.0415897875401677
+          },
+          {
+            "head": 1,
+            "patched_mean_logit_difference": 1.0436854362487793,
+            "absolute_restoration": -0.025473713874816895,
+            "normalized_restoration": -0.07843194109777336
+          },
+          {
+            "head": 2,
+            "patched_mean_logit_difference": 1.0661711692810059,
+            "absolute_restoration": -0.002987980842590332,
+            "normalized_restoration": -0.009199802533661955
+          },
+          {
+            "head": 3,
+            "patched_mean_logit_difference": 1.1048063039779663,
+            "absolute_restoration": 0.03564715385437012,
+            "normalized_restoration": 0.10975531424859103
+          }
+        ]
+      }
+    },
+    {
+      "goal": "goal1",
+      "seed": 31,
+      "occurrences_per_triple": 16,
+      "relation": "semantic",
+      "discovery_subjects": 128,
+      "evaluation_subjects": 64,
+      "evaluation_split": "never-seen relation subjects",
+      "replay_verification": {
+        "verified_exactly": true,
+        "reference_path": "factual_recall/results/final_category_seed31/linear_shift_metrics.json",
+        "errors": {
+          "last_train_loss_abs_error": 0.0,
+          "semantic_probe_abs_error": 0.0,
+          "semantic_train_recall_abs_error": 0.0,
+          "semantic_heldout_recall_abs_error": 0.0,
+          "random_probe_abs_error": 0.0,
+          "random_train_recall_abs_error": 0.0,
+          "random_heldout_recall_abs_error": 0.0
+        },
+        "replay": {
+          "train_steps": 512,
+          "last_train_loss": 1.6059765815734863,
+          "relations": {
+            "semantic": {
+              "probe_accuracy": 1.0,
+              "probe_r2": 0.4326541533723187,
+              "probe_cosine": 0.9365867615816783,
+              "trained_check": {
+                "recall": 0.578125,
+                "loss": 2.2912964820861816
+              },
+              "heldout_check": {
+                "recall": 0.6875,
+                "loss": 2.4572596549987793
+              }
+            },
+            "random": {
+              "probe_accuracy": 0.03125,
+              "probe_r2": -3.6803290111610876,
+              "probe_cosine": 0.5700744365146292,
+              "trained_check": {
+                "recall": 0.1875,
+                "loss": 3.042024850845337
+              },
+              "heldout_check": {
+                "recall": 0.03125,
+                "loss": 3.7841739654541016
+              }
+            }
+          }
+        }
+      },
+      "stage_analysis": {
+        "manual_forward_max_abs_error": 0.0,
+        "baseline": {
+          "full_vocab_accuracy": 0.6875,
+          "object_accuracy": 0.6875,
+          "object_mean_rank": 1.796875,
+          "mean_target_logit": 4.714236259460449,
+          "mean_object_margin": 0.2733055353164673,
+          "mean_object_probability": 0.12372568249702454,
+          "cross_entropy": 2.4572596549987793
+        },
+        "logit_lens": {
+          "input_relation_residual": {
+            "full_vocab_accuracy": 0.0,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 2.0727410316467285,
+            "mean_object_margin": -0.802249550819397,
+            "mean_object_probability": 0.03125,
+            "cross_entropy": 4.096710205078125
+          },
+          "post_attention_residual": {
+            "full_vocab_accuracy": 0.15625,
+            "object_accuracy": 0.46875,
+            "object_mean_rank": 3.5,
+            "mean_target_logit": 2.721238613128662,
+            "mean_object_margin": -0.048817310482263565,
+            "mean_object_probability": 0.0783999115228653,
+            "cross_entropy": 3.316549777984619
+          },
+          "post_mlp_residual": {
+            "full_vocab_accuracy": 0.6875,
+            "object_accuracy": 0.6875,
+            "object_mean_rank": 1.796875,
+            "mean_target_logit": 4.714236259460449,
+            "mean_object_margin": 0.2733055353164673,
+            "mean_object_probability": 0.12372568249702454,
+            "cross_entropy": 2.4572596549987793
+          }
+        },
+        "attention_heads": [
+          {
+            "head": 0,
+            "mean_attention": {
+              "separator": 0.4589909613132477,
+              "subject": 0.341478168964386,
+              "relation": 0.19953085482120514
+            },
+            "mean_output_norm": 0.3371235430240631,
+            "mean_subject_value_contribution_norm": 0.2985256016254425
+          },
+          {
+            "head": 1,
+            "mean_attention": {
+              "separator": 0.14311155676841736,
+              "subject": 0.8355052471160889,
+              "relation": 0.021383244544267654
+            },
+            "mean_output_norm": 0.7602545022964478,
+            "mean_subject_value_contribution_norm": 0.757089376449585
+          },
+          {
+            "head": 2,
+            "mean_attention": {
+              "separator": 0.3653522729873657,
+              "subject": 0.320022851228714,
+              "relation": 0.3146248757839203
+            },
+            "mean_output_norm": 0.34287792444229126,
+            "mean_subject_value_contribution_norm": 0.27330565452575684
+          },
+          {
+            "head": 3,
+            "mean_attention": {
+              "separator": 0.2522769868373871,
+              "subject": 0.6785449385643005,
+              "relation": 0.06917808204889297
+            },
+            "mean_output_norm": 0.5358250737190247,
+            "mean_subject_value_contribution_norm": 0.5325384140014648
+          }
+        ]
+      },
+      "matched_relation_stage_control": {
+        "relation": "random",
+        "manual_forward_max_abs_error": 0.0,
+        "baseline": {
+          "full_vocab_accuracy": 0.03125,
+          "object_accuracy": 0.03125,
+          "object_mean_rank": 16.640625,
+          "mean_target_logit": 3.9600157737731934,
+          "mean_object_margin": -1.266396164894104,
+          "mean_object_probability": 0.0294172465801239,
+          "cross_entropy": 3.7841739654541016
+        },
+        "logit_lens": {
+          "input_relation_residual": {
+            "full_vocab_accuracy": 0.0,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 2.176755428314209,
+            "mean_object_margin": -0.7062031030654907,
+            "mean_object_probability": 0.03125,
+            "cross_entropy": 4.239762306213379
+          },
+          "post_attention_residual": {
+            "full_vocab_accuracy": 0.0,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 17.3125,
+            "mean_target_logit": 1.982478380203247,
+            "mean_object_margin": -1.0763797760009766,
+            "mean_object_probability": 0.0295584574341774,
+            "cross_entropy": 4.193247318267822
+          },
+          "post_mlp_residual": {
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.640625,
+            "mean_target_logit": 3.9600157737731934,
+            "mean_object_margin": -1.266396164894104,
+            "mean_object_probability": 0.0294172465801239,
+            "cross_entropy": 3.7841739654541016
+          }
+        },
+        "attention_heads": [
+          {
+            "head": 0,
+            "mean_attention": {
+              "separator": 0.3067585825920105,
+              "subject": 0.5513319969177246,
+              "relation": 0.1419094353914261
+            },
+            "mean_output_norm": 0.4934388995170593,
+            "mean_subject_value_contribution_norm": 0.48468923568725586
+          },
+          {
+            "head": 1,
+            "mean_attention": {
+              "separator": 0.160758376121521,
+              "subject": 0.8055640459060669,
+              "relation": 0.0336776077747345
+            },
+            "mean_output_norm": 0.7359905242919922,
+            "mean_subject_value_contribution_norm": 0.730167031288147
+          },
+          {
+            "head": 2,
+            "mean_attention": {
+              "separator": 0.35092514753341675,
+              "subject": 0.4052879214286804,
+              "relation": 0.24378690123558044
+            },
+            "mean_output_norm": 0.3761299252510071,
+            "mean_subject_value_contribution_norm": 0.34773603081703186
+          },
+          {
+            "head": 3,
+            "mean_attention": {
+              "separator": 0.2867828905582428,
+              "subject": 0.5996336936950684,
+              "relation": 0.11358338594436646
+            },
+            "mean_output_norm": 0.48005059361457825,
+            "mean_subject_value_contribution_norm": 0.47048962116241455
+          }
+        ]
+      },
+      "random_heldout_control": null,
+      "representation_geometry": {
+        "subject_input_embedding": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.7620969951411807
+        },
+        "attention_head_outputs": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.8401862774262214
+        },
+        "post_attention_residual": {
+          "centroid_cosine_accuracy": 0.984375,
+          "class_eta_squared": 0.850800974121843
+        },
+        "mlp_activation": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.8509361196732648
+        },
+        "post_mlp_residual": {
+          "centroid_cosine_accuracy": 0.984375,
+          "class_eta_squared": 0.8710338157782795
+        }
+      },
+      "head_interventions": {
+        "intervention": "Heads outside kept_heads are replaced by their discovery-set mean activation.",
+        "head_reference_subjects": 128,
+        "evaluation_subjects": 64,
+        "baseline": {
+          "full_vocab_accuracy": 0.6875,
+          "object_accuracy": 0.6875,
+          "object_mean_rank": 1.796875,
+          "mean_target_logit": 4.714236259460449,
+          "mean_object_margin": 0.2733055353164673,
+          "mean_object_probability": 0.12372568249702454,
+          "cross_entropy": 2.4572596549987793
+        },
+        "subsets": [
+          {
+            "kept_heads": [],
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 4.269646167755127,
+            "mean_object_margin": -0.7431577444076538,
+            "mean_object_probability": 0.03125,
+            "cross_entropy": 3.582832098007202
+          },
+          {
+            "kept_heads": [
+              0
+            ],
+            "full_vocab_accuracy": 0.046875,
+            "object_accuracy": 0.046875,
+            "object_mean_rank": 12.625,
+            "mean_target_logit": 4.308574676513672,
+            "mean_object_margin": -0.63868248462677,
+            "mean_object_probability": 0.03588447719812393,
+            "cross_entropy": 3.457174777984619
+          },
+          {
+            "kept_heads": [
+              1
+            ],
+            "full_vocab_accuracy": 0.390625,
+            "object_accuracy": 0.390625,
+            "object_mean_rank": 3.203125,
+            "mean_target_logit": 4.6689653396606445,
+            "mean_object_margin": -0.09588717669248581,
+            "mean_object_probability": 0.08226455748081207,
+            "cross_entropy": 2.732219696044922
+          },
+          {
+            "kept_heads": [
+              0,
+              1
+            ],
+            "full_vocab_accuracy": 0.453125,
+            "object_accuracy": 0.453125,
+            "object_mean_rank": 3.234375,
+            "mean_target_logit": 4.584440231323242,
+            "mean_object_margin": -0.06737592816352844,
+            "mean_object_probability": 0.08860516548156738,
+            "cross_entropy": 2.6983094215393066
+          },
+          {
+            "kept_heads": [
+              2
+            ],
+            "full_vocab_accuracy": 0.015625,
+            "object_accuracy": 0.015625,
+            "object_mean_rank": 13.953125,
+            "mean_target_logit": 4.30648136138916,
+            "mean_object_margin": -0.6621670722961426,
+            "mean_object_probability": 0.03467876464128494,
+            "cross_entropy": 3.489114761352539
+          },
+          {
+            "kept_heads": [
+              0,
+              2
+            ],
+            "full_vocab_accuracy": 0.046875,
+            "object_accuracy": 0.046875,
+            "object_mean_rank": 10.921875,
+            "mean_target_logit": 4.284910202026367,
+            "mean_object_margin": -0.5803688764572144,
+            "mean_object_probability": 0.03939826786518097,
+            "cross_entropy": 3.3806889057159424
+          },
+          {
+            "kept_heads": [
+              1,
+              2
+            ],
+            "full_vocab_accuracy": 0.390625,
+            "object_accuracy": 0.390625,
+            "object_mean_rank": 3.09375,
+            "mean_target_logit": 4.6095499992370605,
+            "mean_object_margin": -0.06408517062664032,
+            "mean_object_probability": 0.08744467049837112,
+            "cross_entropy": 2.6934845447540283
+          },
+          {
+            "kept_heads": [
+              0,
+              1,
+              2
+            ],
+            "full_vocab_accuracy": 0.46875,
+            "object_accuracy": 0.484375,
+            "object_mean_rank": 3.15625,
+            "mean_target_logit": 4.486354827880859,
+            "mean_object_margin": -0.04949092119932175,
+            "mean_object_probability": 0.09288895130157471,
+            "cross_entropy": 2.6821017265319824
+          },
+          {
+            "kept_heads": [
+              3
+            ],
+            "full_vocab_accuracy": 0.28125,
+            "object_accuracy": 0.28125,
+            "object_mean_rank": 5.796875,
+            "mean_target_logit": 4.755145072937012,
+            "mean_object_margin": -0.2203667014837265,
+            "mean_object_probability": 0.05353900045156479,
+            "cross_entropy": 3.106210231781006
+          },
+          {
+            "kept_heads": [
+              0,
+              3
+            ],
+            "full_vocab_accuracy": 0.328125,
+            "object_accuracy": 0.328125,
+            "object_mean_rank": 4.625,
+            "mean_target_logit": 4.771927833557129,
+            "mean_object_margin": -0.15417605638504028,
+            "mean_object_probability": 0.05963766202330589,
+            "cross_entropy": 3.0086488723754883
+          },
+          {
+            "kept_heads": [
+              1,
+              3
+            ],
+            "full_vocab_accuracy": 0.71875,
+            "object_accuracy": 0.71875,
+            "object_mean_rank": 1.71875,
+            "mean_target_logit": 4.88474178314209,
+            "mean_object_margin": 0.2624209523200989,
+            "mean_object_probability": 0.1142333447933197,
+            "cross_entropy": 2.478529930114746
+          },
+          {
+            "kept_heads": [
+              0,
+              1,
+              3
+            ],
+            "full_vocab_accuracy": 0.65625,
+            "object_accuracy": 0.65625,
+            "object_mean_rank": 1.734375,
+            "mean_target_logit": 4.813235282897949,
+            "mean_object_margin": 0.2765653729438782,
+            "mean_object_probability": 0.1201448142528534,
+            "cross_entropy": 2.4589385986328125
+          },
+          {
+            "kept_heads": [
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.34375,
+            "object_accuracy": 0.34375,
+            "object_mean_rank": 4.75,
+            "mean_target_logit": 4.7599616050720215,
+            "mean_object_margin": -0.16929222643375397,
+            "mean_object_probability": 0.058120086789131165,
+            "cross_entropy": 3.0320534706115723
+          },
+          {
+            "kept_heads": [
+              0,
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.3125,
+            "object_accuracy": 0.3125,
+            "object_mean_rank": 4.078125,
+            "mean_target_logit": 4.723640441894531,
+            "mean_object_margin": -0.11515772342681885,
+            "mean_object_probability": 0.06397988647222519,
+            "cross_entropy": 2.953563690185547
+          },
+          {
+            "kept_heads": [
+              1,
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.671875,
+            "object_accuracy": 0.671875,
+            "object_mean_rank": 1.75,
+            "mean_target_logit": 4.817574501037598,
+            "mean_object_margin": 0.269722044467926,
+            "mean_object_probability": 0.11901862919330597,
+            "cross_entropy": 2.4570910930633545
+          },
+          {
+            "kept_heads": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.6875,
+            "object_accuracy": 0.6875,
+            "object_mean_rank": 1.796875,
+            "mean_target_logit": 4.714236259460449,
+            "mean_object_margin": 0.2733055353164673,
+            "mean_object_probability": 0.12372568249702454,
+            "cross_entropy": 2.4572596549987793
+          }
+        ],
+        "margin_shapley": [
+          {
+            "head": 0,
+            "margin_shapley": 0.04862912620107333
+          },
+          {
+            "head": 1,
+            "margin_shapley": 0.5133342705667019
+          },
+          {
+            "head": 2,
+            "margin_shapley": 0.036548918733994164
+          },
+          {
+            "head": 3,
+            "margin_shapley": 0.4179509642223517
+          }
+        ]
+      },
+      "neuron_interventions": {
+        "intervention": "Neuron activations are mean-ablated using discovery-set means. Rankings are learned on discovery subjects and all curves are evaluated on disjoint subjects.",
+        "baseline": {
+          "full_vocab_accuracy": 0.6875,
+          "object_accuracy": 0.6875,
+          "object_mean_rank": 1.796875,
+          "mean_target_logit": 4.714236259460449,
+          "mean_object_margin": 0.2733055353164673,
+          "mean_object_probability": 0.12372568249702454,
+          "cross_entropy": 2.4572596549987793
+        },
+        "top_32_ranking": [
+          165,
+          238,
+          240,
+          209,
+          11,
+          105,
+          7,
+          114,
+          169,
+          237,
+          81,
+          128,
+          64,
+          152,
+          83,
+          101,
+          225,
+          135,
+          144,
+          82,
+          198,
+          253,
+          147,
+          94,
+          127,
+          191,
+          45,
+          171,
+          170,
+          12,
+          80,
+          252
+        ],
+        "curves": [
+          {
+            "k": 1,
+            "top_neurons": [
+              165
+            ],
+            "necessity_mean_margin": 0.26514092087745667,
+            "necessity_object_accuracy": 0.6875,
+            "sufficiency_mean_margin": -0.3526686728000641,
+            "sufficiency_object_accuracy": 0.140625,
+            "random_ablation_margin": {
+              "mean": 0.2719185069203377,
+              "sd": 0.00198401796805878,
+              "min": 0.26604992151260376,
+              "max": 0.27444618940353394
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.684375,
+              "sd": 0.0062499999999999995,
+              "min": 0.671875,
+              "max": 0.6875
+            }
+          },
+          {
+            "k": 2,
+            "top_neurons": [
+              165,
+              238
+            ],
+            "necessity_mean_margin": 0.25747302174568176,
+            "necessity_object_accuracy": 0.6875,
+            "sufficiency_mean_margin": -0.3394238352775574,
+            "sufficiency_object_accuracy": 0.140625,
+            "random_ablation_margin": {
+              "mean": 0.2710763230919838,
+              "sd": 0.0023877109684476722,
+              "min": 0.2656184434890747,
+              "max": 0.2751949429512024
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.6859375,
+              "sd": 0.0046875,
+              "min": 0.671875,
+              "max": 0.6875
+            }
+          },
+          {
+            "k": 4,
+            "top_neurons": [
+              165,
+              238,
+              240,
+              209
+            ],
+            "necessity_mean_margin": 0.24146591126918793,
+            "necessity_object_accuracy": 0.640625,
+            "sufficiency_mean_margin": -0.2971440553665161,
+            "sufficiency_object_accuracy": 0.1875,
+            "random_ablation_margin": {
+              "mean": 0.26920186877250674,
+              "sd": 0.003866383734487521,
+              "min": 0.2586771845817566,
+              "max": 0.27455857396125793
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.684375,
+              "sd": 0.010597390598633231,
+              "min": 0.65625,
+              "max": 0.703125
+            }
+          },
+          {
+            "k": 8,
+            "top_neurons": [
+              165,
+              238,
+              240,
+              209,
+              11,
+              105,
+              7,
+              114
+            ],
+            "necessity_mean_margin": 0.2214357852935791,
+            "necessity_object_accuracy": 0.59375,
+            "sufficiency_mean_margin": -0.23759734630584717,
+            "sufficiency_object_accuracy": 0.234375,
+            "random_ablation_margin": {
+              "mean": 0.26533198058605195,
+              "sd": 0.0046561186723906136,
+              "min": 0.25488942861557007,
+              "max": 0.27528464794158936
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.68515625,
+              "sd": 0.010216169398923454,
+              "min": 0.671875,
+              "max": 0.703125
+            }
+          },
+          {
+            "k": 16,
+            "top_neurons": [
+              165,
+              238,
+              240,
+              209,
+              11,
+              105,
+              7,
+              114,
+              169,
+              237,
+              81,
+              128,
+              64,
+              152,
+              83,
+              101
+            ],
+            "necessity_mean_margin": 0.18424373865127563,
+            "necessity_object_accuracy": 0.5625,
+            "sufficiency_mean_margin": -0.13877138495445251,
+            "sufficiency_object_accuracy": 0.34375,
+            "random_ablation_margin": {
+              "mean": 0.25460281744599345,
+              "sd": 0.008374043131244065,
+              "min": 0.2373546063899994,
+              "max": 0.2742350101470947
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.671875,
+              "sd": 0.01638763825265862,
+              "min": 0.640625,
+              "max": 0.6875
+            }
+          },
+          {
+            "k": 32,
+            "top_neurons": [
+              165,
+              238,
+              240,
+              209,
+              11,
+              105,
+              7,
+              114,
+              169,
+              237,
+              81,
+              128,
+              64,
+              152,
+              83,
+              101,
+              225,
+              135,
+              144,
+              82,
+              198,
+              253,
+              147,
+              94,
+              127,
+              191,
+              45,
+              171,
+              170,
+              12,
+              80,
+              252
+            ],
+            "necessity_mean_margin": 0.1262737214565277,
+            "necessity_object_accuracy": 0.546875,
+            "sufficiency_mean_margin": -0.03628979250788689,
+            "sufficiency_object_accuracy": 0.421875,
+            "random_ablation_margin": {
+              "mean": 0.23820589929819108,
+              "sd": 0.011412149248221247,
+              "min": 0.2167048454284668,
+              "max": 0.26430267095565796
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.65703125,
+              "sd": 0.01943727391347614,
+              "min": 0.625,
+              "max": 0.703125
+            }
+          },
+          {
+            "k": 64,
+            "top_neurons": [
+              165,
+              238,
+              240,
+              209,
+              11,
+              105,
+              7,
+              114,
+              169,
+              237,
+              81,
+              128,
+              64,
+              152,
+              83,
+              101,
+              225,
+              135,
+              144,
+              82,
+              198,
+              253,
+              147,
+              94,
+              127,
+              191,
+              45,
+              171,
+              170,
+              12,
+              80,
+              252,
+              139,
+              66,
+              42,
+              119,
+              162,
+              22,
+              56,
+              1,
+              136,
+              26,
+              164,
+              8,
+              27,
+              157,
+              19,
+              223,
+              31,
+              59,
+              43,
+              193,
+              196,
+              35,
+              149,
+              113,
+              0,
+              217,
+              120,
+              18,
+              49,
+              62,
+              90,
+              202
+            ],
+            "necessity_mean_margin": 0.018737562000751495,
+            "necessity_object_accuracy": 0.46875,
+            "sufficiency_mean_margin": 0.11931265890598297,
+            "sufficiency_object_accuracy": 0.59375,
+            "random_ablation_margin": {
+              "mean": 0.1952204518020153,
+              "sd": 0.013739581949632432,
+              "min": 0.15811040997505188,
+              "max": 0.21511319279670715
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.61328125,
+              "sd": 0.028758066123915564,
+              "min": 0.546875,
+              "max": 0.65625
+            }
+          },
+          {
+            "k": 128,
+            "top_neurons": [
+              165,
+              238,
+              240,
+              209,
+              11,
+              105,
+              7,
+              114,
+              169,
+              237,
+              81,
+              128,
+              64,
+              152,
+              83,
+              101,
+              225,
+              135,
+              144,
+              82,
+              198,
+              253,
+              147,
+              94,
+              127,
+              191,
+              45,
+              171,
+              170,
+              12,
+              80,
+              252,
+              139,
+              66,
+              42,
+              119,
+              162,
+              22,
+              56,
+              1,
+              136,
+              26,
+              164,
+              8,
+              27,
+              157,
+              19,
+              223,
+              31,
+              59,
+              43,
+              193,
+              196,
+              35,
+              149,
+              113,
+              0,
+              217,
+              120,
+              18,
+              49,
+              62,
+              90,
+              202,
+              48,
+              176,
+              85,
+              112,
+              109,
+              111,
+              248,
+              47,
+              21,
+              41,
+              95,
+              142,
+              215,
+              4,
+              183,
+              160,
+              239,
+              74,
+              230,
+              28,
+              200,
+              236,
+              76,
+              52,
+              97,
+              98,
+              226,
+              38,
+              110,
+              125,
+              207,
+              151,
+              100,
+              190,
+              40,
+              179,
+              25,
+              23,
+              221,
+              184,
+              235,
+              204,
+              156,
+              247,
+              68,
+              84,
+              172,
+              167,
+              153,
+              117,
+              233,
+              188,
+              91,
+              145,
+              228,
+              131,
+              13,
+              158,
+              255,
+              70,
+              14,
+              173,
+              231,
+              189
+            ],
+            "necessity_mean_margin": -0.1520550698041916,
+            "necessity_object_accuracy": 0.375,
+            "sufficiency_mean_margin": 0.23982590436935425,
+            "sufficiency_object_accuracy": 0.65625,
+            "random_ablation_margin": {
+              "mean": 0.06263679433614015,
+              "sd": 0.02764315569372119,
+              "min": 0.021526560187339783,
+              "max": 0.11928756535053253
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.51328125,
+              "sd": 0.039613304169022555,
+              "min": 0.453125,
+              "max": 0.59375
+            }
+          },
+          {
+            "k": 256,
+            "top_neurons": [
+              165,
+              238,
+              240,
+              209,
+              11,
+              105,
+              7,
+              114,
+              169,
+              237,
+              81,
+              128,
+              64,
+              152,
+              83,
+              101,
+              225,
+              135,
+              144,
+              82,
+              198,
+              253,
+              147,
+              94,
+              127,
+              191,
+              45,
+              171,
+              170,
+              12,
+              80,
+              252,
+              139,
+              66,
+              42,
+              119,
+              162,
+              22,
+              56,
+              1,
+              136,
+              26,
+              164,
+              8,
+              27,
+              157,
+              19,
+              223,
+              31,
+              59,
+              43,
+              193,
+              196,
+              35,
+              149,
+              113,
+              0,
+              217,
+              120,
+              18,
+              49,
+              62,
+              90,
+              202,
+              48,
+              176,
+              85,
+              112,
+              109,
+              111,
+              248,
+              47,
+              21,
+              41,
+              95,
+              142,
+              215,
+              4,
+              183,
+              160,
+              239,
+              74,
+              230,
+              28,
+              200,
+              236,
+              76,
+              52,
+              97,
+              98,
+              226,
+              38,
+              110,
+              125,
+              207,
+              151,
+              100,
+              190,
+              40,
+              179,
+              25,
+              23,
+              221,
+              184,
+              235,
+              204,
+              156,
+              247,
+              68,
+              84,
+              172,
+              167,
+              153,
+              117,
+              233,
+              188,
+              91,
+              145,
+              228,
+              131,
+              13,
+              158,
+              255,
+              70,
+              14,
+              173,
+              231,
+              189,
+              9,
+              146,
+              32,
+              36,
+              116,
+              67,
+              54,
+              89,
+              208,
+              181,
+              44,
+              24,
+              15,
+              141,
+              10,
+              234,
+              148,
+              251,
+              20,
+              34,
+              205,
+              186,
+              161,
+              129,
+              134,
+              214,
+              143,
+              212,
+              17,
+              79,
+              159,
+              50,
+              195,
+              122,
+              130,
+              88,
+              37,
+              60,
+              73,
+              102,
+              166,
+              124,
+              206,
+              210,
+              63,
+              199,
+              58,
+              93,
+              185,
+              224,
+              250,
+              55,
+              201,
+              140,
+              192,
+              211,
+              72,
+              174,
+              213,
+              222,
+              75,
+              244,
+              30,
+              132,
+              51,
+              2,
+              194,
+              249,
+              92,
+              163,
+              99,
+              154,
+              77,
+              254,
+              180,
+              29,
+              121,
+              118,
+              138,
+              232,
+              16,
+              203,
+              227,
+              245,
+              87,
+              107,
+              168,
+              78,
+              3,
+              242,
+              96,
+              187,
+              133,
+              243,
+              108,
+              216,
+              5,
+              218,
+              46,
+              115,
+              53,
+              69,
+              182,
+              229,
+              106,
+              178,
+              39,
+              33,
+              150,
+              155,
+              86,
+              241,
+              137,
+              177,
+              197,
+              61,
+              71,
+              65,
+              246,
+              104,
+              175,
+              103,
+              126,
+              219,
+              6,
+              220,
+              123,
+              57
+            ],
+            "necessity_mean_margin": -0.3777788281440735,
+            "necessity_object_accuracy": 0.140625,
+            "sufficiency_mean_margin": 0.2733055353164673,
+            "sufficiency_object_accuracy": 0.6875,
+            "random_ablation_margin": {
+              "mean": -0.3777788281440735,
+              "sd": 0.0,
+              "min": -0.3777788281440735,
+              "max": -0.3777788281440735
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.140625,
+              "sd": 0.0,
+              "min": 0.140625,
+              "max": 0.140625
+            }
+          }
+        ],
+        "discovery_top_20_individual_ablations": [
+          {
+            "neuron": 165,
+            "causal_margin_drop": 0.008420884609222412,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 238,
+            "causal_margin_drop": 0.007670789957046509,
+            "ablated_object_accuracy": 0.6875
+          },
+          {
+            "neuron": 240,
+            "causal_margin_drop": 0.007349073886871338,
+            "ablated_object_accuracy": 0.6875
+          },
+          {
+            "neuron": 209,
+            "causal_margin_drop": 0.00693899393081665,
+            "ablated_object_accuracy": 0.6875
+          },
+          {
+            "neuron": 11,
+            "causal_margin_drop": 0.006441593170166016,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 105,
+            "causal_margin_drop": 0.006036520004272461,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 7,
+            "causal_margin_drop": 0.0056501030921936035,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 114,
+            "causal_margin_drop": 0.005638062953948975,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 169,
+            "causal_margin_drop": 0.005505204200744629,
+            "ablated_object_accuracy": 0.703125
+          },
+          {
+            "neuron": 237,
+            "causal_margin_drop": 0.00537109375,
+            "ablated_object_accuracy": 0.6875
+          },
+          {
+            "neuron": 81,
+            "causal_margin_drop": 0.005266547203063965,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 128,
+            "causal_margin_drop": 0.005201935768127441,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 64,
+            "causal_margin_drop": 0.005162656307220459,
+            "ablated_object_accuracy": 0.6875
+          },
+          {
+            "neuron": 152,
+            "causal_margin_drop": 0.004644930362701416,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 83,
+            "causal_margin_drop": 0.004569560289382935,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 101,
+            "causal_margin_drop": 0.00455358624458313,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 225,
+            "causal_margin_drop": 0.004309952259063721,
+            "ablated_object_accuracy": 0.6875
+          },
+          {
+            "neuron": 135,
+            "causal_margin_drop": 0.0043045878410339355,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 144,
+            "causal_margin_drop": 0.004265695810317993,
+            "ablated_object_accuracy": 0.6953125
+          },
+          {
+            "neuron": 82,
+            "causal_margin_drop": 0.0041765570640563965,
+            "ablated_object_accuracy": 0.6875
+          }
+        ]
+      },
+      "mlp_nonlinearity": {
+        "method": "Per-neuron affine GELU surrogates are fit on discovery preactivations and evaluated on disjoint subjects; the resulting whole MLP is affine on its input.",
+        "activation_r2": 0.9621015376684832,
+        "mlp_output_relative_l2_error": 0.07516998285077395,
+        "baseline": {
+          "full_vocab_accuracy": 0.6875,
+          "object_accuracy": 0.6875,
+          "object_mean_rank": 1.796875,
+          "mean_target_logit": 4.714236259460449,
+          "mean_object_margin": 0.2733055353164673,
+          "mean_object_probability": 0.12372568249702454,
+          "cross_entropy": 2.4572596549987793
+        },
+        "affine_gelu_surrogate": {
+          "full_vocab_accuracy": 0.65625,
+          "object_accuracy": 0.671875,
+          "object_mean_rank": 1.8125,
+          "mean_target_logit": 4.699716567993164,
+          "mean_object_margin": 0.2708670496940613,
+          "mean_object_probability": 0.12410605698823929,
+          "cross_entropy": 2.4473652839660645
+        },
+        "discovery_mean_mlp_activation": {
+          "full_vocab_accuracy": 0.140625,
+          "object_accuracy": 0.140625,
+          "object_mean_rank": 7.84375,
+          "mean_target_logit": 4.392016887664795,
+          "mean_object_margin": -0.3777788281440735,
+          "mean_object_probability": 0.04588719457387924,
+          "cross_entropy": 3.207181453704834
+        },
+        "no_mlp_residual_only": {
+          "full_vocab_accuracy": 0.15625,
+          "object_accuracy": 0.46875,
+          "object_mean_rank": 3.5,
+          "mean_target_logit": 2.721238613128662,
+          "mean_object_margin": -0.048817310482263565,
+          "mean_object_probability": 0.0783999115228653,
+          "cross_entropy": 3.316549777984619
+        }
+      },
+      "subject_swap_patching": {
+        "pair_count": 64,
+        "metric": "mean logit(clean target) - logit(corrupt target)",
+        "clean_mean_logit_difference": 1.512333631515503,
+        "corrupt_mean_logit_difference": -1.5656185150146484,
+        "total_effect": 3.0779521465301514,
+        "components": {
+          "subject_input_embedding": {
+            "patched_mean_logit_difference": 1.512333631515503,
+            "absolute_restoration": 3.0779521465301514,
+            "normalized_restoration": 1.0
+          },
+          "all_attention_heads": {
+            "patched_mean_logit_difference": 1.512333631515503,
+            "absolute_restoration": 3.0779521465301514,
+            "normalized_restoration": 1.0
+          },
+          "all_mlp_neurons": {
+            "patched_mean_logit_difference": 0.99976646900177,
+            "absolute_restoration": 2.5653849840164185,
+            "normalized_restoration": 0.833471367288292
+          },
+          "attention_patterns_only": {
+            "patched_mean_logit_difference": -1.544013261795044,
+            "absolute_restoration": 0.021605253219604492,
+            "normalized_restoration": 0.007019359688213674
+          },
+          "attention_values_only": {
+            "patched_mean_logit_difference": 1.4860299825668335,
+            "absolute_restoration": 3.051648497581482,
+            "normalized_restoration": 0.9914541722234629
+          }
+        },
+        "heads": [
+          {
+            "head": 0,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -1.328373908996582,
+              "absolute_restoration": 0.2372446060180664,
+              "normalized_restoration": 0.07707871816185248
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -1.3286223411560059,
+              "absolute_restoration": 0.23699617385864258,
+              "normalized_restoration": 0.07699800470446365
+            }
+          },
+          {
+            "head": 1,
+            "full_head_patch": {
+              "patched_mean_logit_difference": 0.16119834780693054,
+              "absolute_restoration": 1.726816862821579,
+              "normalized_restoration": 0.5610278459878789
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": 0.15461155772209167,
+              "absolute_restoration": 1.7202300727367401,
+              "normalized_restoration": 0.5588878549252289
+            }
+          },
+          {
+            "head": 2,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -1.3920010328292847,
+              "absolute_restoration": 0.17361748218536377,
+              "normalized_restoration": 0.056406816584555056
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -1.393078088760376,
+              "absolute_restoration": 0.17254042625427246,
+              "normalized_restoration": 0.05605689043891777
+            }
+          },
+          {
+            "head": 3,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -0.6987636685371399,
+              "absolute_restoration": 0.8668548464775085,
+              "normalized_restoration": 0.2816336334061381
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -0.7081161141395569,
+              "absolute_restoration": 0.8575024008750916,
+              "normalized_restoration": 0.2785951048140155
+            }
+          }
+        ],
+        "top_exact_neurons": [
+          {
+            "neuron": 12,
+            "exact_absolute_restoration": 0.047115325927734375,
+            "exact_normalized_restoration": 0.015307361415884456,
+            "attribution_estimate": 0.043424323201179504
+          },
+          {
+            "neuron": 241,
+            "exact_absolute_restoration": 0.04179024696350098,
+            "exact_normalized_restoration": 0.013577289370990422,
+            "attribution_estimate": 0.039394646883010864
+          },
+          {
+            "neuron": 240,
+            "exact_absolute_restoration": 0.04059553146362305,
+            "exact_normalized_restoration": 0.013189136650284624,
+            "attribution_estimate": 0.03685804456472397
+          },
+          {
+            "neuron": 7,
+            "exact_absolute_restoration": 0.03227436542510986,
+            "exact_normalized_restoration": 0.010485661858483902,
+            "attribution_estimate": 0.03030170500278473
+          },
+          {
+            "neuron": 113,
+            "exact_absolute_restoration": 0.030312538146972656,
+            "exact_normalized_restoration": 0.009848281163547232,
+            "attribution_estimate": 0.028507692739367485
+          },
+          {
+            "neuron": 169,
+            "exact_absolute_restoration": 0.030125021934509277,
+            "exact_normalized_restoration": 0.009787358769846351,
+            "attribution_estimate": 0.028456952422857285
+          },
+          {
+            "neuron": 253,
+            "exact_absolute_restoration": 0.02838921546936035,
+            "exact_normalized_restoration": 0.00922341027990451,
+            "attribution_estimate": 0.02703828364610672
+          },
+          {
+            "neuron": 128,
+            "exact_absolute_restoration": 0.02577042579650879,
+            "exact_normalized_restoration": 0.008372588191652168,
+            "attribution_estimate": 0.024756282567977905
+          },
+          {
+            "neuron": 170,
+            "exact_absolute_restoration": 0.023939132690429688,
+            "exact_normalized_restoration": 0.007777616918903967,
+            "attribution_estimate": 0.021789541468024254
+          },
+          {
+            "neuron": 238,
+            "exact_absolute_restoration": 0.023357510566711426,
+            "exact_normalized_restoration": 0.00758865292725324,
+            "attribution_estimate": 0.0218103788793087
+          },
+          {
+            "neuron": 139,
+            "exact_absolute_restoration": 0.02329075336456299,
+            "exact_normalized_restoration": 0.0075669640903349355,
+            "attribution_estimate": 0.021613096818327904
+          },
+          {
+            "neuron": 109,
+            "exact_absolute_restoration": 0.0228346586227417,
+            "exact_normalized_restoration": 0.0074187828581038055,
+            "attribution_estimate": 0.021894007921218872
+          },
+          {
+            "neuron": 105,
+            "exact_absolute_restoration": 0.02167034149169922,
+            "exact_normalized_restoration": 0.007040506304209021,
+            "attribution_estimate": 0.020479926839470863
+          },
+          {
+            "neuron": 165,
+            "exact_absolute_restoration": 0.02122950553894043,
+            "exact_normalized_restoration": 0.00689728252041636,
+            "attribution_estimate": 0.019281690940260887
+          },
+          {
+            "neuron": 114,
+            "exact_absolute_restoration": 0.021100521087646484,
+            "exact_normalized_restoration": 0.006855376589084922,
+            "attribution_estimate": 0.02007460407912731
+          },
+          {
+            "neuron": 152,
+            "exact_absolute_restoration": 0.020880699157714844,
+            "exact_normalized_restoration": 0.00678395834751822,
+            "attribution_estimate": 0.019201233983039856
+          },
+          {
+            "neuron": 84,
+            "exact_absolute_restoration": 0.020008563995361328,
+            "exact_normalized_restoration": 0.006500609185206943,
+            "attribution_estimate": 0.01919405907392502
+          },
+          {
+            "neuron": 135,
+            "exact_absolute_restoration": 0.018842697143554688,
+            "exact_normalized_restoration": 0.006121829140455126,
+            "attribution_estimate": 0.01824244111776352
+          },
+          {
+            "neuron": 248,
+            "exact_absolute_restoration": 0.01880335807800293,
+            "exact_normalized_restoration": 0.006109048218699697,
+            "attribution_estimate": 0.017888600006699562
+          },
+          {
+            "neuron": 127,
+            "exact_absolute_restoration": 0.018492937088012695,
+            "exact_normalized_restoration": 0.006008195127029581,
+            "attribution_estimate": 0.017614159733057022
+          }
+        ],
+        "attribution_validation": {
+          "heads_pearson_r": 0.9998975371399591,
+          "heads_spearman_r": 1.0,
+          "neurons_pearson_r": 0.9995357842357496,
+          "neurons_spearman_r": 0.999580674850646,
+          "head_attribution_estimates": [
+            0.21484781801700592,
+            1.3997117280960083,
+            0.15858933329582214,
+            0.7300532460212708
+          ],
+          "head_exact_restorations": [
+            0.2372446060180664,
+            1.726816862821579,
+            0.17361748218536377,
+            0.8668548464775085
+          ]
+        }
+      },
+      "relation_gate_patching": {
+        "clean_relation": "semantic",
+        "corrupt_relation": "random",
+        "clean_mean_logit_difference": 1.543076753616333,
+        "corrupt_mean_logit_difference": 1.1129944324493408,
+        "total_effect": 0.4300823211669922,
+        "relation_token_embedding": {
+          "patched_mean_logit_difference": 1.543076753616333,
+          "absolute_restoration": 0.4300823211669922,
+          "normalized_restoration": 1.0
+        },
+        "all_attention_heads": {
+          "patched_mean_logit_difference": 1.1395387649536133,
+          "absolute_restoration": 0.02654433250427246,
+          "normalized_restoration": 0.06171919001982376
+        },
+        "all_mlp_neurons": {
+          "patched_mean_logit_difference": 1.4773609638214111,
+          "absolute_restoration": 0.3643665313720703,
+          "normalized_restoration": 0.8472018342520855
+        },
+        "heads": [
+          {
+            "head": 0,
+            "patched_mean_logit_difference": 1.0891475677490234,
+            "absolute_restoration": -0.023846864700317383,
+            "normalized_restoration": -0.05544720981697393
+          },
+          {
+            "head": 1,
+            "patched_mean_logit_difference": 1.133448839187622,
+            "absolute_restoration": 0.02045440673828125,
+            "normalized_restoration": 0.04755928279679095
+          },
+          {
+            "head": 2,
+            "patched_mean_logit_difference": 1.1100298166275024,
+            "absolute_restoration": -0.002964615821838379,
+            "normalized_restoration": -0.0068931357461849245
+          },
+          {
+            "head": 3,
+            "patched_mean_logit_difference": 1.1450128555297852,
+            "absolute_restoration": 0.032018423080444336,
+            "normalized_restoration": 0.07444719651243753
+          }
+        ]
+      }
+    },
+    {
+      "goal": "goal1",
+      "seed": 47,
+      "occurrences_per_triple": 16,
+      "relation": "semantic",
+      "discovery_subjects": 128,
+      "evaluation_subjects": 64,
+      "evaluation_split": "never-seen relation subjects",
+      "replay_verification": {
+        "verified_exactly": true,
+        "reference_path": "factual_recall/results/final_category_seed47/linear_shift_metrics.json",
+        "errors": {
+          "last_train_loss_abs_error": 0.0,
+          "semantic_probe_abs_error": 0.0,
+          "semantic_train_recall_abs_error": 0.0,
+          "semantic_heldout_recall_abs_error": 0.0,
+          "random_probe_abs_error": 0.0,
+          "random_train_recall_abs_error": 0.0,
+          "random_heldout_recall_abs_error": 0.0
+        },
+        "replay": {
+          "train_steps": 512,
+          "last_train_loss": 1.6659276485443115,
+          "relations": {
+            "semantic": {
+              "probe_accuracy": 0.984375,
+              "probe_r2": 0.3876587442307129,
+              "probe_cosine": 0.9115961100912439,
+              "trained_check": {
+                "recall": 0.84375,
+                "loss": 2.051640033721924
+              },
+              "heldout_check": {
+                "recall": 0.828125,
+                "loss": 2.2319142818450928
+              }
+            },
+            "random": {
+              "probe_accuracy": 0.03125,
+              "probe_r2": -2.511020935408109,
+              "probe_cosine": 0.5456886927759671,
+              "trained_check": {
+                "recall": 0.1171875,
+                "loss": 2.901531934738159
+              },
+              "heldout_check": {
+                "recall": 0.03125,
+                "loss": 3.7753536701202393
+              }
+            }
+          }
+        }
+      },
+      "stage_analysis": {
+        "manual_forward_max_abs_error": 0.0,
+        "baseline": {
+          "full_vocab_accuracy": 0.828125,
+          "object_accuracy": 0.859375,
+          "object_mean_rank": 1.203125,
+          "mean_target_logit": 4.795399188995361,
+          "mean_object_margin": 0.47077441215515137,
+          "mean_object_probability": 0.1404423862695694,
+          "cross_entropy": 2.2319142818450928
+        },
+        "logit_lens": {
+          "input_relation_residual": {
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 2.5096564292907715,
+            "mean_object_margin": -0.6267374753952026,
+            "mean_object_probability": 0.03125,
+            "cross_entropy": 3.715439796447754
+          },
+          "post_attention_residual": {
+            "full_vocab_accuracy": 0.3125,
+            "object_accuracy": 0.625,
+            "object_mean_rank": 2.015625,
+            "mean_target_logit": 2.7685649394989014,
+            "mean_object_margin": 0.08423976600170135,
+            "mean_object_probability": 0.08979903161525726,
+            "cross_entropy": 3.0590832233428955
+          },
+          "post_mlp_residual": {
+            "full_vocab_accuracy": 0.828125,
+            "object_accuracy": 0.859375,
+            "object_mean_rank": 1.203125,
+            "mean_target_logit": 4.795399188995361,
+            "mean_object_margin": 0.47077441215515137,
+            "mean_object_probability": 0.1404423862695694,
+            "cross_entropy": 2.2319142818450928
+          }
+        },
+        "attention_heads": [
+          {
+            "head": 0,
+            "mean_attention": {
+              "separator": 0.5611698627471924,
+              "subject": 0.12401054799556732,
+              "relation": 0.3148196041584015
+            },
+            "mean_output_norm": 0.143405020236969,
+            "mean_subject_value_contribution_norm": 0.10617953538894653
+          },
+          {
+            "head": 1,
+            "mean_attention": {
+              "separator": 0.10046146810054779,
+              "subject": 0.8537356853485107,
+              "relation": 0.045802801847457886
+            },
+            "mean_output_norm": 0.7192113399505615,
+            "mean_subject_value_contribution_norm": 0.7176567912101746
+          },
+          {
+            "head": 2,
+            "mean_attention": {
+              "separator": 0.2432909905910492,
+              "subject": 0.6931743621826172,
+              "relation": 0.06353463232517242
+            },
+            "mean_output_norm": 0.6225953698158264,
+            "mean_subject_value_contribution_norm": 0.6210994720458984
+          },
+          {
+            "head": 3,
+            "mean_attention": {
+              "separator": 0.2818228602409363,
+              "subject": 0.6209285855293274,
+              "relation": 0.09724849462509155
+            },
+            "mean_output_norm": 0.5569795370101929,
+            "mean_subject_value_contribution_norm": 0.5541673898696899
+          }
+        ]
+      },
+      "matched_relation_stage_control": {
+        "relation": "random",
+        "manual_forward_max_abs_error": 0.0,
+        "baseline": {
+          "full_vocab_accuracy": 0.03125,
+          "object_accuracy": 0.03125,
+          "object_mean_rank": 16.5,
+          "mean_target_logit": 3.5448765754699707,
+          "mean_object_margin": -1.3790279626846313,
+          "mean_object_probability": 0.030775971710681915,
+          "cross_entropy": 3.7753536701202393
+        },
+        "logit_lens": {
+          "input_relation_residual": {
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 2.5545153617858887,
+            "mean_object_margin": -0.5311664342880249,
+            "mean_object_probability": 0.03124999813735485,
+            "cross_entropy": 3.7132434844970703
+          },
+          "post_attention_residual": {
+            "full_vocab_accuracy": 0.015625,
+            "object_accuracy": 0.015625,
+            "object_mean_rank": 17.3125,
+            "mean_target_logit": 1.9067189693450928,
+            "mean_object_margin": -1.0661489963531494,
+            "mean_object_probability": 0.031989216804504395,
+            "cross_entropy": 4.0314788818359375
+          },
+          "post_mlp_residual": {
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 3.5448765754699707,
+            "mean_object_margin": -1.3790279626846313,
+            "mean_object_probability": 0.030775971710681915,
+            "cross_entropy": 3.7753536701202393
+          }
+        },
+        "attention_heads": [
+          {
+            "head": 0,
+            "mean_attention": {
+              "separator": 0.4613102376461029,
+              "subject": 0.2140750288963318,
+              "relation": 0.3246147334575653
+            },
+            "mean_output_norm": 0.1967945694923401,
+            "mean_subject_value_contribution_norm": 0.18424129486083984
+          },
+          {
+            "head": 1,
+            "mean_attention": {
+              "separator": 0.13015908002853394,
+              "subject": 0.811752438545227,
+              "relation": 0.058088455349206924
+            },
+            "mean_output_norm": 0.6857089400291443,
+            "mean_subject_value_contribution_norm": 0.6822406649589539
+          },
+          {
+            "head": 2,
+            "mean_attention": {
+              "separator": 0.2510550618171692,
+              "subject": 0.6806845664978027,
+              "relation": 0.06826039403676987
+            },
+            "mean_output_norm": 0.6113636493682861,
+            "mean_subject_value_contribution_norm": 0.6098695993423462
+          },
+          {
+            "head": 3,
+            "mean_attention": {
+              "separator": 0.2789050340652466,
+              "subject": 0.6245185732841492,
+              "relation": 0.09657637774944305
+            },
+            "mean_output_norm": 0.5614739656448364,
+            "mean_subject_value_contribution_norm": 0.5571877956390381
+          }
+        ]
+      },
+      "random_heldout_control": null,
+      "representation_geometry": {
+        "subject_input_embedding": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.7618446785968929
+        },
+        "attention_head_outputs": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.8347851227230305
+        },
+        "post_attention_residual": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.8513885911774414
+        },
+        "mlp_activation": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.8595558061579507
+        },
+        "post_mlp_residual": {
+          "centroid_cosine_accuracy": 1.0,
+          "class_eta_squared": 0.8742590196647431
+        }
+      },
+      "head_interventions": {
+        "intervention": "Heads outside kept_heads are replaced by their discovery-set mean activation.",
+        "head_reference_subjects": 128,
+        "evaluation_subjects": 64,
+        "baseline": {
+          "full_vocab_accuracy": 0.828125,
+          "object_accuracy": 0.859375,
+          "object_mean_rank": 1.203125,
+          "mean_target_logit": 4.795399188995361,
+          "mean_object_margin": 0.47077441215515137,
+          "mean_object_probability": 0.1404423862695694,
+          "cross_entropy": 2.2319142818450928
+        },
+        "subsets": [
+          {
+            "kept_heads": [],
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.5,
+            "mean_target_logit": 4.443480491638184,
+            "mean_object_margin": -0.6606500744819641,
+            "mean_object_probability": 0.03125,
+            "cross_entropy": 3.57877254486084
+          },
+          {
+            "kept_heads": [
+              0
+            ],
+            "full_vocab_accuracy": 0.03125,
+            "object_accuracy": 0.03125,
+            "object_mean_rank": 16.625,
+            "mean_target_logit": 4.434213161468506,
+            "mean_object_margin": -0.6525630950927734,
+            "mean_object_probability": 0.0313175730407238,
+            "cross_entropy": 3.57938814163208
+          },
+          {
+            "kept_heads": [
+              1
+            ],
+            "full_vocab_accuracy": 0.46875,
+            "object_accuracy": 0.46875,
+            "object_mean_rank": 2.84375,
+            "mean_target_logit": 4.831310272216797,
+            "mean_object_margin": -0.012580782175064087,
+            "mean_object_probability": 0.07242193073034286,
+            "cross_entropy": 2.776289224624634
+          },
+          {
+            "kept_heads": [
+              0,
+              1
+            ],
+            "full_vocab_accuracy": 0.4375,
+            "object_accuracy": 0.4375,
+            "object_mean_rank": 2.921875,
+            "mean_target_logit": 4.809209823608398,
+            "mean_object_margin": -0.025922399014234543,
+            "mean_object_probability": 0.07234920561313629,
+            "cross_entropy": 2.7800629138946533
+          },
+          {
+            "kept_heads": [
+              2
+            ],
+            "full_vocab_accuracy": 0.296875,
+            "object_accuracy": 0.296875,
+            "object_mean_rank": 5.5625,
+            "mean_target_logit": 4.776459217071533,
+            "mean_object_margin": -0.28616806864738464,
+            "mean_object_probability": 0.055222637951374054,
+            "cross_entropy": 3.0666451454162598
+          },
+          {
+            "kept_heads": [
+              0,
+              2
+            ],
+            "full_vocab_accuracy": 0.265625,
+            "object_accuracy": 0.265625,
+            "object_mean_rank": 5.703125,
+            "mean_target_logit": 4.734285831451416,
+            "mean_object_margin": -0.2975304126739502,
+            "mean_object_probability": 0.05518188700079918,
+            "cross_entropy": 3.0760507583618164
+          },
+          {
+            "kept_heads": [
+              1,
+              2
+            ],
+            "full_vocab_accuracy": 0.8125,
+            "object_accuracy": 0.8125,
+            "object_mean_rank": 1.4375,
+            "mean_target_logit": 4.962408065795898,
+            "mean_object_margin": 0.2709372341632843,
+            "mean_object_probability": 0.10798880457878113,
+            "cross_entropy": 2.4198880195617676
+          },
+          {
+            "kept_heads": [
+              0,
+              1,
+              2
+            ],
+            "full_vocab_accuracy": 0.78125,
+            "object_accuracy": 0.78125,
+            "object_mean_rank": 1.5,
+            "mean_target_logit": 4.913027763366699,
+            "mean_object_margin": 0.25096893310546875,
+            "mean_object_probability": 0.10711470246315002,
+            "cross_entropy": 2.4361958503723145
+          },
+          {
+            "kept_heads": [
+              3
+            ],
+            "full_vocab_accuracy": 0.390625,
+            "object_accuracy": 0.390625,
+            "object_mean_rank": 5.59375,
+            "mean_target_logit": 4.698859691619873,
+            "mean_object_margin": -0.17156952619552612,
+            "mean_object_probability": 0.05327439308166504,
+            "cross_entropy": 3.072805166244507
+          },
+          {
+            "kept_heads": [
+              0,
+              3
+            ],
+            "full_vocab_accuracy": 0.34375,
+            "object_accuracy": 0.34375,
+            "object_mean_rank": 5.6875,
+            "mean_target_logit": 4.666023254394531,
+            "mean_object_margin": -0.18914911150932312,
+            "mean_object_probability": 0.053111396729946136,
+            "cross_entropy": 3.0787739753723145
+          },
+          {
+            "kept_heads": [
+              1,
+              3
+            ],
+            "full_vocab_accuracy": 0.71875,
+            "object_accuracy": 0.71875,
+            "object_mean_rank": 1.5,
+            "mean_target_logit": 4.8448944091796875,
+            "mean_object_margin": 0.2768738567829132,
+            "mean_object_probability": 0.10472476482391357,
+            "cross_entropy": 2.44632625579834
+          },
+          {
+            "kept_heads": [
+              0,
+              1,
+              3
+            ],
+            "full_vocab_accuracy": 0.703125,
+            "object_accuracy": 0.71875,
+            "object_mean_rank": 1.5,
+            "mean_target_logit": 4.8021697998046875,
+            "mean_object_margin": 0.257580041885376,
+            "mean_object_probability": 0.10395561158657074,
+            "cross_entropy": 2.4594388008117676
+          },
+          {
+            "kept_heads": [
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.640625,
+            "object_accuracy": 0.640625,
+            "object_mean_rank": 2.390625,
+            "mean_target_logit": 4.856837749481201,
+            "mean_object_margin": 0.12304235249757767,
+            "mean_object_probability": 0.08471804857254028,
+            "cross_entropy": 2.6662821769714355
+          },
+          {
+            "kept_heads": [
+              0,
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.609375,
+            "object_accuracy": 0.609375,
+            "object_mean_rank": 2.46875,
+            "mean_target_logit": 4.793700695037842,
+            "mean_object_margin": 0.09908799082040787,
+            "mean_object_probability": 0.08391671627759933,
+            "cross_entropy": 2.685302257537842
+          },
+          {
+            "kept_heads": [
+              1,
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.859375,
+            "object_accuracy": 0.859375,
+            "object_mean_rank": 1.1875,
+            "mean_target_logit": 4.858716011047363,
+            "mean_object_margin": 0.49082276225090027,
+            "mean_object_probability": 0.14245733618736267,
+            "cross_entropy": 2.2040441036224365
+          },
+          {
+            "kept_heads": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "full_vocab_accuracy": 0.828125,
+            "object_accuracy": 0.859375,
+            "object_mean_rank": 1.203125,
+            "mean_target_logit": 4.795399188995361,
+            "mean_object_margin": 0.47077441215515137,
+            "mean_object_probability": 0.1404423862695694,
+            "cross_entropy": 2.2319142818450928
+          }
+        ],
+        "margin_shapley": [
+          {
+            "head": 0,
+            "margin_shapley": -0.011782011327644188
+          },
+          {
+            "head": 1,
+            "margin_shapley": 0.5045387859766682
+          },
+          {
+            "head": 2,
+            "margin_shapley": 0.2896057538067301
+          },
+          {
+            "head": 3,
+            "margin_shapley": 0.3490619581813613
+          }
+        ]
+      },
+      "neuron_interventions": {
+        "intervention": "Neuron activations are mean-ablated using discovery-set means. Rankings are learned on discovery subjects and all curves are evaluated on disjoint subjects.",
+        "baseline": {
+          "full_vocab_accuracy": 0.828125,
+          "object_accuracy": 0.859375,
+          "object_mean_rank": 1.203125,
+          "mean_target_logit": 4.795399188995361,
+          "mean_object_margin": 0.47077441215515137,
+          "mean_object_probability": 0.1404423862695694,
+          "cross_entropy": 2.2319142818450928
+        },
+        "top_32_ranking": [
+          224,
+          65,
+          55,
+          198,
+          0,
+          23,
+          254,
+          71,
+          196,
+          131,
+          57,
+          7,
+          124,
+          195,
+          62,
+          225,
+          39,
+          41,
+          99,
+          115,
+          229,
+          96,
+          129,
+          97,
+          232,
+          53,
+          223,
+          5,
+          134,
+          34,
+          12,
+          26
+        ],
+        "curves": [
+          {
+            "k": 1,
+            "top_neurons": [
+              224
+            ],
+            "necessity_mean_margin": 0.457923024892807,
+            "necessity_object_accuracy": 0.859375,
+            "sufficiency_mean_margin": -0.2639859914779663,
+            "sufficiency_object_accuracy": 0.15625,
+            "random_ablation_margin": {
+              "mean": 0.4696361914277077,
+              "sd": 0.0011866147533149036,
+              "min": 0.4674648940563202,
+              "max": 0.4713468551635742
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.859375,
+              "sd": 0.0,
+              "min": 0.859375,
+              "max": 0.859375
+            }
+          },
+          {
+            "k": 2,
+            "top_neurons": [
+              224,
+              65
+            ],
+            "necessity_mean_margin": 0.45254331827163696,
+            "necessity_object_accuracy": 0.859375,
+            "sufficiency_mean_margin": -0.23916184902191162,
+            "sufficiency_object_accuracy": 0.1875,
+            "random_ablation_margin": {
+              "mean": 0.46801257580518724,
+              "sd": 0.0022720617332111863,
+              "min": 0.46278178691864014,
+              "max": 0.47051024436950684
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.859375,
+              "sd": 0.0,
+              "min": 0.859375,
+              "max": 0.859375
+            }
+          },
+          {
+            "k": 4,
+            "top_neurons": [
+              224,
+              65,
+              55,
+              198
+            ],
+            "necessity_mean_margin": 0.4504854381084442,
+            "necessity_object_accuracy": 0.859375,
+            "sufficiency_mean_margin": -0.19424644112586975,
+            "sufficiency_object_accuracy": 0.234375,
+            "random_ablation_margin": {
+              "mean": 0.46549971103668214,
+              "sd": 0.003532880705711533,
+              "min": 0.4577518701553345,
+              "max": 0.4719792604446411
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.85859375,
+              "sd": 0.003405389799641151,
+              "min": 0.84375,
+              "max": 0.859375
+            }
+          },
+          {
+            "k": 8,
+            "top_neurons": [
+              224,
+              65,
+              55,
+              198,
+              0,
+              23,
+              254,
+              71
+            ],
+            "necessity_mean_margin": 0.41931068897247314,
+            "necessity_object_accuracy": 0.859375,
+            "sufficiency_mean_margin": -0.14440682530403137,
+            "sufficiency_object_accuracy": 0.28125,
+            "random_ablation_margin": {
+              "mean": 0.46125812232494356,
+              "sd": 0.005947083990990759,
+              "min": 0.44475018978118896,
+              "max": 0.4680313766002655
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.85859375,
+              "sd": 0.003405389799641151,
+              "min": 0.84375,
+              "max": 0.859375
+            }
+          },
+          {
+            "k": 16,
+            "top_neurons": [
+              224,
+              65,
+              55,
+              198,
+              0,
+              23,
+              254,
+              71,
+              196,
+              131,
+              57,
+              7,
+              124,
+              195,
+              62,
+              225
+            ],
+            "necessity_mean_margin": 0.3862680196762085,
+            "necessity_object_accuracy": 0.828125,
+            "sufficiency_mean_margin": -0.07268833369016647,
+            "sufficiency_object_accuracy": 0.375,
+            "random_ablation_margin": {
+              "mean": 0.45191678404808044,
+              "sd": 0.008254729212096365,
+              "min": 0.42673712968826294,
+              "max": 0.4609755873680115
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.85625,
+              "sd": 0.0062499999999999995,
+              "min": 0.84375,
+              "max": 0.859375
+            }
+          },
+          {
+            "k": 32,
+            "top_neurons": [
+              224,
+              65,
+              55,
+              198,
+              0,
+              23,
+              254,
+              71,
+              196,
+              131,
+              57,
+              7,
+              124,
+              195,
+              62,
+              225,
+              39,
+              41,
+              99,
+              115,
+              229,
+              96,
+              129,
+              97,
+              232,
+              53,
+              223,
+              5,
+              134,
+              34,
+              12,
+              26
+            ],
+            "necessity_mean_margin": 0.34500956535339355,
+            "necessity_object_accuracy": 0.796875,
+            "sufficiency_mean_margin": 0.05953015759587288,
+            "sufficiency_object_accuracy": 0.625,
+            "random_ablation_margin": {
+              "mean": 0.43388414233922956,
+              "sd": 0.009977504180172087,
+              "min": 0.4128528833389282,
+              "max": 0.44840413331985474
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.85234375,
+              "sd": 0.007773339352395468,
+              "min": 0.84375,
+              "max": 0.859375
+            }
+          },
+          {
+            "k": 64,
+            "top_neurons": [
+              224,
+              65,
+              55,
+              198,
+              0,
+              23,
+              254,
+              71,
+              196,
+              131,
+              57,
+              7,
+              124,
+              195,
+              62,
+              225,
+              39,
+              41,
+              99,
+              115,
+              229,
+              96,
+              129,
+              97,
+              232,
+              53,
+              223,
+              5,
+              134,
+              34,
+              12,
+              26,
+              126,
+              228,
+              239,
+              253,
+              75,
+              90,
+              214,
+              156,
+              167,
+              216,
+              194,
+              22,
+              138,
+              159,
+              161,
+              190,
+              245,
+              88,
+              135,
+              4,
+              80,
+              199,
+              50,
+              51,
+              186,
+              222,
+              178,
+              242,
+              128,
+              206,
+              183,
+              68
+            ],
+            "necessity_mean_margin": 0.2426508069038391,
+            "necessity_object_accuracy": 0.75,
+            "sufficiency_mean_margin": 0.21850061416625977,
+            "sufficiency_object_accuracy": 0.734375,
+            "random_ablation_margin": {
+              "mean": 0.38401594161987307,
+              "sd": 0.015713287719683226,
+              "min": 0.355374276638031,
+              "max": 0.41833561658859253
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.834375,
+              "sd": 0.01514899955442603,
+              "min": 0.796875,
+              "max": 0.859375
+            }
+          },
+          {
+            "k": 128,
+            "top_neurons": [
+              224,
+              65,
+              55,
+              198,
+              0,
+              23,
+              254,
+              71,
+              196,
+              131,
+              57,
+              7,
+              124,
+              195,
+              62,
+              225,
+              39,
+              41,
+              99,
+              115,
+              229,
+              96,
+              129,
+              97,
+              232,
+              53,
+              223,
+              5,
+              134,
+              34,
+              12,
+              26,
+              126,
+              228,
+              239,
+              253,
+              75,
+              90,
+              214,
+              156,
+              167,
+              216,
+              194,
+              22,
+              138,
+              159,
+              161,
+              190,
+              245,
+              88,
+              135,
+              4,
+              80,
+              199,
+              50,
+              51,
+              186,
+              222,
+              178,
+              242,
+              128,
+              206,
+              183,
+              68,
+              220,
+              15,
+              72,
+              63,
+              215,
+              233,
+              173,
+              150,
+              241,
+              116,
+              73,
+              247,
+              11,
+              87,
+              38,
+              213,
+              66,
+              76,
+              248,
+              18,
+              149,
+              35,
+              164,
+              9,
+              155,
+              64,
+              59,
+              119,
+              17,
+              179,
+              139,
+              58,
+              89,
+              130,
+              114,
+              157,
+              52,
+              171,
+              147,
+              16,
+              219,
+              230,
+              212,
+              13,
+              82,
+              148,
+              111,
+              208,
+              46,
+              27,
+              191,
+              42,
+              29,
+              30,
+              152,
+              49,
+              234,
+              231,
+              79,
+              238,
+              202,
+              95,
+              28,
+              209
+            ],
+            "necessity_mean_margin": 0.0677863284945488,
+            "necessity_object_accuracy": 0.609375,
+            "sufficiency_mean_margin": 0.37377119064331055,
+            "sufficiency_object_accuracy": 0.828125,
+            "random_ablation_margin": {
+              "mean": 0.25714286267757414,
+              "sd": 0.02903878164378535,
+              "min": 0.18220895528793335,
+              "max": 0.31945809721946716
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.7828125,
+              "sd": 0.032738010687120254,
+              "min": 0.6875,
+              "max": 0.828125
+            }
+          },
+          {
+            "k": 256,
+            "top_neurons": [
+              224,
+              65,
+              55,
+              198,
+              0,
+              23,
+              254,
+              71,
+              196,
+              131,
+              57,
+              7,
+              124,
+              195,
+              62,
+              225,
+              39,
+              41,
+              99,
+              115,
+              229,
+              96,
+              129,
+              97,
+              232,
+              53,
+              223,
+              5,
+              134,
+              34,
+              12,
+              26,
+              126,
+              228,
+              239,
+              253,
+              75,
+              90,
+              214,
+              156,
+              167,
+              216,
+              194,
+              22,
+              138,
+              159,
+              161,
+              190,
+              245,
+              88,
+              135,
+              4,
+              80,
+              199,
+              50,
+              51,
+              186,
+              222,
+              178,
+              242,
+              128,
+              206,
+              183,
+              68,
+              220,
+              15,
+              72,
+              63,
+              215,
+              233,
+              173,
+              150,
+              241,
+              116,
+              73,
+              247,
+              11,
+              87,
+              38,
+              213,
+              66,
+              76,
+              248,
+              18,
+              149,
+              35,
+              164,
+              9,
+              155,
+              64,
+              59,
+              119,
+              17,
+              179,
+              139,
+              58,
+              89,
+              130,
+              114,
+              157,
+              52,
+              171,
+              147,
+              16,
+              219,
+              230,
+              212,
+              13,
+              82,
+              148,
+              111,
+              208,
+              46,
+              27,
+              191,
+              42,
+              29,
+              30,
+              152,
+              49,
+              234,
+              231,
+              79,
+              238,
+              202,
+              95,
+              28,
+              209,
+              197,
+              158,
+              136,
+              83,
+              69,
+              153,
+              78,
+              2,
+              144,
+              177,
+              184,
+              70,
+              110,
+              36,
+              37,
+              67,
+              117,
+              112,
+              121,
+              118,
+              125,
+              243,
+              48,
+              176,
+              86,
+              235,
+              207,
+              240,
+              249,
+              32,
+              20,
+              91,
+              255,
+              1,
+              101,
+              120,
+              169,
+              98,
+              146,
+              77,
+              221,
+              106,
+              187,
+              74,
+              154,
+              122,
+              205,
+              251,
+              123,
+              170,
+              166,
+              8,
+              203,
+              31,
+              211,
+              60,
+              81,
+              237,
+              14,
+              47,
+              84,
+              105,
+              94,
+              172,
+              102,
+              246,
+              3,
+              188,
+              141,
+              160,
+              61,
+              210,
+              218,
+              109,
+              137,
+              227,
+              19,
+              113,
+              174,
+              44,
+              104,
+              85,
+              175,
+              252,
+              10,
+              56,
+              165,
+              140,
+              181,
+              201,
+              142,
+              163,
+              204,
+              236,
+              226,
+              43,
+              133,
+              103,
+              107,
+              250,
+              93,
+              45,
+              162,
+              33,
+              151,
+              21,
+              192,
+              132,
+              127,
+              200,
+              182,
+              145,
+              25,
+              108,
+              168,
+              40,
+              217,
+              189,
+              24,
+              6,
+              244,
+              54,
+              185,
+              180,
+              92,
+              100,
+              143,
+              193
+            ],
+            "necessity_mean_margin": -0.28823551535606384,
+            "necessity_object_accuracy": 0.140625,
+            "sufficiency_mean_margin": 0.47077441215515137,
+            "sufficiency_object_accuracy": 0.859375,
+            "random_ablation_margin": {
+              "mean": -0.28823551535606384,
+              "sd": 0.0,
+              "min": -0.28823551535606384,
+              "max": -0.28823551535606384
+            },
+            "random_ablation_accuracy": {
+              "mean": 0.140625,
+              "sd": 0.0,
+              "min": 0.140625,
+              "max": 0.140625
+            }
+          }
+        ],
+        "discovery_top_20_individual_ablations": [
+          {
+            "neuron": 224,
+            "causal_margin_drop": 0.011923730373382568,
+            "ablated_object_accuracy": 0.84375
+          },
+          {
+            "neuron": 65,
+            "causal_margin_drop": 0.006734669208526611,
+            "ablated_object_accuracy": 0.8515625
+          },
+          {
+            "neuron": 55,
+            "causal_margin_drop": 0.0064637064933776855,
+            "ablated_object_accuracy": 0.828125
+          },
+          {
+            "neuron": 198,
+            "causal_margin_drop": 0.006416261196136475,
+            "ablated_object_accuracy": 0.8515625
+          },
+          {
+            "neuron": 0,
+            "causal_margin_drop": 0.006307065486907959,
+            "ablated_object_accuracy": 0.8515625
+          },
+          {
+            "neuron": 23,
+            "causal_margin_drop": 0.006219446659088135,
+            "ablated_object_accuracy": 0.84375
+          },
+          {
+            "neuron": 254,
+            "causal_margin_drop": 0.006195962429046631,
+            "ablated_object_accuracy": 0.84375
+          },
+          {
+            "neuron": 71,
+            "causal_margin_drop": 0.006066024303436279,
+            "ablated_object_accuracy": 0.8359375
+          },
+          {
+            "neuron": 196,
+            "causal_margin_drop": 0.005939483642578125,
+            "ablated_object_accuracy": 0.8359375
+          },
+          {
+            "neuron": 131,
+            "causal_margin_drop": 0.005262792110443115,
+            "ablated_object_accuracy": 0.84375
+          },
+          {
+            "neuron": 57,
+            "causal_margin_drop": 0.004567205905914307,
+            "ablated_object_accuracy": 0.8515625
+          },
+          {
+            "neuron": 7,
+            "causal_margin_drop": 0.004533588886260986,
+            "ablated_object_accuracy": 0.8515625
+          },
+          {
+            "neuron": 124,
+            "causal_margin_drop": 0.004525303840637207,
+            "ablated_object_accuracy": 0.84375
+          },
+          {
+            "neuron": 195,
+            "causal_margin_drop": 0.0045081377029418945,
+            "ablated_object_accuracy": 0.84375
+          },
+          {
+            "neuron": 62,
+            "causal_margin_drop": 0.004331767559051514,
+            "ablated_object_accuracy": 0.8515625
+          },
+          {
+            "neuron": 225,
+            "causal_margin_drop": 0.004282653331756592,
+            "ablated_object_accuracy": 0.8359375
+          },
+          {
+            "neuron": 39,
+            "causal_margin_drop": 0.0042282938957214355,
+            "ablated_object_accuracy": 0.84375
+          },
+          {
+            "neuron": 41,
+            "causal_margin_drop": 0.00415569543838501,
+            "ablated_object_accuracy": 0.84375
+          },
+          {
+            "neuron": 99,
+            "causal_margin_drop": 0.004146456718444824,
+            "ablated_object_accuracy": 0.8515625
+          },
+          {
+            "neuron": 115,
+            "causal_margin_drop": 0.004077255725860596,
+            "ablated_object_accuracy": 0.84375
+          }
+        ]
+      },
+      "mlp_nonlinearity": {
+        "method": "Per-neuron affine GELU surrogates are fit on discovery preactivations and evaluated on disjoint subjects; the resulting whole MLP is affine on its input.",
+        "activation_r2": 0.9608373152271821,
+        "mlp_output_relative_l2_error": 0.07083733636338894,
+        "baseline": {
+          "full_vocab_accuracy": 0.828125,
+          "object_accuracy": 0.859375,
+          "object_mean_rank": 1.203125,
+          "mean_target_logit": 4.795399188995361,
+          "mean_object_margin": 0.47077441215515137,
+          "mean_object_probability": 0.1404423862695694,
+          "cross_entropy": 2.2319142818450928
+        },
+        "affine_gelu_surrogate": {
+          "full_vocab_accuracy": 0.859375,
+          "object_accuracy": 0.859375,
+          "object_mean_rank": 1.21875,
+          "mean_target_logit": 4.7992329597473145,
+          "mean_object_margin": 0.4561289846897125,
+          "mean_object_probability": 0.13943621516227722,
+          "cross_entropy": 2.229451894760132
+        },
+        "discovery_mean_mlp_activation": {
+          "full_vocab_accuracy": 0.140625,
+          "object_accuracy": 0.140625,
+          "object_mean_rank": 6.3125,
+          "mean_target_logit": 4.5297532081604,
+          "mean_object_margin": -0.28823551535606384,
+          "mean_object_probability": 0.04749028757214546,
+          "cross_entropy": 3.1554036140441895
+        },
+        "no_mlp_residual_only": {
+          "full_vocab_accuracy": 0.3125,
+          "object_accuracy": 0.625,
+          "object_mean_rank": 2.015625,
+          "mean_target_logit": 2.7685649394989014,
+          "mean_object_margin": 0.08423976600170135,
+          "mean_object_probability": 0.08979903161525726,
+          "cross_entropy": 3.0590832233428955
+        }
+      },
+      "subject_swap_patching": {
+        "pair_count": 64,
+        "metric": "mean logit(clean target) - logit(corrupt target)",
+        "clean_mean_logit_difference": 1.7293784618377686,
+        "corrupt_mean_logit_difference": -1.8125195503234863,
+        "total_effect": 3.541898012161255,
+        "components": {
+          "subject_input_embedding": {
+            "patched_mean_logit_difference": 1.7293784618377686,
+            "absolute_restoration": 3.541898012161255,
+            "normalized_restoration": 1.0
+          },
+          "all_attention_heads": {
+            "patched_mean_logit_difference": 1.7293784618377686,
+            "absolute_restoration": 3.541898012161255,
+            "normalized_restoration": 1.0
+          },
+          "all_mlp_neurons": {
+            "patched_mean_logit_difference": 1.130240559577942,
+            "absolute_restoration": 2.9427601099014282,
+            "normalized_restoration": 0.8308427006642592
+          },
+          "attention_patterns_only": {
+            "patched_mean_logit_difference": -1.7758662700653076,
+            "absolute_restoration": 0.03665328025817871,
+            "normalized_restoration": 0.010348485510403784
+          },
+          "attention_values_only": {
+            "patched_mean_logit_difference": 1.7111958265304565,
+            "absolute_restoration": 3.523715376853943,
+            "normalized_restoration": 0.9948664147739767
+          }
+        },
+        "heads": [
+          {
+            "head": 0,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -1.7963370084762573,
+              "absolute_restoration": 0.016182541847229004,
+              "normalized_restoration": 0.004568889841453811
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -1.7964434623718262,
+              "absolute_restoration": 0.016076087951660156,
+              "normalized_restoration": 0.004538834234205005
+            }
+          },
+          {
+            "head": 1,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -0.14634792506694794,
+              "absolute_restoration": 1.6661716252565384,
+              "normalized_restoration": 0.4704177307013552
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -0.14997465908527374,
+              "absolute_restoration": 1.6625448912382126,
+              "normalized_restoration": 0.469393778570076
+            }
+          },
+          {
+            "head": 2,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -0.9546064138412476,
+              "absolute_restoration": 0.8579131364822388,
+              "normalized_restoration": 0.2422184753870829
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -0.957339882850647,
+              "absolute_restoration": 0.8551796674728394,
+              "normalized_restoration": 0.24144672278437837
+            }
+          },
+          {
+            "head": 3,
+            "full_head_patch": {
+              "patched_mean_logit_difference": -0.8754509687423706,
+              "absolute_restoration": 0.9370685815811157,
+              "normalized_restoration": 0.264566788304929
+            },
+            "subject_value_path_patch": {
+              "patched_mean_logit_difference": -0.8905264735221863,
+              "absolute_restoration": 0.9219930768013,
+              "normalized_restoration": 0.2603104532190363
+            }
+          }
+        ],
+        "top_exact_neurons": [
+          {
+            "neuron": 0,
+            "exact_absolute_restoration": 0.04440641403198242,
+            "exact_normalized_restoration": 0.012537462648419335,
+            "attribution_estimate": 0.041483163833618164
+          },
+          {
+            "neuron": 55,
+            "exact_absolute_restoration": 0.041924357414245605,
+            "exact_normalized_restoration": 0.011836692437302421,
+            "attribution_estimate": 0.03843062371015549
+          },
+          {
+            "neuron": 43,
+            "exact_absolute_restoration": 0.03613400459289551,
+            "exact_normalized_restoration": 0.010201876075716435,
+            "attribution_estimate": 0.03386270999908447
+          },
+          {
+            "neuron": 65,
+            "exact_absolute_restoration": 0.03538084030151367,
+            "exact_normalized_restoration": 0.009989231813008754,
+            "attribution_estimate": 0.03288238123059273
+          },
+          {
+            "neuron": 196,
+            "exact_absolute_restoration": 0.03467381000518799,
+            "exact_normalized_restoration": 0.009789612768672054,
+            "attribution_estimate": 0.03290082514286041
+          },
+          {
+            "neuron": 82,
+            "exact_absolute_restoration": 0.03444647789001465,
+            "exact_normalized_restoration": 0.00972542906987757,
+            "attribution_estimate": 0.03273920714855194
+          },
+          {
+            "neuron": 224,
+            "exact_absolute_restoration": 0.03086256980895996,
+            "exact_normalized_restoration": 0.008713568178132751,
+            "attribution_estimate": 0.02851424179971218
+          },
+          {
+            "neuron": 190,
+            "exact_absolute_restoration": 0.0279768705368042,
+            "exact_normalized_restoration": 0.007898835720493488,
+            "attribution_estimate": 0.026649653911590576
+          },
+          {
+            "neuron": 135,
+            "exact_absolute_restoration": 0.02640366554260254,
+            "exact_normalized_restoration": 0.00745466567697445,
+            "attribution_estimate": 0.024523356929421425
+          },
+          {
+            "neuron": 243,
+            "exact_absolute_restoration": 0.025269508361816406,
+            "exact_normalized_restoration": 0.007134453977797354,
+            "attribution_estimate": 0.02411012351512909
+          },
+          {
+            "neuron": 156,
+            "exact_absolute_restoration": 0.02526402473449707,
+            "exact_normalized_restoration": 0.0071329057606266425,
+            "attribution_estimate": 0.023227689787745476
+          },
+          {
+            "neuron": 11,
+            "exact_absolute_restoration": 0.025046825408935547,
+            "exact_normalized_restoration": 0.007071582897908473,
+            "attribution_estimate": 0.024051709100604057
+          },
+          {
+            "neuron": 143,
+            "exact_absolute_restoration": 0.024391889572143555,
+            "exact_normalized_restoration": 0.006886671916693531,
+            "attribution_estimate": 0.022983301430940628
+          },
+          {
+            "neuron": 162,
+            "exact_absolute_restoration": 0.023584604263305664,
+            "exact_normalized_restoration": 0.006658747423648829,
+            "attribution_estimate": 0.02211643010377884
+          },
+          {
+            "neuron": 254,
+            "exact_absolute_restoration": 0.023287057876586914,
+            "exact_normalized_restoration": 0.006574739813690238,
+            "attribution_estimate": 0.021880999207496643
+          },
+          {
+            "neuron": 36,
+            "exact_absolute_restoration": 0.022945880889892578,
+            "exact_normalized_restoration": 0.006478413780155989,
+            "attribution_estimate": 0.021522553637623787
+          },
+          {
+            "neuron": 79,
+            "exact_absolute_restoration": 0.022564053535461426,
+            "exact_normalized_restoration": 0.006370610745421467,
+            "attribution_estimate": 0.021433833986520767
+          },
+          {
+            "neuron": 193,
+            "exact_absolute_restoration": 0.022365808486938477,
+            "exact_normalized_restoration": 0.006314639329010756,
+            "attribution_estimate": 0.02098427340388298
+          },
+          {
+            "neuron": 54,
+            "exact_absolute_restoration": 0.022359013557434082,
+            "exact_normalized_restoration": 0.006312720885994875,
+            "attribution_estimate": 0.021055128425359726
+          },
+          {
+            "neuron": 32,
+            "exact_absolute_restoration": 0.022170305252075195,
+            "exact_normalized_restoration": 0.0062594420211854,
+            "attribution_estimate": 0.02113972045481205
+          }
+        ],
+        "attribution_validation": {
+          "heads_pearson_r": 0.9989334895494767,
+          "heads_spearman_r": 1.0,
+          "neurons_pearson_r": 0.9994749312452048,
+          "neurons_spearman_r": 0.9988469901579307,
+          "head_attribution_estimates": [
+            0.014412104152143002,
+            1.3359792232513428,
+            0.7298456430435181,
+            0.7974585294723511
+          ],
+          "head_exact_restorations": [
+            0.016182541847229004,
+            1.6661716252565384,
+            0.8579131364822388,
+            0.9370685815811157
+          ]
+        }
+      },
+      "relation_gate_patching": {
+        "clean_relation": "semantic",
+        "corrupt_relation": "random",
+        "clean_mean_logit_difference": 1.7287147045135498,
+        "corrupt_mean_logit_difference": 1.3267383575439453,
+        "total_effect": 0.4019763469696045,
+        "relation_token_embedding": {
+          "patched_mean_logit_difference": 1.7287147045135498,
+          "absolute_restoration": 0.4019763469696045,
+          "normalized_restoration": 1.0
+        },
+        "all_attention_heads": {
+          "patched_mean_logit_difference": 1.3587591648101807,
+          "absolute_restoration": 0.03202080726623535,
+          "normalized_restoration": 0.07965843639217063
+        },
+        "all_mlp_neurons": {
+          "patched_mean_logit_difference": 1.6611897945404053,
+          "absolute_restoration": 0.33445143699645996,
+          "normalized_restoration": 0.8320177033245928
+        },
+        "heads": [
+          {
+            "head": 0,
+            "patched_mean_logit_difference": 1.3255566358566284,
+            "absolute_restoration": -0.0011817216873168945,
+            "normalized_restoration": -0.002939779159210705
+          },
+          {
+            "head": 1,
+            "patched_mean_logit_difference": 1.3512839078903198,
+            "absolute_restoration": 0.02454555034637451,
+            "normalized_restoration": 0.061062175750929266
+          },
+          {
+            "head": 2,
+            "patched_mean_logit_difference": 1.3335886001586914,
+            "absolute_restoration": 0.006850242614746094,
+            "normalized_restoration": 0.01704140720315585
+          },
+          {
+            "head": 3,
+            "patched_mean_logit_difference": 1.3285956382751465,
+            "absolute_restoration": 0.0018572807312011719,
+            "normalized_restoration": 0.0046203731766874595
+          }
+        ]
+      }
+    }
+  ],
+  "aggregate": {
+    "goal1": {
+      "n_seeds": 3,
+      "seeds": [
+        19,
+        31,
+        47
+      ],
+      "baseline_full_vocab_accuracy": {
+        "mean": 0.6354166666666666,
+        "sd": 0.18236605625012078,
+        "min": 0.390625,
+        "max": 0.828125
+      },
+      "baseline_object_margin": {
+        "mean": 0.30214853088061017,
+        "sd": 0.12754850236446671,
+        "min": 0.1623656451702118,
+        "max": 0.47077441215515137
+      },
+      "logit_lens_object_accuracy": {
+        "input_relation_residual": {
+          "mean": 0.03125,
+          "sd": 0.0,
+          "min": 0.03125,
+          "max": 0.03125
+        },
+        "post_attention_residual": {
+          "mean": 0.5520833333333334,
+          "sd": 0.06421264586426018,
+          "min": 0.46875,
+          "max": 0.625
+        },
+        "post_mlp_residual": {
+          "mean": 0.7291666666666666,
+          "sd": 0.09403890669410306,
+          "min": 0.640625,
+          "max": 0.859375
+        }
+      },
+      "all_heads_mean_ablated_accuracy": {
+        "mean": 0.03125,
+        "sd": 0.0,
+        "min": 0.03125,
+        "max": 0.03125
+      },
+      "all_heads_present_accuracy": {
+        "mean": 0.7291666666666666,
+        "sd": 0.09403890669410306,
+        "min": 0.640625,
+        "max": 0.859375
+      },
+      "heads": [
+        {
+          "head": 0,
+          "subject_attention": {
+            "mean": 0.39823491871356964,
+            "sd": 0.25031236235517795,
+            "min": 0.12401054799556732,
+            "max": 0.7292160391807556
+          },
+          "margin_shapley": {
+            "mean": 0.09388726649598944,
+            "sd": 0.10953444066997695,
+            "min": -0.011782011327644188,
+            "max": 0.24481468461453915
+          },
+          "subject_value_patch_recovery": {
+            "mean": 0.09714467035506845,
+            "sd": 0.08503892378631962,
+            "min": 0.004538834234205005,
+            "max": 0.20989717212653672
+          }
+        },
+        {
+          "head": 1,
+          "subject_attention": {
+            "mean": 0.7498406569163004,
+            "sd": 0.13424535741561203,
+            "min": 0.5602810382843018,
+            "max": 0.8537356853485107
+          },
+          "margin_shapley": {
+            "mean": 0.3512187669467595,
+            "sd": 0.2230754982053265,
+            "min": 0.03578324429690837,
+            "max": 0.5133342705667019
+          },
+          "subject_value_patch_recovery": {
+            "mean": 0.40436814937498067,
+            "sd": 0.1594833594914095,
+            "min": 0.18482281462963698,
+            "max": 0.5588878549252289
+          }
+        },
+        {
+          "head": 2,
+          "subject_attention": {
+            "mean": 0.41751425961653393,
+            "sd": 0.1976842182550846,
+            "min": 0.23934556543827057,
+            "max": 0.6931743621826172
+          },
+          "margin_shapley": {
+            "mean": 0.1181635760391752,
+            "sd": 0.1212742842171445,
+            "min": 0.0283360555768013,
+            "max": 0.2896057538067301
+          },
+          "subject_value_patch_recovery": {
+            "mean": 0.11192688890383336,
+            "sd": 0.09187154502104726,
+            "min": 0.03827705348820397,
+            "max": 0.24144672278437837
+          }
+        },
+        {
+          "head": 3,
+          "subject_attention": {
+            "mean": 0.7018223603566488,
+            "sd": 0.07732459586333902,
+            "min": 0.6209285855293274,
+            "max": 0.8059935569763184
+          },
+          "margin_shapley": {
+            "mean": 0.39899750126318795,
+            "sd": 0.035649597986272166,
+            "min": 0.3490619581813613,
+            "max": 0.4299795813858509
+          },
+          "subject_value_patch_recovery": {
+            "mean": 0.3519106364586737,
+            "sd": 0.1168516919941289,
+            "min": 0.2603104532190363,
+            "max": 0.5168263513429693
+          }
+        }
+      ],
+      "subject_input_patch_recovery": {
+        "mean": 1.0,
+        "sd": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "all_heads_patch_recovery": {
+        "mean": 1.0,
+        "sd": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "attention_values_patch_recovery": {
+        "mean": 0.9873007179841844,
+        "sd": 0.008402964771932772,
+        "min": 0.9755815669551134,
+        "max": 0.9948664147739767
+      },
+      "attention_patterns_patch_recovery": {
+        "mean": 0.01322259312149366,
+        "sd": 0.00656096334450181,
+        "min": 0.007019359688213674,
+        "max": 0.022299934165863525
+      },
+      "all_mlp_patch_recovery": {
+        "mean": 0.8276725738372837,
+        "sd": 0.006432139108658386,
+        "min": 0.8187036535592997,
+        "max": 0.833471367288292
+      },
+      "attribution_validation": {
+        "heads_pearson_r": {
+          "mean": 0.9994334607806973,
+          "sd": 0.00039438836236501074,
+          "min": 0.9989334895494767,
+          "max": 0.9998975371399591
+        },
+        "heads_spearman_r": {
+          "mean": 1.0,
+          "sd": 0.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "neurons_pearson_r": {
+          "mean": 0.9994507272610944,
+          "sd": 8.11551577632261e-05,
+          "min": 0.9993414663023287,
+          "max": 0.9995357842357496
+        },
+        "neurons_spearman_r": {
+          "mean": 0.9991757147648181,
+          "sd": 0.0003043377435987125,
+          "min": 0.9988469901579307,
+          "max": 0.999580674850646
+        }
+      },
+      "geometry_centroid_accuracy": {
+        "subject_input_embedding": {
+          "mean": 1.0,
+          "sd": 0.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "attention_head_outputs": {
+          "mean": 1.0,
+          "sd": 0.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "post_attention_residual": {
+          "mean": 0.9895833333333334,
+          "sd": 0.00736569563735987,
+          "min": 0.984375,
+          "max": 1.0
+        },
+        "mlp_activation": {
+          "mean": 0.984375,
+          "sd": 0.02209708691207961,
+          "min": 0.953125,
+          "max": 1.0
+        },
+        "post_mlp_residual": {
+          "mean": 0.9895833333333334,
+          "sd": 0.00736569563735987,
+          "min": 0.984375,
+          "max": 1.0
+        }
+      },
+      "neuron_necessity_accuracy": {
+        "8": {
+          "mean": 0.6875,
+          "sd": 0.12170126505779086,
+          "min": 0.59375,
+          "max": 0.859375
+        },
+        "16": {
+          "mean": 0.671875,
+          "sd": 0.11339344300561063,
+          "min": 0.5625,
+          "max": 0.828125
+        },
+        "32": {
+          "mean": 0.640625,
+          "sd": 0.11121956512532616,
+          "min": 0.546875,
+          "max": 0.796875
+        },
+        "64": {
+          "mean": 0.578125,
+          "sd": 0.12303137303143455,
+          "min": 0.46875,
+          "max": 0.75
+        },
+        "128": {
+          "mean": 0.4583333333333333,
+          "sd": 0.10699290929257363,
+          "min": 0.375,
+          "max": 0.609375
+        },
+        "256": {
+          "mean": 0.15625,
+          "sd": 0.02209708691207961,
+          "min": 0.140625,
+          "max": 0.1875
+        }
+      },
+      "neuron_sufficiency_accuracy": {
+        "8": {
+          "mean": 0.28125,
+          "sd": 0.038273277230987154,
+          "min": 0.234375,
+          "max": 0.328125
+        },
+        "16": {
+          "mean": 0.375,
+          "sd": 0.02551551815399144,
+          "min": 0.34375,
+          "max": 0.40625
+        },
+        "32": {
+          "mean": 0.484375,
+          "sd": 0.09964128369640099,
+          "min": 0.40625,
+          "max": 0.625
+        },
+        "64": {
+          "mean": 0.6302083333333334,
+          "sd": 0.07475364632503814,
+          "min": 0.5625,
+          "max": 0.734375
+        },
+        "128": {
+          "mean": 0.703125,
+          "sd": 0.08930431353897003,
+          "min": 0.625,
+          "max": 0.828125
+        },
+        "256": {
+          "mean": 0.7291666666666666,
+          "sd": 0.09403890669410306,
+          "min": 0.640625,
+          "max": 0.859375
+        }
+      },
+      "neuron_subject_specific_margin_fraction": {
+        "8": {
+          "after_top_k_ablation": {
+            "mean": 0.9189563360497929,
+            "sd": 0.011414082372148785,
+            "min": 0.9043394744802811,
+            "max": 0.9321962449800529
+          },
+          "with_only_top_k_variable": {
+            "mean": 0.1954530769579368,
+            "sd": 0.014406180257054667,
+            "min": 0.1815594581306635,
+            "max": 0.21530463593558882
+          },
+          "after_random_k_ablation": {
+            "mean": 0.987480487493698,
+            "sd": 0.0002157849261560655,
+            "min": 0.9872258066631816,
+            "max": 0.9877534230924613
+          }
+        },
+        "16": {
+          "after_top_k_ablation": {
+            "mean": 0.8694449797913232,
+            "sd": 0.013865118414078545,
+            "min": 0.8564625523152134,
+            "max": 0.8886623357404054
+          },
+          "with_only_top_k_variable": {
+            "mean": 0.3264171330640307,
+            "sd": 0.03395093591588411,
+            "min": 0.2839846672001697,
+            "max": 0.3670913580527205
+          },
+          "after_random_k_ablation": {
+            "mean": 0.9754662168077656,
+            "sd": 0.0035563994855513335,
+            "min": 0.9712745092339984,
+            "max": 0.9799691760479399
+          }
+        },
+        "32": {
+          "after_top_k_ablation": {
+            "mean": 0.7896241486416763,
+            "sd": 0.032090405077230114,
+            "min": 0.760394419948088,
+            "max": 0.8343040818792196
+          },
+          "with_only_top_k_variable": {
+            "mean": 0.49770787598661537,
+            "sd": 0.028530229333861748,
+            "min": 0.4581832995152729,
+            "max": 0.5244927613084701
+          },
+          "after_random_k_ablation": {
+            "mean": 0.9470475371426512,
+            "sd": 0.0032321315377172775,
+            "min": 0.9436552621768699,
+            "max": 0.951396854667126
+          }
+        },
+        "64": {
+          "after_top_k_ablation": {
+            "mean": 0.6308479456704549,
+            "sd": 0.04956146815314443,
+            "min": 0.5840887804798263,
+            "max": 0.6994458214804555
+          },
+          "with_only_top_k_variable": {
+            "mean": 0.7237997428084668,
+            "sd": 0.04083258164980532,
+            "min": 0.6676278018970128,
+            "max": 0.7634824531923855
+          },
+          "after_random_k_ablation": {
+            "mean": 0.8865859846663037,
+            "sd": 0.005719397976233127,
+            "min": 0.8800691770580598,
+            "max": 0.8939935671558596
+          }
+        },
+        "128": {
+          "after_top_k_ablation": {
+            "mean": 0.384952119342691,
+            "sd": 0.05955435893243621,
+            "min": 0.3391065491100665,
+            "max": 0.4690608527585458
+          },
+          "with_only_top_k_variable": {
+            "mean": 0.9522480574806265,
+            "sd": 0.06690920406537934,
+            "min": 0.8721976907075336,
+            "max": 1.0359678225405777
+          },
+          "after_random_k_ablation": {
+            "mean": 0.7121662315901153,
+            "sd": 0.026952856941391504,
+            "min": 0.6764340340465037,
+            "max": 0.7415254713591818
+          }
+        },
+        "256": {
+          "after_top_k_ablation": {
+            "mean": 0.0,
+            "sd": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "with_only_top_k_variable": {
+            "mean": 1.0,
+            "sd": 0.0,
+            "min": 1.0,
+            "max": 1.0
+          },
+          "after_random_k_ablation": {
+            "mean": 0.0,
+            "sd": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      },
+      "mlp_nonlinearity": {
+        "activation_r2": {
+          "mean": 0.9624481263845045,
+          "sd": 0.001477187709443572,
+          "min": 0.9608373152271821,
+          "max": 0.9644055262578481
+        },
+        "affine_surrogate_accuracy": {
+          "mean": 0.7291666666666666,
+          "sd": 0.09229190180556954,
+          "min": 0.65625,
+          "max": 0.859375
+        },
+        "affine_surrogate_margin": {
+          "mean": 0.2957245210806529,
+          "sd": 0.12209350642028863,
+          "min": 0.16017752885818481,
+          "max": 0.4561289846897125
+        },
+        "no_mlp_accuracy": {
+          "mean": 0.5520833333333334,
+          "sd": 0.06421264586426018,
+          "min": 0.46875,
+          "max": 0.625
+        },
+        "no_mlp_margin": {
+          "mean": 0.01649339497089386,
+          "sd": 0.054347620314168524,
+          "min": -0.048817310482263565,
+          "max": 0.08423976600170135
+        }
+      },
+      "relation_gate": {
+        "all_heads_patch_recovery": {
+          "mean": 0.06979033746359442,
+          "sd": 0.007433075455063388,
+          "min": 0.06171919001982376,
+          "max": 0.07965843639217063
+        },
+        "all_mlp_patch_recovery": {
+          "mean": 0.8504649840945054,
+          "sd": 0.016555896352165766,
+          "min": 0.8320177033245928,
+          "max": 0.8721754147068377
+        }
+      },
+      "representative_seed": 19,
+      "representative_top_neurons": [
+        196,
+        223,
+        181,
+        71,
+        158,
+        10,
+        45,
+        42,
+        63,
+        48,
+        233,
+        152,
+        6,
+        90,
+        104,
+        156,
+        242,
+        173,
+        28,
+        128,
+        207,
+        184,
+        13,
+        153,
+        141,
+        32,
+        232,
+        92,
+        199,
+        52,
+        255,
+        38
+      ]
+    }
+  }
+}

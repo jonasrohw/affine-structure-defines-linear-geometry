@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-06",
+  "backup_commit": "f1cbc06332092d5d43b4bc5b68942c1abcaa71a7",
+  "source_fingerprint": "7c38e719d0cc89c5a9680007c3025173f976b60af7ebbe66d13247a83b7b6323",
+  "lock_sha256": "49050ac3c132a3dd92ca47521db5454f475f1c0d0a3e6adda1c2b78ccf984779",
+  "tests": {
+    "passed": 18,
+    "command": "uv run --locked pytest -q"
+  },
+  "backup_parity": {
+    "experiment1_full_f16_seeds": [
+      19,
+      31,
+      47
+    ],
+    "experiment1_tensors_bit_identical": true,
+    "experiment2_structured_and_joint_short_fixture_bit_identical": true
+  },
+  "local_smoke": {
+    "status": "smoke_passed",
+    "elapsed_seconds": 182.9200628510007,
+    "figures": 6,
+    "pdf_pages": 15
+  },
+  "docker": {
+    "build": "passed",
+    "image_id": "sha256:c90e16ea4492aefb292c55f12e883f959acf9af1b294ed0116cc06e7133c0810",
+    "network_during_run": "none",
+    "smoke_status": "smoke_passed",
+    "elapsed_seconds": 170.48512635099905,
+    "source_fingerprint_matches_local": true,
+    "lock_matches_local": true,
+    "numerical_comparison": {
+      "measurements": [
+        {
+          "file": "experiment1/sweep.json",
+          "compared": 470,
+          "max_abs_difference": 0,
+          "largest_difference_field": "/9/trained_triples_per_relation"
+        },
+        {
+          "file": "experiment1/mechanism.json",
+          "compared": 1548,
+          "max_abs_difference": 0.0,
+          "largest_difference_field": "/runs/0/subject_swap_patching/total_effect"
+        },
+        {
+          "file": "experiment1/linearity.json",
+          "compared": 530,
+          "max_abs_difference": 0,
+          "largest_difference_field": "/runs/0/stages/readout/output_dim"
+        },
+        {
+          "file": "experiment2/analysis.json",
+          "compared": 667,
+          "max_abs_difference": 0,
+          "largest_difference_field": "/summary/num_parameters"
+        },
+        {
+          "file": "paper/data/lment_frequency/summary.json",
+          "compared": 40,
+          "max_abs_difference": 0.0,
+          "largest_difference_field": "/variable_token_rho/subject-relation"
+        },
+        {
+          "file": "paper/data/lment_causality/summary.json",
+          "compared": 3,
+          "max_abs_difference": 0.0,
+          "largest_difference_field": "/pearson_log1p_frequency"
+        }
+      ],
+      "checkpoint_tensors_bit_identical": {
+        "structured": true,
+        "joint": true,
+        "continuation": true,
+        "continuation2": true
+      }
+    }
+  },
+  "experiment1_and_lment": {
+    "checks": 246,
+    "passed": 241,
+    "disagreements": [
+      {
+        "metric": "transformation_table/attention_core/4",
+        "actual": 0.7473958333333334,
+        "expected": 0.742,
+        "absolute_tolerance": 0.0005,
+        "matches": false
+      },
+      {
+        "metric": "transformation_table/attention_core/5",
+        "actual": 0.06820729611306664,
+        "expected": 0.072,
+        "absolute_tolerance": 0.0005,
+        "matches": false
+      },
+      {
+        "metric": "transformation_table/mlp_core/0",
+        "actual": 0.9820417695628071,
+        "expected": 0.983,
+        "absolute_tolerance": 0.0005,
+        "matches": false
+      },
+      {
+        "metric": "transformation_table/mlp_core/2",
+        "actual": 0.13338861845379632,
+        "expected": 0.131,
+        "absolute_tolerance": 0.0005,
+        "matches": false
+      },
+      {
+        "metric": "transformation_table/mlp_core/3",
+        "actual": 0.012872719377833776,
+        "expected": 0.011,
+        "absolute_tolerance": 0.0005,
+        "matches": false
+      }
+    ]
+  },
+  "full_experiment2": {
+    "status": "running",
+    "manifest": "results/full/manifest_experiment2.json",
+    "completion_report": "results/full/validation_complete.json"
+  },
+  "exact_paper_reproduction_certified": false,
+  "limitations": [
+    "Five appendix entries differ even under the pre-refactor runtime.",
+    "Original Experiment 2 checkpoints and actual training configs are absent from Git.",
+    "LMEnt snapshots permit aggregation, not reproduction of original model inference or corpus counting."
+  ]
+}

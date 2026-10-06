@@ -11,15 +11,14 @@ from factual_recall.linear_shift_linearity_analysis import (
     jacobian_metrics,
     midpoint_metrics,
     target_stratified_affine_folds,
-    target_stratified_affine_split,
 )
 
 
 def test_target_stratified_affine_split_uses_only_memorized_subjects():
     world = World("category", seed=19)
-    fit, evaluation = target_stratified_affine_split(
+    fit, evaluation = target_stratified_affine_folds(
         world, world.probe_subjects, "random"
-    )
+    )[0]
     assert len(fit) == 96
     assert len(evaluation) == 32
     assert not set(fit) & set(evaluation)

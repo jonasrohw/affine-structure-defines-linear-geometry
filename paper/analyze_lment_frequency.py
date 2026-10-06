@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import shutil
 from pathlib import Path
 
 import matplotlib
@@ -137,9 +138,20 @@ def contrasts(facts, minimum_tail=10):
 
 
 def main():
+    global ROOT, DATA
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", type=Path)
+    parser.add_argument("--output-dir", type=Path, help="Write a self-contained paper directory here")
     args = parser.parse_args()
+    if args.output_dir:
+        destination = args.output_dir.resolve()
+        if destination != ROOT:
+            for relative in ("lment_frequency/facts.csv", "lment_frequency/provenance.json",
+                             "lment_causality/relation_means.csv", "lment_causality/provenance.json"):
+                target = destination / "data" / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(ROOT / "data" / relative, target)
+        ROOT, DATA = destination, destination / "data/lment_frequency"
     if args.source_root:
         snapshot(args.source_root)
     provenance = json.loads((DATA / "provenance.json").read_text())
@@ -249,6 +261,9 @@ def main():
     assert group.value.between(0, 1).all() and group.mean_count.ge(0).all()
     assert (group.metric == "causal_pairwise_success").all()
     correlation = np.log1p(group.mean_count).corr(group.value)
+    causal_summary = {"n_relations": len(group), "n_test_query_trials": int(group.n_valid.sum()),
+                      "pearson_log1p_frequency": float(correlation)}
+    (causal_data / "summary.json").write_text(json.dumps(causal_summary, indent=2) + "\n")
     axes[0].scatter(1 + group.mean_count, group.value,
                     color=colors[0], s=20, alpha=.8, edgecolors="white", linewidths=.3)
     axes[0].set(xscale="log", ylim=(0, 1), yticks=np.linspace(0, 1, 6),

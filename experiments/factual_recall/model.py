@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -65,7 +64,7 @@ class TransformerBlock(nn.Module):
 
 
 class CausalTransformer(nn.Module):
-    """GPT-style decoder with optional residual-stream capture."""
+    """GPT-style decoder used by both reported experiments."""
 
     def __init__(self, model_cfg: TransformerConfig, vocab_cfg: TokenVocabulary) -> None:
         super().__init__()
@@ -80,7 +79,6 @@ class CausalTransformer(nn.Module):
         self.lm_head = nn.Linear(model_cfg.hidden_dim, vocab_cfg.vocab_size, bias=False)
         if model_cfg.tie_embeddings:
             self.lm_head.weight = self.token_emb.weight
-        self._capture: Optional[list[torch.Tensor]] = None
         self._apply_init()
 
     def _apply_init(self) -> None:
@@ -100,16 +98,9 @@ class CausalTransformer(nn.Module):
             )
         positions = torch.arange(seq_len, device=input_ids.device).unsqueeze(0)
         x = self.token_emb(input_ids) + self.pos_emb(positions)
-        if self._capture is not None:
-            self._capture.append(x.detach().clone())
         for block in self.blocks:
             x = block(x)
-            if self._capture is not None:
-                self._capture.append(x.detach().clone())
         return self.lm_head(self.ln_f(x))
-
-    def capture_residuals(self):
-        return _ResidualCapture(self)
 
     @property
     def n_layers(self) -> int:
@@ -119,21 +110,5 @@ class CausalTransformer(nn.Module):
         return sum(p.numel() for p in self.parameters())
 
 
-class _ResidualCapture:
-    def __init__(self, model: CausalTransformer) -> None:
-        self.model = model
-
-    def __enter__(self) -> list[torch.Tensor]:
-        self.model._capture = []
-        return self.model._capture
-
-    def __exit__(self, *args) -> None:
-        self.model._capture = None
-
-
 def build_model(model_cfg: TransformerConfig, vocab_cfg: TokenVocabulary) -> CausalTransformer:
     return CausalTransformer(model_cfg, vocab_cfg)
-
-
-# Backwards-compatible name used by legacy Vienna scripts.
-MiniTransformer = CausalTransformer

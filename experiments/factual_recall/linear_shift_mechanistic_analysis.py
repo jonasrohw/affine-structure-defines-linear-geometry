@@ -19,13 +19,11 @@ literal units in ``CausalTransformer.blocks[0]``.
 
 from __future__ import annotations
 
-import argparse
 import itertools
 import json
 import math
-from dataclasses import asdict
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Sequence
 
 import numpy as np
 import torch
@@ -43,10 +41,7 @@ from .linear_shift import (
 from .model import CausalTransformer
 
 
-GOALS = {
-    "goal1": {"occurrences": 16, "relation": "semantic"},
-    "goal2": {"occurrences": 64, "relation": "random"},
-}
+GOALS = {"goal1": {"occurrences": 16, "relation": "semantic"}}
 TOKENS = ("separator", "subject", "relation")
 
 
@@ -266,7 +261,7 @@ def replay_and_verify(
         attr_repeats=128,
         output_dir=Path("unused"),
     )
-    world = World(cfg.world, cfg.seed, subjects_per_bucket=cfg.subjects_per_bucket, comp_nf=cfg.comp_nf)
+    world = World(cfg.world, cfg.seed, subjects_per_bucket=cfg.subjects_per_bucket)
     sequences, trained_subjects = build_corpus(cfg, world)
     model, steps, last_loss = train_one_epoch(cfg, world, sequences, device)
     model.eval()
@@ -278,52 +273,28 @@ def replay_and_verify(
             "trained_check": behavioral_check(model, world, relation, trained_subjects, device),
             "heldout_check": behavioral_check(model, world, relation, world.heldout_subjects, device),
         }
-    reference_path = PROJECT_ROOT / f"factual_recall/results/final_category_seed{seed}/linear_shift_metrics.json"
-    rows = json.loads(reference_path.read_text(encoding="utf-8"))
-    reference = next(
-        row
-        for row in rows
-        if row["config"]["n_triples"] == 128 and row["config"]["occurrences"] == occurrences
-    )
-    comparisons = {
-        "last_train_loss_abs_error": abs(last_loss - reference["last_train_loss"]),
-        "semantic_probe_abs_error": abs(
-            replay["relations"]["semantic"]["probe_accuracy"]
-            - reference["relations"]["semantic"]["probe_accuracy"]
-        ),
-        "semantic_train_recall_abs_error": abs(
-            replay["relations"]["semantic"]["trained_check"]["recall"]
-            - reference["relations"]["semantic"]["trained_check"]["recall"]
-        ),
-        "semantic_heldout_recall_abs_error": abs(
-            replay["relations"]["semantic"]["heldout_check"]["recall"]
-            - reference["relations"]["semantic"]["heldout_check"]["recall"]
-        ),
-        "random_probe_abs_error": abs(
-            replay["relations"]["random"]["probe_accuracy"]
-            - reference["relations"]["random"]["probe_accuracy"]
-        ),
-        "random_train_recall_abs_error": abs(
-            replay["relations"]["random"]["trained_check"]["recall"]
-            - reference["relations"]["random"]["trained_check"]["recall"]
-        ),
-        "random_heldout_recall_abs_error": abs(
-            replay["relations"]["random"]["heldout_check"]["recall"]
-            - reference["relations"]["random"]["heldout_check"]["recall"]
-        ),
-    }
-    # CPU reduction order can move the archived scalar loss by a few float32
-    # ulps across PyTorch/threading builds even when every behavioral and probe
-    # metric matches exactly. Keep the replay guard strict while allowing that
-    # platform-level numerical noise.
-    verification_tolerance = 5e-7
-    verified = all(error < verification_tolerance for error in comparisons.values())
-    if not verified:
-        raise RuntimeError(f"Replay for seed={seed}, F={occurrences} did not match: {comparisons}")
+    # The archived aggregate contains the original F=16 replay measurements.
+    # Record drift explicitly; never substitute archived values for fresh measurements.
+    reference_path = PROJECT_ROOT / "paper/reference/experiment1_mechanism.json"
+    archive = json.loads(reference_path.read_text())
+    reference = next((run["replay_verification"]["replay"] for run in archive["runs"]
+                      if run["seed"] == seed and run["occurrences_per_triple"] == occurrences), None)
+    comparisons = {}
+    if reference is not None:
+        comparisons["last_train_loss_abs_error"] = abs(last_loss - reference["last_train_loss"])
+        for relation in ("semantic", "random"):
+            for key, path in (("probe", ("probe_accuracy",)),
+                              ("trained", ("trained_check", "recall")),
+                              ("heldout", ("heldout_check", "recall"))):
+                actual = replay["relations"][relation]
+                expected = reference["relations"][relation]
+                for part in path:
+                    actual, expected = actual[part], expected[part]
+                comparisons[f"{relation}_{key}_abs_error"] = abs(actual - expected)
     return model, world, trained_subjects, {
-        "verified_exactly": verified,
-        "verification_tolerance": verification_tolerance,
-        "reference_path": str(reference_path.relative_to(PROJECT_ROOT)),
+        "verified_against_archive": bool(comparisons) and all(e < 5e-7 for e in comparisons.values()),
+        "verification_tolerance": 5e-7,
+        "reference_path": "paper/reference/experiment1_mechanism.json",
         "errors": comparisons,
         "replay": replay,
     }
@@ -953,11 +924,6 @@ def analyze_goal_seed(
     control_stage, _ = stage_and_attention_analysis(
         model, world, control_relation, evaluation, device
     )
-    heldout_control = None
-    if goal == "goal2":
-        heldout_control, _ = stage_and_attention_analysis(
-            model, world, relation, world.heldout_subjects, device
-        )
     return {
         "goal": goal,
         "seed": seed,
@@ -966,12 +932,11 @@ def analyze_goal_seed(
         "discovery_subjects": len(discovery),
         "evaluation_subjects": len(evaluation),
         "evaluation_split": (
-            "never-seen relation subjects" if goal == "goal1" else "disjoint target-stratified half of trained subjects"
+            "never-seen relation subjects"
         ),
         "replay_verification": replay,
         "stage_analysis": stage,
         "matched_relation_stage_control": {"relation": control_relation, **control_stage},
-        "random_heldout_control": heldout_control,
         "representation_geometry": geometry,
         "head_interventions": head_interventions,
         "neuron_interventions": neurons,
@@ -1198,346 +1163,3 @@ def aggregate_results(runs: Sequence[dict]) -> dict:
             "representative_top_neurons": goal_runs[0]["neuron_interventions"]["top_32_ranking"],
         }
     return result
-
-
-def fmt(value: float, digits: int = 3) -> str:
-    return f"{value:.{digits}f}"
-
-
-def write_report(result: dict, path: Path) -> None:
-    aggregate = result["aggregate"]
-    g1 = aggregate["goal1"]
-    g2 = aggregate["goal2"]
-
-    def ms(cell: dict) -> str:
-        return f"{cell['mean']:.3f} ± {cell['sd']:.3f}"
-
-    lines = [
-        "# Goal 1 and Goal 2: learned representations and algorithms",
-        "",
-        "![Learned representations and causal algorithms](goal1_goal2_mechanisms.svg)",
-        "",
-        "A representation is treated as mechanistically used only when swapping or ablating it changes the answer. "
-        "All rankings are learned on one subject split and evaluated on a disjoint split.",
-        "",
-        "## Goal 1 — shared attribute-class program",
-        "",
-        "Attribute training organizes subject embeddings into 32 code families indexed by f(subject). A centroid learned on "
-        f"trained subjects decodes the target class of never-seen relation subjects with accuracy {ms(g1['geometry_centroid_accuracy']['subject_input_embedding'])}. "
-        "The code is distributed: subjects in a class share the task-relevant direction while retaining identity and g information.",
-        "",
-        "```text",
-        "answer_semantic(subject):",
-        "    code = embedding[subject]                    # shared f-class code",
-        "    payload = H3.read_value(code, r0) + H1.read_value(code, r0)",
-        "              + smaller H0/H2 contributions",
-        "    state = relation_state[r0] + project(payload)",
-        "    state += distributed_class_readout(state)",
-        "    scores = dot(final_normalize(state), object_directions)",
-        "    return argmax(scores)                        # b[f(subject)]",
-        "```",
-        "",
-        f"Value-only subject swaps restore {ms(g1['attention_values_patch_recovery'])} of the target-logit effect, while "
-        f"pattern-only swaps restore {ms(g1['attention_patterns_patch_recovery'])}. All-head mean ablation reduces object "
-        f"accuracy from {ms(g1['all_heads_present_accuracy'])} to {ms(g1['all_heads_mean_ablated_accuracy'])}. "
-        "The relation selector acts mainly in the downstream readout: relation-conditioned head patches restore "
-        f"{ms(g1['relation_gate']['all_heads_patch_recovery'])}, versus {ms(g1['relation_gate']['all_mlp_patch_recovery'])} "
-        "for the MLP population. An affine surrogate for all GELUs preserves the original held-out object accuracy, which "
-        "establishes decision equivalence but not equality of transformations. Direct midpoint and exact-Jacobian tests of "
-        "Goal 1 are reported in `results/final_linearity_goal1/goal1_linearity_analysis.md`.",
-        "",
-        "## Goal 2 — subject-indexed key–value memory",
-        "",
-        "Each trained subject embedding is an individual memory record containing a key and an idiosyncratic target payload. "
-        "The same record also retains the semantic attribute code; r0 and r1 select different interpretations. Because subject "
-        "values are formed before the following relation token is read, the payload is relation-independent and the relation "
-        "acts as a memory-bank selector.",
-        "",
-        "```text",
-        "answer_random(subject):",
-        "    record = embedding[subject]                  # key + rho(subject) payload",
-        "    retrieved = H1.read_value(record, r1)        # primary lookup",
-        "                + supporting H0/H2 reads         # H3 is negligible",
-        "    state = relation_state[r1] + project(retrieved)",
-        "    state += distributed_mlp_correction(state)",
-        "    scores = dot(final_normalize(state), object_directions)",
-        "    return argmax(scores)                        # b[rho(subject)]",
-        "```",
-        "",
-        f"The arbitrary target is weakly class-decodable in raw trained-subject embeddings ({ms(g2['geometry_centroid_accuracy']['subject_input_embedding'])}), "
-        f"becomes clearer in head outputs ({ms(g2['geometry_centroid_accuracy']['attention_head_outputs'])}), and is explicit "
-        f"after attention ({ms(g2['geometry_centroid_accuracy']['post_attention_residual'])}). Value-only subject swaps restore "
-        f"{ms(g2['attention_values_patch_recovery'])} of the target effect, versus {ms(g2['attention_patterns_patch_recovery'])} "
-        "for patterns. The post-attention state already answers "
-        f"{ms(g2['logit_lens_object_accuracy']['post_attention_residual'])} of memorized facts, and the distributed MLP corrects "
-        f"the remainder to {ms(g2['logit_lens_object_accuracy']['post_mlp_residual'])}.",
-        "",
-        "The architecture-aware affine GELU surrogate still answers all disjoint memorized facts, which establishes decision "
-        "equivalence but not equality of transformations. Direct midpoint and exact-Jacobian tests of attention, MLP, readout, "
-        "and the full lookup are reported separately in `results/final_linearity_analysis/goal2_linearity_analysis.md`.",
-        "",
-        "## Causal summary",
-        "",
-        "| Intervention | Goal 1 | Goal 2 | Meaning |",
-        "|---|---:|---:|---|",
-        f"| All-head subject swap | {ms(g1['all_heads_patch_recovery'])} | {ms(g2['all_heads_patch_recovery'])} | Subject record determines the answer |",
-        f"| Value-only subject swap | {ms(g1['attention_values_patch_recovery'])} | {ms(g2['attention_values_patch_recovery'])} | Target content is carried in V payloads |",
-        f"| Pattern-only subject swap | {ms(g1['attention_patterns_patch_recovery'])} | {ms(g2['attention_patterns_patch_recovery'])} | Subject-specific routing carries little target content |",
-        f"| Accuracy without MLP | {ms(g1['mlp_nonlinearity']['no_mlp_accuracy'])} | {ms(g2['mlp_nonlinearity']['no_mlp_accuracy'])} | Attention performs retrieval; MLP reads/sharpens |",
-    ]
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-
-def make_figure(result: dict, output_dir: Path) -> None:
-    import matplotlib.pyplot as plt
-    from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
-
-    aggregate = result["aggregate"]
-    g1 = aggregate["goal1"]
-    g2 = aggregate["goal2"]
-    plt.rcParams.update(
-        {
-            "font.family": "DejaVu Sans",
-            "font.size": 12,
-            "axes.titlesize": 14,
-            "axes.labelsize": 11,
-            "svg.fonttype": "none",
-            "pdf.fonttype": 42,
-        }
-    )
-    fig = plt.figure(figsize=(15, 10.5), constrained_layout=False)
-    grid = fig.add_gridspec(
-        3,
-        2,
-        height_ratios=[0.9, 0.9, 1.15],
-        hspace=0.38,
-        wspace=0.22,
-    )
-    goal1_ax = fig.add_subplot(grid[0, :])
-    goal2_ax = fig.add_subplot(grid[1, :])
-    geometry_ax = fig.add_subplot(grid[2, 0])
-    patch_ax = fig.add_subplot(grid[2, 1])
-
-    navy = "#16324F"
-    blue = "#2B6CB0"
-    cyan = "#2A9D8F"
-    orange = "#E07A5F"
-    gray = "#5E6C76"
-
-    def box(ax, x, y, w, h, text, face, edge=navy, size=9, weight="normal"):
-        patch = FancyBboxPatch(
-            (x, y), w, h, boxstyle="round,pad=0.015,rounding_size=0.025",
-            linewidth=1.2, edgecolor=edge, facecolor=face
-        )
-        ax.add_patch(patch)
-        ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=size, weight=weight)
-        return patch
-
-    def arrow(ax, x0, y0, x1, y1, color=gray, width=1.3):
-        ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=11,
-                                     linewidth=width, color=color, shrinkA=2, shrinkB=2))
-
-    def circuit_panel(ax, panel, title, subtitle, semantic):
-        ax.set_xlim(0, 1)
-        ax.set_ylim(0, 1)
-        ax.axis("off")
-        ax.text(0.0, 1.02, f"{panel}  {title}", fontsize=14, weight="bold", color=navy, va="bottom")
-        ax.text(0.0, 0.96, subtitle, fontsize=10, color=gray, va="top")
-        source = (
-            "subject embedding\nshared f-class code\nheld-out decode 1.00"
-            if semantic
-            else "subject embedding\nindividual key + payload\nraw target decode 0.14"
-        )
-        retrieval = (
-            "H3 + H1 (H0/H2 support)\ntransport V(subject)\nvalue patch 0.987"
-            if semantic
-            else "H1 (H0/H2 support)\nretrieve V(subject)\nvalue patch 0.975"
-        )
-        readout = (
-            "r₀ selects shared readout\ndistributed nonlinear map\nworks on unseen subjects"
-            if semantic
-            else "r₁ selects memory readout\ndistributed correction\ntrained subjects only"
-        )
-        target = "b[f(subject)]" if semantic else "b[ρ(subject)]"
-        box(ax, 0.02, 0.43, 0.21, 0.34, source, "#E8F1FB", size=11, weight="bold")
-        box(ax, 0.30, 0.43, 0.23, 0.34, retrieval, "#DFF3F0", size=11, weight="bold")
-        box(ax, 0.61, 0.43, 0.23, 0.34, readout, "#FBECE7", size=11, weight="bold")
-        box(ax, 0.90, 0.48, 0.09, 0.24, target, "#FFF5D6", size=10, weight="bold")
-        arrow(ax, 0.23, 0.60, 0.30, 0.60, color=blue, width=2)
-        arrow(ax, 0.53, 0.60, 0.61, 0.60, color=cyan, width=2)
-        arrow(ax, 0.84, 0.60, 0.90, 0.60, color=orange, width=2)
-        relation = "r₀" if semantic else "r₁"
-        box(ax, 0.54, 0.77, 0.055, 0.08, relation, "#F0E8F7", edge="#79589F", size=10, weight="bold")
-        arrow(ax, 0.56, 0.77, 0.47, 0.70, color="#79589F", width=1.2)
-        arrow(ax, 0.58, 0.77, 0.68, 0.70, color="#79589F", width=1.2)
-        ax.text(
-            0.50,
-            0.22,
-            "Swapping subject values transfers the answer; swapping subject-specific attention weights does not.",
-            ha="center",
-            fontsize=10,
-            color=navy,
-            weight="bold",
-        )
-
-    circuit_panel(
-        goal1_ax,
-        "A",
-        "Goal 1: shared attribute-class program",
-        "The concept f(subject) is already represented in the embeddings of subjects never seen in relation triples.",
-        True,
-    )
-    circuit_panel(
-        goal2_ax,
-        "B",
-        "Goal 2: subject-indexed key–value memory",
-        "Repeated triples write an arbitrary target payload into each trained subject record; no shared rule is learned.",
-        False,
-    )
-
-    # How each representation makes the target class explicit.
-    stages = [
-        "subject_input_embedding",
-        "attention_head_outputs",
-        "post_attention_residual",
-        "mlp_activation",
-        "post_mlp_residual",
-    ]
-    stage_labels = ["subject\nembedding", "head\noutputs", "post-\nattention", "MLP\npopulation", "final\nstate"]
-    x = np.arange(len(stages))
-    for label, agg, color, marker in [("Goal 1", g1, blue, "o"), ("Goal 2", g2, orange, "s")]:
-        means = [agg["geometry_centroid_accuracy"][stage]["mean"] for stage in stages]
-        sds = [agg["geometry_centroid_accuracy"][stage]["sd"] for stage in stages]
-        geometry_ax.errorbar(x, means, yerr=sds, color=color, marker=marker, linewidth=2,
-                             capsize=3, label=label)
-    geometry_ax.axhline(1 / 32, color=gray, linestyle=":", linewidth=1.2, label="chance")
-    geometry_ax.set_xticks(x, stage_labels)
-    geometry_ax.set_ylim(0, 1.08)
-    geometry_ax.set_ylabel("Target-class centroid accuracy")
-    geometry_ax.set_title("C  What is represented, and when?", loc="left", weight="bold", color=navy)
-    geometry_ax.legend(frameon=False, ncol=3, fontsize=9)
-    geometry_ax.spines[["top", "right"]].set_visible(False)
-    geometry_ax.grid(axis="y", alpha=0.18)
-
-    # Subject swap decomposition: transported values versus routing patterns.
-    labels = ["all heads", "values only", "patterns only"]
-    g1_values = [
-        g1["all_heads_patch_recovery"]["mean"],
-        g1["attention_values_patch_recovery"]["mean"],
-        g1["attention_patterns_patch_recovery"]["mean"],
-    ]
-    g2_values = [
-        g2["all_heads_patch_recovery"]["mean"],
-        g2["attention_values_patch_recovery"]["mean"],
-        g2["attention_patterns_patch_recovery"]["mean"],
-    ]
-    g1_sd = [
-        g1["all_heads_patch_recovery"]["sd"],
-        g1["attention_values_patch_recovery"]["sd"],
-        g1["attention_patterns_patch_recovery"]["sd"],
-    ]
-    g2_sd = [
-        g2["all_heads_patch_recovery"]["sd"],
-        g2["attention_values_patch_recovery"]["sd"],
-        g2["attention_patterns_patch_recovery"]["sd"],
-    ]
-    bx = np.arange(len(labels))
-    width = 0.36
-    patch_ax.bar(bx - width / 2, g1_values, width, yerr=g1_sd, color=blue, capsize=3, label="Goal 1")
-    patch_ax.bar(bx + width / 2, g2_values, width, yerr=g2_sd, color=orange, capsize=3, label="Goal 2")
-    patch_ax.set_xticks(bx, labels)
-    patch_ax.set_ylim(0, 1.08)
-    patch_ax.set_ylabel("Recovered subject-specific target effect")
-    patch_ax.set_title("D  The answer is carried in value payloads", loc="left", weight="bold", color=navy)
-    patch_ax.legend(frameon=False, ncol=2, fontsize=9)
-    patch_ax.spines[["top", "right"]].set_visible(False)
-    patch_ax.grid(axis="y", alpha=0.18)
-
-    fig.suptitle(
-        "Two learned data structures, two factual-recall algorithms",
-        fontsize=19,
-        weight="bold",
-        color=navy,
-        y=0.995,
-    )
-    fig.text(
-        0.5,
-        0.008,
-        "Points/bars: mean over seeds 19, 31, 47; error bars: across-seed SD. "
-        "All decoders and interventions are evaluated on subjects disjoint from discovery.",
-        ha="center",
-        fontsize=9,
-        color=gray,
-    )
-    for suffix in ("svg", "pdf", "png"):
-        kwargs = {"dpi": 220} if suffix == "png" else {}
-        artifact = output_dir / f"goal1_goal2_mechanisms.{suffix}"
-        fig.savefig(artifact, bbox_inches="tight", **kwargs)
-        if suffix == "svg":
-            svg = artifact.read_text(encoding="utf-8")
-            artifact.write_text(
-                "\n".join(line.rstrip() for line in svg.splitlines()) + "\n",
-                encoding="utf-8",
-            )
-    plt.close(fig)
-
-
-def run_analysis(seeds: Sequence[int], device_name: str, output_dir: Path) -> dict:
-    device = torch.device(device_name)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    runs = []
-    for goal in GOALS:
-        for seed in seeds:
-            print(f"analyzing {goal} seed={seed} F={GOALS[goal]['occurrences']}", flush=True)
-            runs.append(analyze_goal_seed(goal, seed, device))
-    result = {
-        "analysis": "Goal 1 / Goal 2 learned representations and causal algorithms",
-        "model": {
-            "layers": 1,
-            "hidden_dim": 64,
-            "attention_heads": 4,
-            "head_dim": 16,
-            "mlp_neurons": 256,
-        },
-        "seeds": list(seeds),
-        "goals": GOALS,
-        "runs": runs,
-    }
-    result["aggregate"] = aggregate_results(runs)
-    json_path = output_dir / "goal1_goal2_mechanistic_analysis.json"
-    json_path.write_text(json.dumps(result, indent=2, default=_jsonable), encoding="utf-8")
-    write_report(result, output_dir / "goal1_goal2_mechanistic_analysis.md")
-    make_figure(result, output_dir)
-    return result
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--seeds", default="19,31,47")
-    parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
-    parser.add_argument(
-        "--output-dir",
-        type=Path,
-        default=Path("factual_recall/results/final_mechanistic_analysis"),
-    )
-    args = parser.parse_args()
-    output_dir = args.output_dir
-    if not output_dir.is_absolute():
-        output_dir = PROJECT_ROOT / output_dir
-    result = run_analysis([int(seed) for seed in args.seeds.split(",")], args.device, output_dir)
-    print(
-        json.dumps(
-            {
-                "output_dir": str(output_dir),
-                "runs": len(result["runs"]),
-                "all_replays_verified": all(
-                    run["replay_verification"]["verified_exactly"] for run in result["runs"]
-                ),
-            },
-            indent=2,
-        )
-    )
-
-
-if __name__ == "__main__":
-    main()

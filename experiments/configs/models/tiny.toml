@@ -1,6 +1,0 @@
-size = "tiny"
-n_layers = 1
-hidden_dim = 32
-n_heads = 4
-context_len = 64
-tie_embeddings = false

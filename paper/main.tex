@@ -17,7 +17,7 @@
 \usepackage{url}
 \usepackage{hyperref}
 
-\graphicspath{{figures/}{../experiments/paper/figures/}}
+\graphicspath{{figures/}}
 
 \newcommand{\Rsem}{R_{\mathrm{sem}}}
 \newcommand{\Rrnd}{R_{\mathrm{rnd}}}
@@ -237,7 +237,7 @@ configurations. Both use a Transformer architecture with next token prediction t
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{../figure-drafts/synthetic_dataset_generation.pdf}
+\includegraphics[width=\textwidth]{synthetic_dataset_generation.pdf}
 \caption{Generating the two controlled synthetic datasets (seed 19).
 \textbf{A:} Categorical attributes define a fixed-shift object relation, paired
 with a balanced random assignment. Filled and hollow circles mark relation-trained
@@ -607,6 +607,11 @@ training curricula, metrics, and interventions. The appendix gives optimization
 details, per-seed results, and the complete affine tests. The supplementary code
 contains deterministic data generators, saved configurations, result manifests,
 and figure scripts for seeds 19, 31, and 47.
+From the repository root, \texttt{uv run --locked reproduce} regenerates the
+synthetic measurements, tables, figures, and PDF. The pinned Docker environment
+is provided for the same workflow. Its audit reports numerical disagreements
+with the archived results; the README records the limits of the available
+training provenance.
 Section~\ref{sec:lment-frequency} and Appendix~\ref{app:lment-frequency} describe
 the pretrained-model aggregation, with a saved prediction/count snapshot, source
 hashes, and a script that reproduces its tables and figure.

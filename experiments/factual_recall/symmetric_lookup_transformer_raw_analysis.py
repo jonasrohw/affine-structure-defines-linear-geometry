@@ -9,9 +9,6 @@ representations.
 
 from __future__ import annotations
 
-import argparse
-import json
-from dataclasses import asdict
 from pathlib import Path
 
 import numpy as np
@@ -29,7 +26,6 @@ from .symmetric_lookup_transformer import (
     relation_symmetry_agreements,
 )
 from .symmetric_lookup_transformer_analysis import (
-    SEEDS,
     binary_relation_accuracies,
     causal_trace,
     diagnostic_forward,
@@ -39,53 +35,8 @@ from .symmetric_lookup_transformer_analysis import (
 )
 
 
-FINAL_CHECKPOINTS = {
-    19: Path(
-        "factual_recall/results/symmetric_lookup_transformer_raw_search_d20l8_refined2/"
-        "joint_d20_l8_h4_aw1_raw4_seed19.pt"
-    ),
-    31: Path(
-        "factual_recall/results/symmetric_lookup_transformer_raw_search_d20l8_refined2/"
-        "joint_d20_l8_h4_aw1_raw4_seed31.pt"
-    ),
-    47: Path(
-        "factual_recall/results/symmetric_lookup_transformer_raw_search_d20l8_refined/"
-        "joint_d20_l8_h4_aw1_raw4_seed47.pt"
-    ),
-}
-
-BASE_JOINT_RESULTS = {
-    seed: Path(
-        "factual_recall/results/symmetric_lookup_transformer_raw_search_d20l8/"
-        f"joint_d20_l8_h4_aw1_raw4_seed{seed}.json"
-    )
-    for seed in SEEDS
-}
-
-
 def candidate_config(seed: int) -> TransformerLookupConfig:
-    return TransformerLookupConfig(
-        seed=seed,
-        n_entities=64,
-        n_attributes=10,
-        hidden_dim=20,
-        n_layers=8,
-        n_heads=4,
-        tie_embeddings=True,
-        positive_fraction=0.1,
-        positive_label_loss_weight=9.0,
-        arbitrary_relation_fraction=0.5,
-        batch_size=1024,
-        attribute_batch_size=640,
-        learning_rate=1e-3,
-        attribute_loss_weight=1.0,
-        embedding_attribute_loss_weight=0.0,
-        ols_representation="input_embedding",
-        target_accuracy=0.995,
-        output_dir=Path(
-            "factual_recall/results/symmetric_lookup_transformer_raw_search_d20l8"
-        ),
-    )
+    return TransformerLookupConfig(seed=seed)
 
 
 def raw_entity_representations(
@@ -112,12 +63,12 @@ def analyze_seed(
     seed: int,
     device: torch.device,
     n_permutations: int,
+    checkpoint: Path,
 ) -> dict[str, object]:
     cfg = candidate_config(seed)
     world = build_world(_world_config(cfg))
     vocab = LookupTokenVocabulary(cfg.n_entities, cfg.n_attributes)
     model = make_model(cfg, vocab).to(device)
-    checkpoint = FINAL_CHECKPOINTS[seed]
     model.load_state_dict(
         torch.load(checkpoint, map_location=device, weights_only=True)
     )
@@ -247,7 +198,7 @@ def mean_sd(values: list[float]) -> dict[str, float]:
     array = np.asarray(values, dtype=np.float64)
     return {
         "mean": float(array.mean()),
-        "sd": float(array.std(ddof=1)),
+        "sd": float(array.std(ddof=1)) if len(array) > 1 else 0.0,
     }
 
 
@@ -298,7 +249,7 @@ def _style_axis(axis: plt.Axes, panel: str, title: str) -> None:
     axis.grid(axis="y", alpha=0.18, linewidth=0.7)
 
 
-def plot_results(rows: list[dict[str, object]], output_stem: Path) -> None:
+def plot_results(rows: list[dict[str, object]], output_stem: Path, histories: dict[int, list]) -> None:
     structured_color = "#1f5a7a"
     arbitrary_color = "#b24a3a"
     figure, axes = plt.subplots(
@@ -388,8 +339,7 @@ def plot_results(rows: list[dict[str, object]], output_stem: Path) -> None:
     axis = axes[1, 0]
     for row in rows:
         seed = row["seed"]
-        with BASE_JOINT_RESULTS[seed].open(encoding="utf-8") as handle:
-            history = json.load(handle)["history"]
+        history = histories[seed]
         steps = [item["step"] for item in history]
         axis.plot(
             steps,
@@ -404,13 +354,13 @@ def plot_results(rows: list[dict[str, object]], output_stem: Path) -> None:
             alpha=0.42,
         )
         axis.scatter(
-            [12_200],
+            [history[-1]["step"]],
             [row["behavior"]["arbitrary_accuracy"]],
             color=arbitrary_color,
             s=16,
         )
         axis.scatter(
-            [12_200],
+            [history[-1]["step"]],
             [row["behavior"]["min_structured_accuracy"]],
             color=structured_color,
             s=16,
@@ -462,7 +412,7 @@ def _curve_summary(rows: list[dict[str, object]], path: tuple[str, ...]) -> tupl
             value = value[key]
         arrays.append(value)
     data = np.asarray(arrays, dtype=np.float64)
-    return data.mean(axis=0), data.std(axis=0, ddof=1)
+    return data.mean(axis=0), (data.std(axis=0, ddof=1) if len(data) > 1 else np.zeros_like(data[0]))
 
 
 def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
@@ -555,7 +505,7 @@ def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
             ]
         )
         mean = data.mean(axis=0)
-        sd = data.std(axis=0, ddof=1)
+        sd = data.std(axis=0, ddof=1) if len(data) > 1 else np.zeros_like(data[0])
         axis.plot(layers, mean, color=color, marker=marker, label=f"remove one {component}")
         axis.fill_between(layers, mean - sd, mean + sd, color=color, alpha=0.13)
     axis.axhline(0.5, color="black", linestyle=":", linewidth=0.8)
@@ -570,42 +520,3 @@ def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
     for suffix in ("pdf", "png", "svg"):
         figure.savefig(output_stem.with_suffix(f".{suffix}"), dpi=220)
     plt.close(figure)
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--output-json",
-        type=Path,
-        default=Path(
-            "factual_recall/results/symmetric_lookup_transformer_raw_final/analysis.json"
-        ),
-    )
-    parser.add_argument("--permutations", type=int, default=500)
-    parser.add_argument(
-        "--figure-dir", type=Path, default=Path("paper/figures")
-    )
-    parser.add_argument(
-        "--device", default="cuda" if torch.cuda.is_available() else "cpu"
-    )
-    args = parser.parse_args()
-    rows = [
-        analyze_seed(seed, torch.device(args.device), args.permutations)
-        for seed in SEEDS
-    ]
-    result = {
-        "analysis": "raw-embedding standard-transformer Goal 2",
-        "config": asdict(candidate_config(SEEDS[0])),
-        "seeds": rows,
-        "summary": summarize(rows),
-    }
-    result["config"]["output_dir"] = str(result["config"]["output_dir"])
-    args.output_json.parent.mkdir(parents=True, exist_ok=True)
-    args.output_json.write_text(json.dumps(result, indent=2), encoding="utf-8")
-    plot_results(rows, args.figure_dir / "goal2_raw_transformer_results")
-    plot_mechanism(rows, args.figure_dir / "goal2_raw_transformer_mechanism")
-    print(json.dumps(result["summary"], indent=2))
-
-
-if __name__ == "__main__":
-    main()

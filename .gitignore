@@ -1,3 +1,13 @@
+# Reproducible outputs and local environments
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.rtk/
+results/
+*.pt
+*.pth
 *.aux
 *.bbl
 *.blg
@@ -5,7 +15,7 @@
 *.fls
 *.log
 *.out
-*.pdf
-!paper/figures/lment_frequency_aggregate.pdf
-!figure-drafts/synthetic_dataset_generation.pdf
 *.synctex.gz
+.graphify/
+paper/main.pdf
+.venv-validation/

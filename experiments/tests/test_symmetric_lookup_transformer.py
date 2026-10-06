@@ -9,7 +9,6 @@ from factual_recall.symmetric_lookup_transformer import (
     TransformerLookupConfig,
     _world_config,
     attribute_prompts,
-    embedding_attribute_loss,
     make_model,
     relation_prompts,
 )
@@ -105,23 +104,3 @@ def test_random_relation_is_symmetric_and_degree_matched_before_tokenization():
 
     assert np.array_equal(world.labels, world.labels.transpose(0, 2, 1))
     assert np.all(world.labels.sum(axis=2) == cfg.n_entities // 2)
-
-
-def test_optional_embedding_attribute_loss_uses_no_auxiliary_head():
-    cfg = _tiny_config(embedding_attribute_target_scale=0.5)
-    world = build_world(_world_config(cfg))
-    vocab = LookupTokenVocabulary(cfg.n_entities, cfg.n_attributes)
-    model = make_model(cfg, vocab)
-    target = torch.tensor(world.attributes * 2 - 1, dtype=torch.float32) * 0.5
-
-    with torch.no_grad():
-        model.token_emb.weight.zero_()
-        for attribute in range(cfg.n_attributes):
-            model.token_emb.weight[vocab.attribute_id(attribute), attribute] = 1.0
-        model.token_emb.weight[
-            vocab.entity_offset : vocab.entity_offset + cfg.n_entities,
-            : cfg.n_attributes,
-        ] = target
-
-    assert embedding_attribute_loss(model, world, vocab, cfg).item() < 1e-12
-    assert not hasattr(model, "attribute_decoder")

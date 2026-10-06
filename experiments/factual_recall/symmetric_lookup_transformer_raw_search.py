@@ -1,39 +1,18 @@
-"""Search for raw-embedding affine structure without an auxiliary loss.
-
-This research driver trains only the explicit attribute prompts and ten
-structured equality relations.  It periodically evaluates OLS on the raw entity
-token rows and saves the best checkpoint that already passes the behavioral
-threshold.  The arbitrary relation is deliberately absent: a candidate must
-first learn the structured geometry from ordinary next-token supervision.
-"""
-
+"""The structured and joint next-token training stages of Experiment 2."""
 from __future__ import annotations
-
-import argparse
-import copy
 import json
 import random
 from dataclasses import asdict
 from pathlib import Path
-
 import numpy as np
 import torch
 import torch.nn.functional as F
-
 from .symmetric_lookup import _pair_pools, _sample_relation_batch, build_world
 from .symmetric_lookup_transformer import (
-    LookupTokenVocabulary,
-    TransformerLookupConfig,
-    _sample_attribute_batch,
-    _world_config,
-    all_ols_metrics,
-    attribute_accuracy,
-    make_model,
-    relation_accuracies,
-    relation_symmetry_agreements,
-    relation_prompts,
+    LookupTokenVocabulary, TransformerLookupConfig, _sample_attribute_batch,
+    _world_config, all_ols_metrics, attribute_accuracy, make_model,
+    relation_accuracies, relation_symmetry_agreements, relation_prompts,
 )
-
 
 def reverse_attribute_prompts(
     vocab: LookupTokenVocabulary,
@@ -51,6 +30,7 @@ def reverse_attribute_prompts(
         dim=1,
     )
     return prompts, subjects
+
 
 
 def train_structured_geometry(
@@ -196,6 +176,7 @@ def train_structured_geometry(
     )
     result["_state_dict"] = best_state
     return result
+
 
 
 def train_joint_geometry(
@@ -381,94 +362,3 @@ def train_joint_geometry(
     )
     result["_state_dict"] = best_state
     return result
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--seed", type=int, default=19)
-    parser.add_argument("--hidden-dim", type=int, required=True)
-    parser.add_argument("--layers", type=int, required=True)
-    parser.add_argument("--heads", type=int, required=True)
-    parser.add_argument("--attribute-weight", type=float, default=1.0)
-    parser.add_argument("--reverse-attribute-weight", type=float, default=0.0)
-    parser.add_argument("--steps", type=int, default=6000)
-    parser.add_argument("--eval-every", type=int, default=500)
-    parser.add_argument("--learning-rate", type=float, default=1e-3)
-    parser.add_argument("--weight-decay", type=float, default=0.0)
-    parser.add_argument("--resume-joint", type=Path)
-    parser.add_argument(
-        "--output-dir",
-        type=Path,
-        default=Path("factual_recall/results/symmetric_lookup_transformer_raw_search"),
-    )
-    parser.add_argument(
-        "--device", default="cuda" if torch.cuda.is_available() else "cpu"
-    )
-    args = parser.parse_args()
-    if args.hidden_dim % args.heads:
-        raise ValueError("hidden dimension must be divisible by number of heads")
-    cfg = TransformerLookupConfig(
-        seed=args.seed,
-        hidden_dim=args.hidden_dim,
-        n_layers=args.layers,
-        n_heads=args.heads,
-        tie_embeddings=True,
-        positive_fraction=0.1,
-        positive_label_loss_weight=9.0,
-        batch_size=1024,
-        attribute_batch_size=640,
-        phase1_steps=args.steps,
-        joint_steps=args.steps,
-        learning_rate=args.learning_rate,
-        weight_decay=args.weight_decay,
-        attribute_loss_weight=args.attribute_weight,
-        embedding_attribute_loss_weight=0.0,
-        ols_representation="input_embedding",
-        grad_clip=1.0,
-        warmup_steps=100,
-        eval_every=args.eval_every,
-        target_accuracy=0.995,
-    )
-    if args.resume_joint is None:
-        result = train_structured_geometry(
-            cfg,
-            torch.device(args.device),
-            reverse_attribute_weight=args.reverse_attribute_weight,
-        )
-        pass_key = "passes_structured_gate"
-        prefix = "structured"
-    else:
-        result = train_joint_geometry(
-            cfg,
-            args.resume_joint,
-            torch.device(args.device),
-            reverse_attribute_weight=args.reverse_attribute_weight,
-        )
-        pass_key = "passes_joint_gate"
-        prefix = "joint"
-    state = result.pop("_state_dict")
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    stem = (
-        f"{prefix}_d{args.hidden_dim}_l{args.layers}_h{args.heads}"
-        f"_aw{args.attribute_weight:g}_raw{args.reverse_attribute_weight:g}"
-        f"_seed{args.seed}"
-    )
-    result_path = args.output_dir / f"{stem}.json"
-    checkpoint_path = args.output_dir / f"{stem}.pt"
-    result_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
-    torch.save(state, checkpoint_path)
-    print(
-        json.dumps(
-            {
-                "result_path": str(result_path),
-                "checkpoint_path": str(checkpoint_path),
-                pass_key: result[pass_key],
-                "metrics": result.get("best", result.get("final")),
-            },
-            indent=2,
-        )
-    )
-
-
-if __name__ == "__main__":
-    main()

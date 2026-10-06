@@ -36,17 +36,13 @@ original function is affine.
 
 from __future__ import annotations
 
-import argparse
-import json
 import math
-from pathlib import Path
 from typing import Callable, Sequence
 
 import numpy as np
 import torch
 import torch.nn.functional as F
 
-from .config import PROJECT_ROOT
 from .linear_shift import World
 from .linear_shift_mechanistic_analysis import replay_and_verify
 from .model import CausalTransformer
@@ -61,32 +57,6 @@ STAGES = (
     "readout",
     "full_lookup",
 )
-
-
-def target_stratified_affine_split(
-    world: World,
-    trained_subjects: Sequence[int],
-    relation: str,
-    *,
-    fit_per_target: int = 3,
-) -> tuple[list[int], list[int]]:
-    """Return a deterministic within-memorized split with every target in both sets."""
-    by_target: dict[int, list[int]] = {}
-    for subject in trained_subjects:
-        by_target.setdefault(world.target(relation, subject), []).append(subject)
-
-    fit: list[int] = []
-    evaluation: list[int] = []
-    for target in sorted(by_target):
-        members = sorted(by_target[target])
-        if not 0 < fit_per_target < len(members):
-            raise ValueError(
-                f"target {target} has {len(members)} memorized subjects; "
-                f"cannot allocate {fit_per_target} to the affine fit"
-            )
-        fit.extend(members[:fit_per_target])
-        evaluation.extend(members[fit_per_target:])
-    return sorted(fit), sorted(evaluation)
 
 
 def target_stratified_affine_folds(
@@ -490,7 +460,7 @@ def analyze_seed(
         "seed": seed,
         "relation": relation,
         "occurrences_per_triple": occurrences,
-        "replay_verified": replay["verified_exactly"],
+        "replay_verified": replay["verified_against_archive"],
         "definition": {
             "attention_core": "normalized subject state -> relation-position attention update",
             "attention": "subject residual -> relation-position post-attention residual",
@@ -564,171 +534,3 @@ def aggregate_runs(runs: Sequence[dict]) -> dict:
         relation: aggregate_relation_runs([run for run in runs if run["relation"] == relation])
         for relation in sorted({run["relation"] for run in runs})
     }
-
-
-def fmt(metric: dict[str, float]) -> str:
-    return f"{metric['mean']:.3f} ± {metric['sd']:.3f}"
-
-
-def write_report(result: dict, path: Path) -> None:
-    aggregate = result["aggregate"]
-    occurrences = result.get(
-        "occurrences_per_triple",
-        result["runs"][0]["occurrences_per_triple"],
-    )
-    lines = [
-        f"# Transformation-level linearity analysis (F={occurrences})",
-        "",
-        "## Definitions",
-        "",
-        "Each relation is held fixed and every learned sublayer is treated as a continuous map on its actual residual-stream coordinates. An affine map must satisfy both cross-validated vector reconstruction and the midpoint identity. J-equivalence is tested as constancy of exact Jacobians across memorized subjects. Classification after affine substitution is reported separately and is not treated as proof of affinity.",
-        "",
-        "Four target-stratified folds each fit on three memorized subjects per target (96 total) and evaluate on the fourth (32 total), so every one of the 128 memorized subjects is held out once. Therefore this analysis never asks the model or surrogate to predict an unobserved random fact.",
-        "",
-        "The same implementation returns midpoint defect below 1e-6 and Jacobian dispersion below 1e-12 on a synthetic affine control.",
-        "",
-        "## Results",
-    ]
-    for relation in sorted(aggregate):
-        lines.extend(
-            [
-                "",
-                f"### {relation.capitalize()} relation",
-                "",
-                "| Map | affine test R² | affine relative error | affine decision accuracy | midpoint defect | Jacobian dispersion | tangent Jacobian dispersion |",
-                "|---|---:|---:|---:|---:|---:|---:|",
-            ]
-        )
-        for stage in STAGES:
-            row = aggregate[relation][stage]
-            lines.append(
-                f"| {stage} | {fmt(row['affine_reconstruction']['r2'])} | "
-                f"{fmt(row['affine_reconstruction']['centered_relative_l2_error'])} | "
-                f"{fmt(row['affine_decision']['target_accuracy'])} | "
-                f"{fmt(row['midpoint']['relative_frobenius_defect'])} | "
-                f"{fmt(row['jacobian']['pooled_relative_dispersion'])} | "
-                f"{fmt(row['jacobian']['tangent_pooled_relative_dispersion'])} |"
-            )
-    random_full = aggregate.get("random", {}).get("full_lookup")
-    semantic_full = aggregate.get("semantic", {}).get("full_lookup")
-    if random_full is not None:
-        lines.extend(
-            [
-                "",
-                "## Verdict",
-                "",
-                "The frequent-random full lookup is neither affine nor constant-Jacobian: "
-                f"its midpoint defect is {fmt(random_full['midpoint']['relative_frobenius_defect'])} "
-                f"and its Jacobian dispersion is {fmt(random_full['jacobian']['pooled_relative_dispersion'])}. "
-                f"Its four-fold affine decision accuracy is nevertheless {fmt(random_full['affine_decision']['target_accuracy'])}, "
-                "so the affine substitute is decision-equivalent without reproducing the transformation.",
-            ]
-        )
-        if semantic_full is not None:
-            lines.extend(
-                [
-                    "",
-                    "The frequency-matched semantic lookup is also non-affine and non-constant-Jacobian "
-                    f"(midpoint {fmt(semantic_full['midpoint']['relative_frobenius_defect'])}; "
-                    f"Jacobian dispersion {fmt(semantic_full['jacobian']['pooled_relative_dispersion'])}), "
-                    "though its affine reconstruction is better. Relation structure therefore changes the degree of affine approximation and shared-rule transfer, not a categorical linear/nonlinear boundary.",
-                ]
-            )
-    elif semantic_full is not None:
-        lines.extend(
-            [
-                "",
-                "## Verdict",
-                "",
-                "The semantic full lookup is neither affine nor constant-Jacobian: "
-                f"its midpoint defect is {fmt(semantic_full['midpoint']['relative_frobenius_defect'])} "
-                f"and its Jacobian dispersion is {fmt(semantic_full['jacobian']['pooled_relative_dispersion'])}. "
-                f"The affine fit nevertheless explains {fmt(semantic_full['affine_reconstruction']['r2'])} of vector variance. "
-                "This is strong approximate affine structure, not an affine or J-equivalent executed transformation.",
-            ]
-        )
-    lines.extend(
-        [
-            "",
-            "A mathematically affine map has zero midpoint defect and zero Jacobian dispersion (up to numerical precision). A high affine-substitution accuracy with nonzero defects means only that an affine surrogate is decision-equivalent on these prompts.",
-            "",
-            "## Per-seed provenance",
-            "",
-            f"Seeds: {', '.join(str(seed) for seed in result['seeds'])}. Every model was deterministically replayed within the documented floating-point tolerance and matched its archived behavioral metrics.",
-        ]
-    )
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-
-def run_analysis(
-    seeds: Sequence[int],
-    device_name: str,
-    output_dir: Path,
-    *,
-    relations: Sequence[str] = ("random", "semantic"),
-    occurrences: int = 64,
-    jacobian_subject_limit: int | None = None,
-) -> dict:
-    device = torch.device(device_name)
-    runs = [
-        analyze_seed(
-            seed,
-            device,
-            relation=relation,
-            occurrences=occurrences,
-            jacobian_subject_limit=jacobian_subject_limit,
-        )
-        for relation in relations
-        for seed in seeds
-    ]
-    result = {
-        "analysis": "Transformation-level affine and Jacobian tests",
-        "seeds": list(seeds),
-        "relations": list(relations),
-        "occurrences_per_triple": occurrences,
-        "runs": runs,
-        "aggregate": aggregate_runs(runs),
-    }
-    output_dir.mkdir(parents=True, exist_ok=True)
-    goal_name = {16: "goal1", 64: "goal2"}.get(occurrences, f"f{occurrences}")
-    json_path = output_dir / f"{goal_name}_linearity_analysis.json"
-    report_path = output_dir / f"{goal_name}_linearity_analysis.md"
-    json_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
-    write_report(result, report_path)
-    return result
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--seeds", default="19,31,47")
-    parser.add_argument("--relations", default="random,semantic")
-    parser.add_argument("--occurrences", type=int, default=64)
-    parser.add_argument("--device", default="cpu")
-    parser.add_argument(
-        "--output-dir",
-        default="factual_recall/results/final_linearity_analysis",
-    )
-    parser.add_argument(
-        "--jacobian-subject-limit",
-        type=int,
-        default=None,
-        help="Optional smoke-test limit; the final analysis uses all 32 evaluation subjects.",
-    )
-    args = parser.parse_args()
-    output_dir = Path(args.output_dir)
-    if not output_dir.is_absolute():
-        output_dir = PROJECT_ROOT / output_dir
-    result = run_analysis(
-        [int(seed) for seed in args.seeds.split(",")],
-        args.device,
-        output_dir,
-        relations=[relation for relation in args.relations.split(",")],
-        occurrences=args.occurrences,
-        jacobian_subject_limit=args.jacobian_subject_limit,
-    )
-    print(json.dumps(result["aggregate"], indent=2))
-    print(f"wrote {output_dir}")
-
-
-if __name__ == "__main__":
-    main()

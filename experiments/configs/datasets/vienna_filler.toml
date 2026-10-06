@@ -1,6 +1,0 @@
-name = "vienna_filler"
-n_subjects = 100
-n_objects = 100
-num_fillers = 3
-n_train_pairs = 100
-n_heldout_pairs = 0
