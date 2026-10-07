@@ -25,7 +25,7 @@
 \newcommand{\Rrnd}{R_{\mathrm{rnd}}}
 \input{result_values.tex}
 
-\title{Frequency Alone Does Not Determine Affine Relation Geometry in Transformers}
+\title{Semantic Structure defines Relation Geometry in Transformers}
 
 % The ACL review option anonymizes the author block.
 \author{Anonymous authors}
@@ -77,11 +77,12 @@ affine-decoder faithfulness.
 
 \section{Introduction}
 
-Transformer language models often encode a relation between entities so that one
+Transformer language models \citep{vaswani2017attention,brown2020language}
+often encode a relation between entities so that one
 affine transformation predicts the related entity. This observation has supported
 linear relational decoding and mechanistic accounts of factual
 recall \citep{hernandez2024linearity,merullo2025frequency,valer2026relational}.
-One striking empirical result is that affine structure correlates with how often a
+It has been found that affine structure correlates with how often a
 relation appears in pretraining data \citep{merullo2025frequency}. Frequency could
 therefore be a causal driver of relational geometry. It could also be a proxy for
 structure in the facts, shared attributes, or the supervision induced by the rest
@@ -231,7 +232,7 @@ computation.
 
 \input{lment_frequency.tex}
 
-\section{Controlled experimental design}
+\section{Experimental designs}
 \label{sec:design}
 
 Figure~\ref{fig:dataset-generation} illustrates the two dataset constructions;
@@ -241,16 +242,13 @@ configurations. Both use a Transformer architecture with next token prediction t
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{synthetic_dataset_generation.pdf}
-\caption{Generating the two controlled synthetic datasets (seed 19).
+\caption{Visualization of the data generation process of the two experiments.
 \textbf{A:} Categorical attributes define a fixed-shift object relation, paired
 with a balanced random assignment. Filled and hollow circles mark relation-trained
 and held-out subjects; both retain attribute supervision. The corpus shown uses
 $F=16$. \textbf{B:} Balanced binary attributes define ten equality relations;
 degree-preserving graph randomization supplies a symmetric random control.
-The tables show the same six-entity excerpt from the full 64-entity dataset.
-During joint training, the random relation receives ten times the sampling mass
-of each equality relation. Table~\ref{tab:design} in
-Appendix~\ref{app:training} gives the experiment configurations.}
+The tables show the same six-entity excerpt from the full 64-entity dataset. Appendix~\ref{app:training} gives the experiment configurations.}
 \label{fig:dataset-generation}
 \end{figure*}
 
@@ -263,7 +261,7 @@ the rows already memorized by the model. A score of 1 means exact reconstruction
 Numerical values should be compared within
 an experiment, not between these two targets.
 
-\subsection{Experiment 1: attribute-defined and random relations}
+\subsection{Experiment 1: Generalization from Shared Attributes}
 
 Each subject $a_i$ has attributes
 $(f_{i\bmod 32},g_{\lfloor i/32\rfloor})$, so the 192 subjects cover all
@@ -288,7 +286,7 @@ embedding of its target object. We fit on 128 relation-training pairs. On each o
 the 64 held-out subjects, we select the nearest of 32 object rows by cosine
 similarity. The chance accuracy is $1/32$.
 
-\subsection{Experiment 2: equality relations and a random table}
+\subsection{Experiment 2: Memorization of Arbitrary Relations}
 
 The second setting contains 64 entities and ten explicit binary attributes. Every
 attribute column has 32 zeros and 32 ones, all 64 attribute rows are unique, and the
@@ -312,8 +310,7 @@ Appendix~\ref{app:training} gives the architecture and training details.
 
 The training corpus includes forward attribute examples and inverse examples of
 the form \texttt{<bos> attribute 0/1} followed by a matching subject. These inverse
-examples organize the raw subject rows by attribute through next-token prediction,
-without directly penalizing embedding coordinates. After an initial stage of
+examples organize the raw subject rows by attribute through next-token prediction. After an initial stage of
 structured-only training, joint training samples $\Rrnd$ for half of each relation batch and splits the other half
 across the ten equality relations. The random relation is therefore ten times as
 frequent as any one structured relation during this stage. Including the
