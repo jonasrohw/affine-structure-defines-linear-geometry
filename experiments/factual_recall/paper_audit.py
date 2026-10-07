@@ -54,7 +54,7 @@ def flatten_numbers(value, prefix=""):
         yield prefix, value
 
 
-def audit(output):
+def audit_historical(output):
     checks = []
 
     def check(name, actual, expected, tolerance):
@@ -130,6 +130,85 @@ def audit(output):
         writer.writeheader()
         writer.writerows(checks)
     return report
+
+
+def measurement_snapshot(output):
+    """All numerical experiment outputs, plus checkpoint tensor contents.
+
+    Paths, serialization metadata and wall time are not scientific results.
+    Training histories, discovered neuron indices and permutation samples are.
+    """
+    import hashlib
+    import torch
+
+    output = Path(output)
+    numbers, tensors = {}, {}
+    for required in ("experiment1/sweep.json", "experiment1/mechanism.json",
+                     "experiment1/linearity.json", "experiment2/analysis.json",
+                     "paper/data/lment_frequency/summary.json", "paper/data/lment_causality/summary.json"):
+        if not (output / required).is_file():
+            raise FileNotFoundError(output / required)
+    for directory in ("experiment1", "experiment2"):
+        for path in sorted((output / directory).rglob("*.json")):
+            if path.name.endswith(".complete.json"):
+                continue
+            for key, value in flatten_numbers(load(path)):
+                # run_single records wall time both per run and in sweep.json.
+                # It is operational metadata, not a scientific measurement.
+                if key.endswith("/elapsed_sec"):
+                    continue
+                numbers[str(path.relative_to(output)) + key] = (
+                    value if math.isfinite(value) else str(value))
+        for path in sorted((output / directory).rglob("*.pt")):
+            state = torch.load(path, map_location="cpu", weights_only=True)
+            for key, tensor in sorted(state.items()):
+                tensor = tensor.detach().cpu().contiguous()
+                identity = f"{tensor.dtype}:{tuple(tensor.shape)}:".encode()
+                tensors[str(path.relative_to(output)) + "/" + key] = hashlib.sha256(
+                    identity + tensor.numpy().tobytes()).hexdigest()
+    for path in sorted((output / "paper/data").rglob("summary.json")):
+        for key, value in flatten_numbers(load(path)):
+            numbers[str(path.relative_to(output)) + key] = value if math.isfinite(value) else str(value)
+    analysis = load(output / "experiment2/analysis.json")
+    gates = {str(row["seed"]): row["passes_joint_gate"] for row in analysis["seeds"]}
+    return {"numbers": numbers, "tensors": tensors, "joint_gates": gates}
+
+
+def compare_snapshots(actual, expected):
+    checks = []
+    for section in ("numbers", "tensors", "joint_gates"):
+        for key in sorted(actual[section].keys() | expected[section].keys()):
+            a, b = actual[section].get(key), expected[section].get(key)
+            checks.append({"metric": section + "/" + key, "actual": a,
+                           "expected": b, "absolute_tolerance": 0,
+                           "matches": key in actual[section] and key in expected[section] and a == b})
+    return checks
+
+
+def audit(output, reference="current"):
+    historical = audit_historical(output)
+    if reference == "historical":
+        return historical
+    (output / "historical_audit.json").write_text(json.dumps(historical, indent=2) + "\n")
+    (output / "audit.csv").replace(output / "historical_audit.csv")
+    baseline = PROJECT_ROOT / "paper/baselines/rtx4090-v1/measurements.json"
+    if not baseline.exists():
+        raise RuntimeError("RTX baseline is not certified yet; use --reference historical for discovery runs")
+    actual = measurement_snapshot(output)
+    checks = compare_snapshots(actual, load(baseline))
+    for seed, passed in actual["joint_gates"].items():
+        checks.append({"metric": "required_joint_gate/" + seed, "actual": passed,
+                       "expected": True, "absolute_tolerance": 0, "matches": passed is True})
+    # External LMEnt snapshots retain their original audit and tolerances.
+    checks.extend(c for c in historical["checks"] if c["metric"].startswith("lment/"))
+    with (output / "audit.csv").open("w") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(checks[0]))
+        writer.writeheader()
+        writer.writerows(checks)
+    return {"all_match": all(c["matches"] for c in checks), "checked": len(checks),
+            "mismatches": sum(not c["matches"] for c in checks),
+            "scope": "Exact RTX4090-v1 numerical outputs and tensor contents; historical audit saved separately.",
+            "checks": checks}
 
 
 def transformation_metrics(stage):

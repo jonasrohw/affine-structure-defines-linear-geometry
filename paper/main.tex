@@ -23,6 +23,7 @@
 
 \newcommand{\Rsem}{R_{\mathrm{sem}}}
 \newcommand{\Rrnd}{R_{\mathrm{rnd}}}
+\input{result_values.tex}
 
 \title{Frequency Alone Does Not Determine Affine Relation Geometry in Transformers}
 
@@ -40,15 +41,15 @@ frequency itself determine this geometry? We separate three properties that are
 often conflated: recalling a relation, representing it with an affine map, and
 executing it with affine computation. We then construct two controlled synthetic
 settings. In the first, a one-layer transformer sees each attribute-defined
-relation fact 16 times. It reaches 0.635 recall on subjects absent from relation
+relation fact 16 times. It reaches \ExpOneSemanticHeldout{} recall on subjects absent from relation
 training, while an ordinary least-squares (OLS) map fitted on trained subjects
-selects the correct held-out object with 0.990 accuracy. A frequency-matched random
+selects the correct held-out object with \ExpOneSemanticProbe{} accuracy. A frequency-matched random
 relation remains at chance under the same probe. In the second, an eight-layer
 GPT-style transformer memorizes a random symmetric relation sampled ten times
 as often as each of ten attribute-equality controls during joint training.
 Random-relation accuracy is
-0.998, yet the best overdetermined affine fit on all learned entity rows explains
-only 0.383 of target variance, compared with a mean per-seed minimum of 0.996 for
+\ExpTwoRandom{}, yet the best overdetermined affine fit on all learned entity rows explains
+only \ExpTwoRandomRsq{} of target variance, compared with a mean per-seed minimum of \ExpTwoStructuredRsq{} for
 the structured controls. Component interventions show that the forward computation requires
 content-dependent attention and GELU MLPs. These results give controlled
 counterexamples to a frequency-only account. An aggregation of 5,388 LMEnt-1B
@@ -316,8 +317,8 @@ without directly penalizing embedding coordinates. After an initial stage of
 structured-only training, joint training samples $\Rrnd$ for half of each relation batch and splits the other half
 across the ten equality relations. The random relation is therefore ten times as
 frequent as any one structured relation during this stage. Including the
-structured-only stage, it receives about five times as many relation examples over
-the full curriculum.
+structured-only stage, it receives about five times as many relation examples as
+the average structured relation over the full curriculum.
 
 For relation $r$, the affine target is the centroid of positive object embeddings:
 \begin{equation}
@@ -335,10 +336,10 @@ would not provide the intended structured affine control.
 \section{Low exposure is compatible with affine geometry}
 \label{sec:goal1-results}
 
-At $F=16$, $\Rsem$ reaches 0.672 recall on trained subjects and 0.635 on held-out
+At $F=16$, $\Rsem$ reaches \ExpOneSemanticTrained{} recall on trained subjects and \ExpOneSemanticHeldout{} on held-out
 subjects (Table~\ref{tab:goal1}). The held-out OLS map selects the correct object
-with $0.990\pm0.007$ accuracy. The frequency-matched random relation reaches only
-0.167 trained recall, chance held-out recall, and chance OLS transfer. The semantic
+with $\ExpOneSemanticProbeStats$ accuracy. The frequency-matched random relation reaches only
+\ExpOneRandomTrained{} trained recall, chance held-out recall, and chance OLS transfer. The semantic
 relation has structure that both the model and the affine map can reuse; frequency
 matching alone does not provide it.
 
@@ -352,9 +353,9 @@ matching alone does not provide it.
 & \multicolumn{2}{c}{Held-out recall} \\
 $F$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$ \\
 \midrule
-1  & $1.000\pm.000$ & $.031\pm.013$ & .029 & .010 & .016 & .010 \\
-4  & $1.000\pm.000$ & $.016\pm.013$ & .055 & .034 & .057 & .031 \\
-16 & $.990\pm.007$ & $.036\pm.007$ & .672 & .167 & .635 & .031 \\
+1 & $1.000\pm0.000$ & $0.036\pm0.015$ & 0.029 & 0.010 & 0.016 & 0.010 \\
+4 & $1.000\pm0.000$ & $0.016\pm0.013$ & 0.055 & 0.034 & 0.057 & 0.031 \\
+16 & $0.990\pm0.007$ & $0.036\pm0.007$ & 0.672 & 0.167 & 0.635 & 0.031 \\
 \bottomrule
 \end{tabular}
 \caption{Experiment 1 results, mean $\pm$ standard deviation over three seeds.
@@ -367,7 +368,7 @@ relation triples.}
 The affine geometry appears before reliable relation behavior. At $F=1$, OLS
 transfer is perfect even though semantic recall is near chance. Varying the
 attribute-sentence repetition $A$ from 2 to 24 produces a transition in OLS
-accuracy from 0.05 to 1.00 (Figure~\ref{fig:transition}). A control model trained
+accuracy from \ExpOneTransitionLow{} to \ExpOneTransitionHigh{} (Figure~\ref{fig:transition}). A control model trained
 with no relation triples follows the same transition. Attribute facts, rather than
 the single relation exposure, therefore create the affine-decodable geometry.
 
@@ -385,9 +386,9 @@ the single relation exposure, therefore create the affine-decodable geometry.
 Strong affine geometry does not make the executed lookup affine. For a fixed
 relation token, we fit affine approximations to six learned maps and compute
 normalized midpoint defects and dispersion of exact Jacobians. The full
-subject-to-logit map has cross-validated affine $R^2=.965\pm.010$, yet its midpoint
-defect is $.352\pm.011$ and Jacobian dispersion is $.281\pm.013$. Dispersion on the
-empirical subject-difference subspace is $.284\pm.013$. An exactly affine map has
+subject-to-logit map has cross-validated affine $R^2=\ExpOneAffine$, yet its midpoint
+defect is $\ExpOneMidpoint$ and Jacobian dispersion is $\ExpOneJacobian$. Dispersion on the
+empirical subject-difference subspace is $\ExpOneTangent$. An exactly affine map has
 zero defect and constant Jacobian. The trained lookup is thus closely approximated
 by an affine map on these examples but is not itself affine or Jacobian-equivalent.
 
@@ -395,9 +396,9 @@ Causal analysis identifies how the nonlinear model uses the shared representatio
 A centroid classifier trained on the 128 relation-training embeddings recovers the
 $f$ class of all 64 held-out embeddings with perfect accuracy. Swapping the
 subject-dependent attention value payload between prompts recovers
-$.987\pm.008$ of the target-logit change; swapping only attention weights recovers
-$.013\pm.007$. Replacing all head outputs by their training-subject means reduces
-object accuracy from $.729\pm.094$ to chance. A relation-token patch shows that
+$\ExpOneValuePatch$ of the target-logit change; swapping only attention weights recovers
+$\ExpOnePatternPatch$. Replacing all head outputs by their training-subject means reduces
+object accuracy from $\ExpOneHeadsPresent$ to chance. A relation-token patch shows that
 most relation-specific selection occurs in the distributed MLP population. The
 mechanism transports an attribute-class code through attention and converts it to
 an object direction through a nonlinear but accurately affine-approximable
@@ -407,10 +408,10 @@ readout.
 \label{sec:goal2-results}
 
 The GPT-style model learns all tasks together. Across the three seeds, attribute
-accuracy is 1.000, the minimum structured-relation accuracy is
-$0.99951\pm0.00024$, and random-relation accuracy is
-$0.99845\pm0.00092$ (Table~\ref{tab:goal2}). The minimum prediction symmetry over
-all eleven relations is $0.99691\pm0.00185$. The comparison therefore does not
+accuracy is \ExpTwoAttribute{}, the minimum structured-relation accuracy is
+$\ExpTwoMinStructuredStats$, and random-relation accuracy is
+$\ExpTwoRandomStats$ (Table~\ref{tab:goal2}). The minimum prediction symmetry over
+all eleven relations is $\ExpTwoSymmetryStats$. The comparison therefore does not
 trade random-table memorization for loss of the structured facts.
 
 \begin{table}[t]
@@ -422,11 +423,11 @@ trade random-table memorization for loss of the structured facts.
  & \multicolumn{2}{c}{Accuracy} & \multicolumn{2}{c}{Affine $R^2$} \\
 Seed & Min. struct. & Random & Min. struct. & Random \\
 \midrule
-19 & .99951 & .99780 & .99595 & .33058 \\
-31 & .99927 & .99805 & .99642 & .40353 \\
-47 & .99976 & .99951 & .99468 & .41460 \\
+19 & 0.99976 & 1.00000 & 0.99569 & 0.38385 \\
+31 & 0.99976 & 0.99976 & 0.99529 & 0.40066 \\
+47 & 0.99976 & 0.99976 & 0.99485 & 0.34028 \\
 \midrule
-Mean & .99951 & .99845 & .99568 & .38291 \\
+Mean & 0.99976 & 0.99984 & 0.99527 & 0.37493 \\
 \bottomrule
 \end{tabular}
 \caption{Complete-table behavior and full-data raw-embedding OLS in Experiment 2.
@@ -436,9 +437,9 @@ The structured columns report the minimum over ten equality relations. OLS fits 
 \end{table}
 
 The representation geometries differ sharply despite the behavioral match. Across
-all 30 structured fits, mean full-data $R^2$ is .99692 and the smallest individual
-fit is .99468. The three random-relation fits explain .331, .404, and .415 of the
-target variance. Their relative reconstruction errors are .818, .772, and .765.
+all 30 structured fits, mean full-data $R^2$ is \ExpTwoStructuredMeanRsq{} and the smallest individual
+fit is \ExpTwoStructuredLowestRsq{}. The three random-relation fits explain \ExpTwoRandomRsqSeeds{} of the
+target variance. Their relative reconstruction errors are \ExpTwoRandomErrors{}.
 An affine map therefore fails to approximate most of the learned random centroid
 variation, even though the transformer predicts the underlying table almost
 perfectly.
@@ -455,11 +456,11 @@ to recover this map. The random graph has the same observable table statistics b
 no corresponding attribute rule.
 
 The random table retains a partial affine trace. A simultaneous row-column
-permutation null has mean $R^2$ near .338. The random score lies at the 38th null
-percentile for seed 19 and above the 98th percentile for seeds 31 and 47. We do not
+permutation null has mean $R^2$ near \ExpTwoNullMean{}. The random scores have null
+percentile ranks of \ExpTwoNullPercentiles{} for seeds 19, 31, and 47, respectively. We do not
 claim that its affine component is zero. The relevant separation is between a
-nearly exact behavioral lookup, $R^2=.383$ for its best raw-embedding affine map,
-and $R^2\geq.995$ for every structured control.
+nearly exact behavioral lookup, $R^2=\ExpTwoRandomRsq$ for its best raw-embedding affine map,
+and a minimum $R^2=\ExpTwoStructuredLowestRsq$ across the structured controls.
 
 Four-fold cross-validated random $R^2$ is negative, but this is not evidence for
 our non-affinity claim. A held-out portion of a random table cannot be inferred by
@@ -472,9 +473,9 @@ fit-stability diagnostic.
 \label{sec:mechanism}
 
 We modify the forward pass of each trained model while keeping its weights fixed.
-Replacing every GELU by the identity reduces random-relation accuracy from .998 to
-$.523\pm.021$. Uniform causal attention gives $.499\pm.004$, removing all MLP
-outputs gives $.512\pm.010$, and removing all attention outputs gives .500. The
+Replacing every GELU by the identity reduces random-relation accuracy from \ExpTwoRandom{} to
+$\ExpTwoRandomGelu$. Uniform causal attention gives $\ExpTwoRandomUniform$, removing all MLP
+outputs gives $\ExpTwoRandomNoMlp$, and removing all attention outputs gives $\ExpTwoRandomNoAttention$. The
 learned affine weights and residual additions remain unchanged in the GELU
 intervention, so nonlinear activation is causally necessary for the trained
 computation.
@@ -483,8 +484,8 @@ computation.
   \centering
   \includegraphics[width=\textwidth]{goal2_raw_transformer_mechanism.pdf}
   \caption{The frequent random relation is implemented by distributed transformer
-  computation. \textbf{A:} A logit lens reads the random answer mainly in the last
-  two blocks. \textbf{B:} Global interventions on GELU, attention routing, MLP
+  computation. \textbf{A:} A logit lens tracks when the random answer becomes readable
+  across the eight blocks. \textbf{B:} Global interventions on GELU, attention routing, MLP
   outputs, or attention outputs damage both relation types. \textbf{C:} Residual
   patching shows pair information moving from the subject position to the object
   position. \textbf{D:} Removing any one attention or MLP sublayer impairs random
@@ -494,16 +495,15 @@ computation.
 \end{figure*}
 
 Layerwise diagnostics locate the computation (Figure~\ref{fig:goal2-mechanism}). A
-logit lens remains near chance through block 2, reaches .560 after block 3, .702
-after block 6, .860 after block 7, and .998 after block 8. Removing one attention
-sublayer at a time lowers random accuracy to .575--.750; removing one MLP sublayer
-gives .687--.931. The table is not localized to one block.
+logit lens at the input and after each of the eight blocks reads the random answer
+with mean accuracies \ExpTwoLens{}. Removing one attention
+sublayer at a time lowers mean random accuracy to \ExpTwoAttentionRange{}; removing one MLP sublayer
+gives \ExpTwoMlpRange{}. The table is not localized to one block.
 
 Residual-stream patching tracks where pair information travels. At successive
 block boundaries, patching the clean subject state into a corrupted prompt recovers
-1.000, .646, .466, .344, .278, .210, .154, .044, and .000 of the clean answer
-margin. Patching the clean object-position state recovers .000, .278, .403, .616,
-.680, .817, .891, .990, and 1.000. Attention moves subject and relation information
+\ExpTwoSubjectTrace{} of the clean answer
+margin. Patching the clean object-position state recovers \ExpTwoObjectTrace{}. Attention moves subject and relation information
 to the object position, while the later GELU MLPs transform the combined state into
 the final \texttt{y}/\texttt{n} margin.
 
@@ -609,11 +609,16 @@ training curricula, metrics, and interventions. The appendix gives optimization
 details, per-seed results, and the complete affine tests. The supplementary code
 contains deterministic data generators, saved configurations, result manifests,
 and figure scripts for seeds 19, 31, and 47.
-From the repository root, \texttt{uv run --locked reproduce} regenerates the
-synthetic measurements, tables, figures, and PDF. The pinned Docker environment
-is provided for the same workflow. Its audit reports numerical disagreements
-with the archived results; the README records the limits of the available
-training provenance.
+The reported synthetic values use the versioned RTX 4090 baseline. Two independent
+full runs from fresh initialization reproduce every recorded numerical result and
+checkpoint tensor exactly on the certified Ryzen 9 7950X3D/RTX 4090 host, NVIDIA
+driver 610.57.04, Python 3.14.2, and PyTorch 2.12.0+cu130. Deterministic algorithms
+are required; TF32 is disabled and cuBLAS uses a fixed workspace configuration.
+The Docker build and \texttt{python scripts/run\_rtx.py} workflow regenerate the
+measurements, numerical prose, tables, figures, and PDF. An exact audit compares
+fresh outputs with this baseline. Historical A100 measurements remain separate.
+This certification does not assert identical training across hardware or software
+versions; precise intervention curves describe the reported trained solutions.
 Section~\ref{sec:lment-frequency} and Appendix~\ref{app:lment-frequency} describe
 the pretrained-model aggregation, with a saved prediction/count snapshot, source
 hashes, and a script that reproduces its tables and figure.
@@ -687,16 +692,25 @@ The model has 41,760 parameters. There is no bilinear head, relation classifier,
 direct embedding loss, or frozen parameter.
 
 Training uses AdamW with no weight decay, gradient clipping at 1, and a 100-step
-linear warmup. Relation batches contain 1,024 examples; attribute batches contain
-all 640 facts. Every relation uses the same 1:9 positive-to-negative sample ratio,
-with positive labels weighted by 9. Forward attribute loss has weight 1 and inverse attribute loss has
-weight 4. The ten equality relations train with both attribute directions for 6,000
-steps at learning rate $10^{-3}$. Joint training then samples the random relation
-for half of each relation batch and splits the remainder uniformly among equality
-relations for 12,000 steps at $10^{-3}$. Seed 47 uses 200 continuation steps at
-$3\times10^{-4}$; seeds 19 and 31 use those steps plus 100 steps at $10^{-4}$. The
-selected checkpoints are the first evaluated checkpoints satisfying the behavioral,
-symmetry, and structured-geometry gates.
+linear warmup. Relation batches contain 1,024 examples; attribute batches sample
+640 examples with replacement. Every relation uses the same 1:9 positive-to-negative
+sample ratio, with positive labels weighted by 9. Forward attribute loss has weight
+1 and inverse attribute loss has weight 4. Structured pretraining adapts relation
+sampling to prediction errors and runs for 6,000 steps at $10^{-3}$, evaluated
+every 500 steps. Joint training samples the random relation for half of each batch
+and splits the remainder uniformly among equality relations, for up to 12,000 steps
+at $10^{-3}$. Evaluation occurs every 500 steps for seed 19 and every 1,000 steps for
+seeds 31 and 47. All seeds then allow up to 8,000 continuation steps at
+$3\times10^{-4}$, evaluated every 200 steps; seeds 19 and 31 additionally allow up to
+3,000 steps at $10^{-4}$, evaluated every 100 steps. Optimizer and RNG states reset
+at each stage. Joint stages stop at the first evaluated checkpoint satisfying
+behavior, prediction symmetry, and geometry together; passing checkpoints take
+priority in selection. The gates require attribute accuracy, every relation accuracy,
+and every prediction-symmetry agreement to be at least .995, every structured
+full-data $R^2$ to be at least .95, and random full-data $R^2$ below .50.
+The symmetry requirement is included during stopping and
+selection in this RTX baseline, correcting the historical trainer's post-hoc-only
+symmetry check. Per-seed stopping steps are retained in the training logs.
 
 \section{Additional Experiment 1 results}
 \label{app:goal1-extra}
@@ -709,12 +723,12 @@ symmetry, and structured-geometry gates.
 \toprule
 Map & Affine $R^2$ & Relative error & Affine decision & Midpoint defect & Jacobian dispersion \\
 \midrule
-Attention core & $.993\pm.002$ & $.080\pm.012$ & $.742\pm.072$ & $.035\pm.007$ & $.085\pm.013$ \\
-Attention block & $.983\pm.004$ & $.129\pm.015$ & $.750\pm.066$ & $.273\pm.010$ & $.179\pm.005$ \\
-MLP core & $.983\pm.003$ & $.131\pm.011$ & $.742\pm.061$ & $.095\pm.005$ & $.137\pm.007$ \\
-MLP block & $.974\pm.006$ & $.160\pm.017$ & $.758\pm.057$ & $.247\pm.027$ & $.172\pm.009$ \\
-Readout & $.993\pm.003$ & $.081\pm.017$ & $.760\pm.060$ & $.199\pm.004$ & $.228\pm.007$ \\
-Full lookup & $.965\pm.010$ & $.185\pm.027$ & $.750\pm.056$ & $.352\pm.011$ & $.281\pm.013$ \\
+Attention core & $0.993\pm0.002$ & $0.080\pm0.012$ & $0.747\pm0.069$ & $0.035\pm0.007$ & $0.085\pm0.013$ \\
+Attention block & $0.983\pm0.004$ & $0.129\pm0.015$ & $0.750\pm0.066$ & $0.273\pm0.010$ & $0.179\pm0.005$ \\
+MLP core & $0.982\pm0.004$ & $0.133\pm0.013$ & $0.747\pm0.068$ & $0.095\pm0.005$ & $0.137\pm0.007$ \\
+MLP block & $0.974\pm0.006$ & $0.160\pm0.017$ & $0.758\pm0.057$ & $0.247\pm0.027$ & $0.172\pm0.009$ \\
+Readout & $0.993\pm0.003$ & $0.081\pm0.017$ & $0.760\pm0.060$ & $0.199\pm0.004$ & $0.228\pm0.007$ \\
+Full lookup & $0.965\pm0.010$ & $0.185\pm0.027$ & $0.750\pm0.056$ & $0.352\pm0.011$ & $0.281\pm0.013$ \\
 \bottomrule
 \end{tabular}
 \caption{Transformation-level tests for $\Rsem$ at $F=16$. Affine fits use four
@@ -733,11 +747,11 @@ often enough. It does not generalize a rule that the data do not contain.
 The mechanism interventions use target-logit margin recovery. A patch's recovery
 is the change produced by the patch divided by the clean-minus-corrupted change,
 aggregated before division. For the semantic relation, patching all subject-derived
-head value payloads recovers $.987\pm.008$ of the effect, while patching only
-attention weights recovers $.013\pm.007$. Patching the MLP population recovers
-$.850\pm.017$ of the relation-token effect. Keeping only the 32 MLP units with the
-largest causal effects recovers $.498\pm.029$ of the subject-specific margin, while
-ablating them still leaves $.790\pm.032$ of the effect. The readout is distributed.
+head value payloads recovers $\ExpOneValuePatch$ of the effect, while patching only
+attention weights recovers $\ExpOnePatternPatch$. Patching the MLP population recovers
+$\ExpOneRelationPatch$ of the relation-token effect. Keeping only the 32 MLP units with the
+largest causal effects recovers $\ExpOneTopOnly$ of the subject-specific margin, while
+ablating them still leaves $\ExpOneTopAblated$ of the effect. The readout is distributed.
 
 \section{Additional Experiment 2 results}
 \label{app:goal2-extra}
@@ -750,11 +764,11 @@ ablating them still leaves $.790\pm.032$ of the effect. The readout is distribut
 \toprule
 Seed & Attribute & Min. struct. & Random & Min. symmetry & Min. struct. $R^2$ & Random $R^2$ & Random CV $R^2$ \\
 \midrule
-19 & 1.00000 & .99951 & .99780 & .99561 & .99595 & .33058 & $-.78806$ \\
-31 & 1.00000 & .99927 & .99805 & .99609 & .99642 & .40353 & $-.59251$ \\
-47 & 1.00000 & .99976 & .99951 & .99902 & .99468 & .41460 & $-.66663$ \\
+19 & 1.00000 & 0.99976 & 1.00000 & 0.99951 & 0.99569 & 0.38385 & -0.65023 \\
+31 & 1.00000 & 0.99976 & 0.99976 & 0.99951 & 0.99529 & 0.40066 & -0.76091 \\
+47 & 1.00000 & 0.99976 & 0.99976 & 0.99951 & 0.99485 & 0.34028 & -0.72857 \\
 \midrule
-Mean & 1.00000 & .99951 & .99845 & .99691 & .99568 & .38291 & $-.68240$ \\
+Mean & 1.00000 & 0.99976 & 0.99984 & 0.99951 & 0.99527 & 0.37493 & -0.71324 \\
 \bottomrule
 \end{tabular}
 \caption{Complete-table behavior and raw-embedding affine fits. The cross-validated
@@ -774,12 +788,12 @@ is non-affine.}
 \end{figure*}
 
 For the component interventions, structured-relation mean accuracy is
-$0.99993\pm0.00005$ in the trained model, $0.57194\pm0.06142$ after replacing GELU
-with the identity, $0.50035\pm0.00001$ with uniform attention,
-$0.56585\pm0.03274$ with all MLP outputs removed, and exactly .500 with all
+$\ExpTwoStructuredFullPrecise$ in the trained model, $\ExpTwoStructuredGeluPrecise$ after replacing GELU
+with the identity, $\ExpTwoStructuredUniformPrecise$ with uniform attention,
+$\ExpTwoStructuredNoMlpPrecise$ with all MLP outputs removed, and $\ExpTwoStructuredNoAttentionPrecise$ with all
 attention outputs removed. The random-relation values are
-$0.99845\pm0.00092$, $0.52295\pm0.02070$, $0.49862\pm0.00366$,
-$0.51229\pm0.01040$, and .500, respectively. The common degradation shows that
+$\ExpTwoRandomFullPrecise$, $\ExpTwoRandomGeluPrecise$, $\ExpTwoRandomUniformPrecise$,
+$\ExpTwoRandomNoMlpPrecise$, and $\ExpTwoRandomNoAttentionPrecise$, respectively. The common degradation shows that
 both relation types use nonlinear transformer components. It does not erase the
 representation-level OLS separation.
 

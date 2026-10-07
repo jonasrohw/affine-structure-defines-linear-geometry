@@ -1,0 +1,2348 @@
+[
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 28928,
+    "train_steps": 452,
+    "last_train_loss": 1.4288530349731445,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.1517505645751953,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 1.0,
+        "probe_r2": 0.8335754050935654,
+        "probe_cosine": 0.9855989605034787,
+        "trained_check": {
+          "recall": 0.0234375,
+          "loss": 4.864761829376221
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 4.890769004821777
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -1.0990926481844516,
+        "probe_cosine": 0.8163512699989622,
+        "trained_check": {
+          "recall": 0.03125,
+          "loss": 4.86019229888916
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 4.8918585777282715
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 128,
+      "occurrences": 4,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 29696,
+    "train_steps": 464,
+    "last_train_loss": 1.4710639715194702,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.1517095565795898,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 1.0,
+        "probe_r2": 0.6763621668313502,
+        "probe_cosine": 0.97773112102621,
+        "trained_check": {
+          "recall": 0.046875,
+          "loss": 3.7850117683410645
+        },
+        "heldout_check": {
+          "recall": 0.046875,
+          "loss": 3.790667772293091
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.03125,
+        "probe_r2": -1.6771605580630937,
+        "probe_cosine": 0.8202303398542757,
+        "trained_check": {
+          "recall": 0.0390625,
+          "loss": 3.797731637954712
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 3.8184449672698975
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 128,
+      "occurrences": 16,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 32768,
+    "train_steps": 512,
+    "last_train_loss": 1.5958598852157593,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.2386679649353027,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.984375,
+        "probe_r2": 0.36844968140915635,
+        "probe_cosine": 0.9279135612737015,
+        "trained_check": {
+          "recall": 0.59375,
+          "loss": 2.4085261821746826
+        },
+        "heldout_check": {
+          "recall": 0.390625,
+          "loss": 2.681042194366455
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -2.7566901394064254,
+        "probe_cosine": 0.6101760072171791,
+        "trained_check": {
+          "recall": 0.1953125,
+          "loss": 3.0042176246643066
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 3.8396382331848145
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 128,
+      "occurrences": 64,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 45056,
+    "train_steps": 704,
+    "last_train_loss": 1.5426764488220215,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.7349932193756104,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.8125,
+        "probe_r2": 0.10477166484376355,
+        "probe_cosine": 0.7567124872404268,
+        "trained_check": {
+          "recall": 1.0,
+          "loss": 0.04370252415537834
+        },
+        "heldout_check": {
+          "recall": 1.0,
+          "loss": 0.2169201672077179
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -2.0983849942072337,
+        "probe_cosine": 0.17608304158067672,
+        "trained_check": {
+          "recall": 1.0,
+          "loss": 0.053962357342243195
+        },
+        "heldout_check": {
+          "recall": 0.046875,
+          "loss": 6.63761568069458
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 28928,
+    "train_steps": 452,
+    "last_train_loss": 1.4258372783660889,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.1160812377929688,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 1.0,
+        "probe_r2": 0.8665527699788531,
+        "probe_cosine": 0.9906178026750937,
+        "trained_check": {
+          "recall": 0.0234375,
+          "loss": 4.809209823608398
+        },
+        "heldout_check": {
+          "recall": 0.015625,
+          "loss": 4.804708480834961
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -0.8807350872461464,
+        "probe_cosine": 0.8669363686500384,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 4.7997002601623535
+        },
+        "heldout_check": {
+          "recall": 0.015625,
+          "loss": 4.821605205535889
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 128,
+      "occurrences": 4,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 29696,
+    "train_steps": 464,
+    "last_train_loss": 1.4371185302734375,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.1279232501983643,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 1.0,
+        "probe_r2": 0.7811230883012916,
+        "probe_cosine": 0.9884020711109924,
+        "trained_check": {
+          "recall": 0.0859375,
+          "loss": 3.8051505088806152
+        },
+        "heldout_check": {
+          "recall": 0.09375,
+          "loss": 3.813398838043213
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0,
+        "probe_r2": -1.6053025727081387,
+        "probe_cosine": 0.8659333730671577,
+        "trained_check": {
+          "recall": 0.03125,
+          "loss": 3.836724042892456
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 3.8725831508636475
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 128,
+      "occurrences": 16,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 32768,
+    "train_steps": 512,
+    "last_train_loss": 1.6059768199920654,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.2659063339233398,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 1.0,
+        "probe_r2": 0.43265065952375537,
+        "probe_cosine": 0.9365865265804723,
+        "trained_check": {
+          "recall": 0.578125,
+          "loss": 2.2912981510162354
+        },
+        "heldout_check": {
+          "recall": 0.6875,
+          "loss": 2.4572622776031494
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.03125,
+        "probe_r2": -3.6803088400602704,
+        "probe_cosine": 0.5700752544015668,
+        "trained_check": {
+          "recall": 0.1875,
+          "loss": 3.042025566101074
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 3.7841739654541016
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 128,
+      "occurrences": 64,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 45056,
+    "train_steps": 704,
+    "last_train_loss": 1.5406997203826904,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.7257087230682373,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.9375,
+        "probe_r2": 0.49226970403185766,
+        "probe_cosine": 0.8317844902445843,
+        "trained_check": {
+          "recall": 1.0,
+          "loss": 0.049134448170661926
+        },
+        "heldout_check": {
+          "recall": 1.0,
+          "loss": 0.28939640522003174
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0,
+        "probe_r2": -1.6368767668694129,
+        "probe_cosine": 0.19353284611259075,
+        "trained_check": {
+          "recall": 1.0,
+          "loss": 0.05712488293647766
+        },
+        "heldout_check": {
+          "recall": 0.015625,
+          "loss": 7.683913707733154
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 28928,
+    "train_steps": 452,
+    "last_train_loss": 1.4194180965423584,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.1142446994781494,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 1.0,
+        "probe_r2": 0.8183477604933401,
+        "probe_cosine": 0.9865460666670401,
+        "trained_check": {
+          "recall": 0.0390625,
+          "loss": 4.862209796905518
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 4.88095760345459
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -0.9339638302887552,
+        "probe_cosine": 0.8544060612344945,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 4.873265266418457
+        },
+        "heldout_check": {
+          "recall": 0.015625,
+          "loss": 4.888387680053711
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 128,
+      "occurrences": 4,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 29696,
+    "train_steps": 464,
+    "last_train_loss": 1.4838677644729614,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.1320340633392334,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 1.0,
+        "probe_r2": 0.6225426839929027,
+        "probe_cosine": 0.9787545065285246,
+        "trained_check": {
+          "recall": 0.03125,
+          "loss": 3.8019165992736816
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 3.8108556270599365
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -2.0800554297523743,
+        "probe_cosine": 0.8315923235922542,
+        "trained_check": {
+          "recall": 0.03125,
+          "loss": 3.826427936553955
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 3.8511550426483154
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 128,
+      "occurrences": 16,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 32768,
+    "train_steps": 512,
+    "last_train_loss": 1.6659278869628906,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.2579777240753174,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.984375,
+        "probe_r2": 0.38765936676445245,
+        "probe_cosine": 0.9115962325141541,
+        "trained_check": {
+          "recall": 0.84375,
+          "loss": 2.0516409873962402
+        },
+        "heldout_check": {
+          "recall": 0.828125,
+          "loss": 2.2319157123565674
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.03125,
+        "probe_r2": -2.5110247030074886,
+        "probe_cosine": 0.5456882601690387,
+        "trained_check": {
+          "recall": 0.1171875,
+          "loss": 2.9015321731567383
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 3.7753536701202393
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 128,
+      "occurrences": 64,
+      "attr_repeats": 128,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 45056,
+    "train_steps": 704,
+    "last_train_loss": 1.55780029296875,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 1.7151715755462646,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.921875,
+        "probe_r2": 0.351642270858913,
+        "probe_cosine": 0.7979319395302782,
+        "trained_check": {
+          "recall": 1.0,
+          "loss": 0.05358083173632622
+        },
+        "heldout_check": {
+          "recall": 0.984375,
+          "loss": 0.29570117592811584
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0,
+        "probe_r2": -1.3871952163279704,
+        "probe_cosine": 0.2784681969111424,
+        "trained_check": {
+          "recall": 1.0,
+          "loss": 0.06343349069356918
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 6.033566474914551
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 2,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 448,
+    "train_steps": 7,
+    "last_train_loss": 5.024690628051758,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.0187225341796875,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.078125,
+        "probe_r2": -0.8848707809134773,
+        "probe_cosine": 0.08580509169465392,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.628020763397217
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0625,
+        "probe_r2": -0.985984625634803,
+        "probe_cosine": 0.05652830175277346,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.619095802307129
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 2,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 704,
+    "train_steps": 11,
+    "last_train_loss": 4.884738445281982,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.028099775314331055,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.078125,
+        "probe_r2": -0.9005438033553281,
+        "probe_cosine": 0.11392818871424379,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.364335060119629
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.367473602294922
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0625,
+        "probe_r2": -1.0314357026924883,
+        "probe_cosine": 0.08133830211534479,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.372323513031006
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.379236221313477
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 4,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 896,
+    "train_steps": 14,
+    "last_train_loss": 4.683256149291992,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.037119388580322266,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.125,
+        "probe_r2": -0.7152870995965759,
+        "probe_cosine": 0.23770137349956044,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.700137138366699
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.078125,
+        "probe_r2": -0.9317098917668367,
+        "probe_cosine": 0.13134635853722065,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.69468879699707
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 4,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 1152,
+    "train_steps": 18,
+    "last_train_loss": 4.530495643615723,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.04583859443664551,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.109375,
+        "probe_r2": -0.7425327162694475,
+        "probe_cosine": 0.22384768505908353,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.335611343383789
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.335596561431885
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0625,
+        "probe_r2": -1.0681812939208117,
+        "probe_cosine": 0.10576494351358973,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.339842319488525
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.342949390411377
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 8,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 1792,
+    "train_steps": 28,
+    "last_train_loss": 3.8949942588806152,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.07194328308105469,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.484375,
+        "probe_r2": -0.36000056108616474,
+        "probe_cosine": 0.5745522891912274,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.9767351150512695
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.078125,
+        "probe_r2": -0.8676724293759401,
+        "probe_cosine": 0.3960671118003119,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.945263862609863
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 8,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 2048,
+    "train_steps": 32,
+    "last_train_loss": 3.819833517074585,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.08086180686950684,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.484375,
+        "probe_r2": -0.40502450878230656,
+        "probe_cosine": 0.5297903267295256,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.512181282043457
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.510217666625977
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -1.0007776894982574,
+        "probe_cosine": 0.3153235070417375,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.481757640838623
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.479616641998291
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 16,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 3584,
+    "train_steps": 56,
+    "last_train_loss": 2.737419605255127,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.1403062343597412,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.859375,
+        "probe_r2": 0.19855244547196804,
+        "probe_cosine": 0.8823154545150008,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 7.261420726776123
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -0.8945102110486796,
+        "probe_cosine": 0.7164694307441113,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 7.238391399383545
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 16,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 3840,
+    "train_steps": 60,
+    "last_train_loss": 2.8028769493103027,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.15085124969482422,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.90625,
+        "probe_r2": 0.1937603271050603,
+        "probe_cosine": 0.8582504471567389,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.202914237976074
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.203546524047852
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.03125,
+        "probe_r2": -0.9797737669471009,
+        "probe_cosine": 0.6441337721084965,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.189964771270752
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.193465232849121
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 24,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 5376,
+    "train_steps": 84,
+    "last_train_loss": 2.17476749420166,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.20852136611938477,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 1.0,
+        "probe_r2": 0.5426728537727116,
+        "probe_cosine": 0.9543091848176413,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 8.282859802246094
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0625,
+        "probe_r2": -1.0891023493534346,
+        "probe_cosine": 0.7842259004558283,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 8.328972816467285
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 19,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 24,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 5632,
+    "train_steps": 88,
+    "last_train_loss": 2.248420000076294,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.21852755546569824,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.984375,
+        "probe_r2": 0.5751015824601753,
+        "probe_cosine": 0.9535943166275392,
+        "trained_check": {
+          "recall": 0.0234375,
+          "loss": 5.026166915893555
+        },
+        "heldout_check": {
+          "recall": 0.046875,
+          "loss": 5.026270389556885
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -1.0598597503716882,
+        "probe_cosine": 0.7682179858282082,
+        "trained_check": {
+          "recall": 0.015625,
+          "loss": 5.002904415130615
+        },
+        "heldout_check": {
+          "recall": 0.046875,
+          "loss": 5.0118632316589355
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 2,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 448,
+    "train_steps": 7,
+    "last_train_loss": 5.041049957275391,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.0193631649017334,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.03125,
+        "probe_r2": -0.8712364498546774,
+        "probe_cosine": 0.0790121269777638,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.67534875869751
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -0.9293915659833349,
+        "probe_cosine": 0.06267291427634669,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.676535129547119
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 2,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 704,
+    "train_steps": 11,
+    "last_train_loss": 4.897327899932861,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.028966188430786133,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.0625,
+        "probe_r2": -0.8633245482429623,
+        "probe_cosine": 0.10237118973192341,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.354867458343506
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.358025550842285
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -1.0001652779286938,
+        "probe_cosine": 0.054924918970393845,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.344242572784424
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.355953693389893
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 4,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 896,
+    "train_steps": 14,
+    "last_train_loss": 4.719841957092285,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.03593778610229492,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.09375,
+        "probe_r2": -0.7620718670052049,
+        "probe_cosine": 0.23691470933621017,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.733610153198242
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.03125,
+        "probe_r2": -0.9570763981536459,
+        "probe_cosine": 0.15960507355501669,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.73350191116333
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 4,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 1152,
+    "train_steps": 18,
+    "last_train_loss": 4.595501899719238,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.0458528995513916,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.09375,
+        "probe_r2": -0.8188518855527624,
+        "probe_cosine": 0.21210918645580315,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.378509044647217
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.382903575897217
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -0.9952677708200639,
+        "probe_cosine": 0.12553965306123172,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.369699001312256
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.378836631774902
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 8,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 1792,
+    "train_steps": 28,
+    "last_train_loss": 3.9274990558624268,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.06980562210083008,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.265625,
+        "probe_r2": -0.49357600718758987,
+        "probe_cosine": 0.5787788158238736,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 6.084890365600586
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -0.9460105267883487,
+        "probe_cosine": 0.4452572509871751,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 6.035008430480957
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 8,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 2048,
+    "train_steps": 32,
+    "last_train_loss": 3.874457597732544,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.08097600936889648,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.28125,
+        "probe_r2": -0.4566818416041716,
+        "probe_cosine": 0.5350905291147241,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.307743549346924
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.303992748260498
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -1.0872712087678984,
+        "probe_cosine": 0.3490024534608698,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.295825004577637
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.298171043395996
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 16,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 3584,
+    "train_steps": 56,
+    "last_train_loss": 2.7887048721313477,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.1393435001373291,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.890625,
+        "probe_r2": 0.10149243247503825,
+        "probe_cosine": 0.8788364838410921,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 7.131543159484863
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -0.9296612310628449,
+        "probe_cosine": 0.7384742266818389,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 7.146180629730225
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 16,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 3840,
+    "train_steps": 60,
+    "last_train_loss": 2.878866195678711,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.1492011547088623,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.78125,
+        "probe_r2": 0.055188402511385015,
+        "probe_cosine": 0.8560907060227331,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.161770820617676
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.1630473136901855
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -0.8830210519535948,
+        "probe_cosine": 0.705541947221017,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.154739856719971
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.16041898727417
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 24,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 5376,
+    "train_steps": 84,
+    "last_train_loss": 2.2000479698181152,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.208662748336792,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.984375,
+        "probe_r2": 0.5000861053351311,
+        "probe_cosine": 0.9541773321228196,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 7.94080114364624
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0,
+        "probe_r2": -0.8753678805530125,
+        "probe_cosine": 0.8251559013199556,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 8.128021240234375
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 31,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 24,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 5632,
+    "train_steps": 88,
+    "last_train_loss": 2.2657060623168945,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.2260127067565918,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.96875,
+        "probe_r2": 0.48799240613157013,
+        "probe_cosine": 0.950776484123365,
+        "trained_check": {
+          "recall": 0.03125,
+          "loss": 5.053102970123291
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 5.054399490356445
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0,
+        "probe_r2": -0.9270350992568028,
+        "probe_cosine": 0.8134146841850657,
+        "trained_check": {
+          "recall": 0.0234375,
+          "loss": 5.06012487411499
+        },
+        "heldout_check": {
+          "recall": 0.03125,
+          "loss": 5.069752216339111
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 2,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 448,
+    "train_steps": 7,
+    "last_train_loss": 5.029496669769287,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.018793582916259766,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -0.9210950954698833,
+        "probe_cosine": 0.08468022631606034,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.607159614562988
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.03125,
+        "probe_r2": -1.101984964992293,
+        "probe_cosine": 0.06078076557277383,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.581543922424316
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 2,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 704,
+    "train_steps": 11,
+    "last_train_loss": 4.867599964141846,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.028117656707763672,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -0.9429378020279477,
+        "probe_cosine": 0.1342756400182434,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.337235450744629
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.341623306274414
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -1.1433594341996405,
+        "probe_cosine": 0.08899411277446986,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.308495044708252
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.312503337860107
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 4,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 896,
+    "train_steps": 14,
+    "last_train_loss": 4.63184118270874,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.03597545623779297,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.078125,
+        "probe_r2": -0.7976715378339703,
+        "probe_cosine": 0.23925932211453171,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.696047306060791
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -1.0482212981487184,
+        "probe_cosine": 0.15881791608606732,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.668815612792969
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 4,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 1152,
+    "train_steps": 18,
+    "last_train_loss": 4.496186256408691,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.04572105407714844,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.09375,
+        "probe_r2": -0.819408214879956,
+        "probe_cosine": 0.25040452866399726,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.355782508850098
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.360447883605957
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -1.0763364397529638,
+        "probe_cosine": 0.15673858408642308,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.32151460647583
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.326238632202148
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 8,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 1792,
+    "train_steps": 28,
+    "last_train_loss": 3.850487470626831,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.07012081146240234,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.28125,
+        "probe_r2": -0.43242116290778787,
+        "probe_cosine": 0.6014010233422133,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 6.050419330596924
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.0625,
+        "probe_r2": -0.9364262204849954,
+        "probe_cosine": 0.46651611146550453,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 6.005840301513672
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 8,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 2048,
+    "train_steps": 32,
+    "last_train_loss": 3.7888081073760986,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.08010268211364746,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.265625,
+        "probe_r2": -0.4473944209400922,
+        "probe_cosine": 0.5795438647126335,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.2100653648376465
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.2109551429748535
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.015625,
+        "probe_r2": -0.9100031385516802,
+        "probe_cosine": 0.4269427554120606,
+        "trained_check": {
+          "recall": 0.0078125,
+          "loss": 5.192302227020264
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.197731971740723
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 16,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 3584,
+    "train_steps": 56,
+    "last_train_loss": 2.7243974208831787,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.14006733894348145,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.8125,
+        "probe_r2": 0.14152474670037818,
+        "probe_cosine": 0.8864524534486117,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 7.28996467590332
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -0.9446079924442627,
+        "probe_cosine": 0.742070854127081,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 7.133578777313232
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 16,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 3840,
+    "train_steps": 60,
+    "last_train_loss": 2.767442464828491,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.15044140815734863,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.828125,
+        "probe_r2": 0.11941973471826794,
+        "probe_cosine": 0.8766976341784991,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.045554161071777
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.046901226043701
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -0.9949446875541395,
+        "probe_cosine": 0.720821836109825,
+        "trained_check": {
+          "recall": 0.0,
+          "loss": 5.042211532592773
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 5.051965713500977
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 0,
+      "occurrences": 1,
+      "attr_repeats": 24,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 5376,
+    "train_steps": 84,
+    "last_train_loss": 2.129312753677368,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 0,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.2069540023803711,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 1.0,
+        "probe_r2": 0.5267352540930506,
+        "probe_cosine": 0.9551641836086039,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 7.3890275955200195
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -1.0334037478012177,
+        "probe_cosine": 0.8010414817174516,
+        "trained_check": null,
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 7.057699680328369
+        }
+      }
+    }
+  },
+  {
+    "config": {
+      "world": "category",
+      "subjects_per_bucket": 6,
+      "probe": "embedding",
+      "seed": 47,
+      "n_triples": 128,
+      "occurrences": 1,
+      "attr_repeats": 24,
+      "tie_embeddings": false,
+      "n_layers": 1,
+      "hidden_dim": 64,
+      "n_heads": 4,
+      "batch_size": 64,
+      "learning_rate": 0.001,
+      "warmup_steps": 5,
+      "weight_decay": 0.0,
+      "grad_clip": 1.0,
+      "output_dir": "/app/results/rtx-reproducibility/run1/experiment1"
+    },
+    "epochs": 1,
+    "corpus_sequences": 5632,
+    "train_steps": 88,
+    "last_train_loss": 2.193488121032715,
+    "num_parameters": 84288,
+    "trained_triples_per_relation": 128,
+    "probe_fit_pairs": 128,
+    "heldout_subjects": 64,
+    "elapsed_sec": 0.22091460227966309,
+    "relations": {
+      "semantic": {
+        "probe_accuracy": 0.984375,
+        "probe_r2": 0.5210847245985117,
+        "probe_cosine": 0.9510147296668001,
+        "trained_check": {
+          "recall": 0.0703125,
+          "loss": 5.028637886047363
+        },
+        "heldout_check": {
+          "recall": 0.0625,
+          "loss": 5.033299446105957
+        }
+      },
+      "random": {
+        "probe_accuracy": 0.046875,
+        "probe_r2": -0.8744266192495749,
+        "probe_cosine": 0.8049162796740088,
+        "trained_check": {
+          "recall": 0.0234375,
+          "loss": 4.993312835693359
+        },
+        "heldout_check": {
+          "recall": 0.0,
+          "loss": 4.9986467361450195
+        }
+      }
+    }
+  }
+]

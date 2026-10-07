@@ -1,0 +1,4 @@
+# Matplotlib emits whitespace inside SVG path definitions; keep its exports intact.
+paper/figures/*.svg -whitespace linguist-generated=true
+paper/baselines/rtx4090-v1/** linguist-generated=true
+paper/result_values.tex linguist-generated=true

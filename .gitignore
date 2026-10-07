@@ -19,3 +19,5 @@ results/
 .graphify/
 paper/main.pdf
 .venv-validation/
+# Versioned paper evidence includes the three certified final checkpoints.
+!paper/baselines/rtx4090-v1/checkpoints/*.pt

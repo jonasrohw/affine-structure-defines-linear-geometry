@@ -32,6 +32,7 @@ class TransformerLookupConfig:
     warmup_steps: int = 100
     eval_every: int = 500
     target_accuracy: float = 0.995
+    require_symmetry_for_stopping: bool = True
     ols_folds: int = 4
     graph_swaps_per_edge: int = 40
     output_dir: Path = PROJECT_ROOT / "results" / "experiment2"

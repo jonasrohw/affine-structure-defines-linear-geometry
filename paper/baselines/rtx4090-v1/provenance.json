@@ -1,0 +1,41 @@
+{
+  "training_image": "sha256:1b8fde3f54a039fb4a4b3fc07d58b615d9210cbf140f1fda1b91ece9c6725212",
+  "cpu_model": "AMD Ryzen 9 7950X3D 16-Core Processor",
+  "training_sources": {
+    "__init__.py": "711a2cc366b8c9d5aaa191c8ef0e553f896eddb44dd11ceb53fcc3cdebabf2b5",
+    "config.py": "8b4c8a73c1500cdb0f47d41c5c78cbdd13af7994a0e5fcf711596b36a6adfd81",
+    "figure_style.py": "673bf052255efaea9ba617d4d4ccf21cf63899c1223731cda49b3aa85b98c13e",
+    "linear_shift.py": "8b5a35791415dbb424b555298f98063c65af05b60fdbbd3fc5cb2ca1d43f5ce3",
+    "linear_shift_linearity_analysis.py": "4eb3dda3c7915d7ed9f49816715876f3769948122fee14727408e29e9044d40c",
+    "linear_shift_mechanistic_analysis.py": "d5fb782d2065d67977b2f48354134314c648132e338bce0200b53ef76e2a8f45",
+    "model.py": "8b00a4cf8211a1e65b30b818b54bf60405757b270db710cd9482e00789bb16c5",
+    "paper_audit.py": "6f971755f3dab167961899aafa8a7c223a5cab4788e677e3d433fb18dab0e3d6",
+    "reproduce.py": "d2c6f8fc36abb4e06b3796eba3e5c7a5f989b4f61cace6cc0ad710b170b61022",
+    "symmetric_lookup.py": "deebd00fe41d912137740639ae74ea67b78d28ae5244a6bfa76722d655cd8943",
+    "symmetric_lookup_transformer.py": "790c91a4e6cc86b8158181db81612733c39daa225039eb7b90edee4c1280215d",
+    "symmetric_lookup_transformer_analysis.py": "d93424bb41c2ee42895b927adc1d64d561a7a33d5b6a6653caabc54e30c12e79",
+    "symmetric_lookup_transformer_raw_analysis.py": "d8fd1caf00ff85568178bb0edcf507658e299b4eb3ad82286cdfb0d87ef49cbc",
+    "symmetric_lookup_transformer_raw_search.py": "394c91e0f375dac41b3f7e8f3462f1ea7b4a561bab3c213a80f4c5cacb8d841b"
+  },
+  "verification_sources": {
+    "__init__.py": "711a2cc366b8c9d5aaa191c8ef0e553f896eddb44dd11ceb53fcc3cdebabf2b5",
+    "config.py": "8b4c8a73c1500cdb0f47d41c5c78cbdd13af7994a0e5fcf711596b36a6adfd81",
+    "figure_style.py": "673bf052255efaea9ba617d4d4ccf21cf63899c1223731cda49b3aa85b98c13e",
+    "linear_shift.py": "8b5a35791415dbb424b555298f98063c65af05b60fdbbd3fc5cb2ca1d43f5ce3",
+    "linear_shift_linearity_analysis.py": "4eb3dda3c7915d7ed9f49816715876f3769948122fee14727408e29e9044d40c",
+    "linear_shift_mechanistic_analysis.py": "d5fb782d2065d67977b2f48354134314c648132e338bce0200b53ef76e2a8f45",
+    "model.py": "8b00a4cf8211a1e65b30b818b54bf60405757b270db710cd9482e00789bb16c5",
+    "paper_audit.py": "af5a6449c7e5c2ff0add55a1053317346b848b5a95da1eec48a68ab02236bd77",
+    "reproduce.py": "d2c6f8fc36abb4e06b3796eba3e5c7a5f989b4f61cace6cc0ad710b170b61022",
+    "symmetric_lookup.py": "deebd00fe41d912137740639ae74ea67b78d28ae5244a6bfa76722d655cd8943",
+    "symmetric_lookup_transformer.py": "790c91a4e6cc86b8158181db81612733c39daa225039eb7b90edee4c1280215d",
+    "symmetric_lookup_transformer_analysis.py": "d93424bb41c2ee42895b927adc1d64d561a7a33d5b6a6653caabc54e30c12e79",
+    "symmetric_lookup_transformer_raw_analysis.py": "d8fd1caf00ff85568178bb0edcf507658e299b4eb3ad82286cdfb0d87ef49cbc",
+    "symmetric_lookup_transformer_raw_search.py": "394c91e0f375dac41b3f7e8f3462f1ea7b4a561bab3c213a80f4c5cacb8d841b"
+  },
+  "post_training_changes": {
+    "paper_audit.py": "Exclude elapsed_sec wall-clock metadata from scientific numeric snapshots. Training and analysis files are identical."
+  },
+  "runtime_build": "docker/rtx/Dockerfile built from its public pinned interpreter archive and locked dependencies",
+  "interpreter_archive_sha256": "b54c8ad23ded6b9a2e9da754bf3a5e622763e3ac224db555a6a8888f40897036"
+}

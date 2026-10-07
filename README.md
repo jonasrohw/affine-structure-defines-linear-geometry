@@ -3,96 +3,132 @@
 Code and evidence for **Frequency Alone Does Not Determine Affine Relation Geometry in Transformers**.
 The original repository is preserved on the local `backup` branch.
 
-**Exact numerical reproduction is not yet certified.** The full Experiment 1
-and LMEnt audit passes 241 of 246 checks; five transformation-table entries
-differ from the manuscript. The same differences occur with the pre-refactor
-runtime, and the refactored Experiment 1 trainer matches the backup bit-for-bit
-for all three reported seeds. References are retained unchanged, and the full
-command deliberately fails its audit when values disagree.
+The paper uses the versioned **rtx4090-v1** baseline in
+[`paper/baselines/rtx4090-v1/`](paper/baselines/rtx4090-v1/).
+Two independent full runs from fresh initialization matched **21,200 scientific
+numeric outputs, 935 checkpoint tensors, and all three final gates exactly**.
+All 23 tests pass. This evidence was required before adoption.
+The [validation record](validation.json) records the verification and claim review.
+Historical A100 measurements in `paper/reference/` remain unchanged.
 
-The [validation record](validation.json) includes 18 passing tests, local and
-offline Docker smoke/PDF runs, and the outstanding numerical disagreements.
+## Reproduce the paper on the certified RTX setup
 
-Run from the repository root:
+Certification is scoped to the Ryzen 9 7950X3D CPU, one RTX 4090, NVIDIA driver
+610.57.04, and the pinned Linux x86-64 environment: CPython 3.14.2 (standalone
+build 20260114), PyTorch 2.12.0+cu130 and the full lock in `docker/rtx/uv.lock`.
+Experiment 1 runs on the CPU; Experiment 2 runs on the GPU. Changing hardware,
+drivers or numerical libraries requires new verification. This is not a claim
+of universal bitwise reproducibility across systems.
 
-```sh
-uv run --locked reproduce
-```
-
-This trains both synthetic experiments from scratch for seeds 19, 31 and 47,
-recomputes the probes, interventions and exact Jacobians, aggregates the saved
-LMEnt observations, generates all six manuscript figures and four synthetic
-result tables, compiles the paper, and compares fresh measurements with the
-reported evidence. Results go to `results/full/`; the source manuscript and
-archived references are never overwritten. A numerical disagreement produces
-`audit.json` and `audit.csv` and a nonzero exit status. Do not treat completion of
-training alone as successful reproduction of the paper.
-
-Local requirements: uv, Cairo (for the SVG dataset figure), and a TeX Live installation with `latexmk`, the ACL
-template's packages, Inconsolata, `cm-super`, and `dvipng` (for figure text).
-Python 3.13.11 is selected by `.python-version`. All Python dependencies,
-including transitive dependencies and wheel hashes, are pinned in `uv.lock`.
-Linux uses the pinned CPU PyTorch wheel; no GPU or external dataset download is
-required. `--no-pdf` omits only LaTeX compilation.
+From the repository root:
 
 ```sh
-uv run --locked reproduce --smoke     # one seed, short Experiment 2; exercises PDF generation
-uv run --locked reproduce --resume    # verify hashes before reusing completed stages
-uv run --locked pytest -q
+docker build --network host -t factual-recall:reproducible .
+docker build --network host -f docker/rtx/Dockerfile -t factual-recall:rtx-runtime docker/rtx
+docker build --network host -f Dockerfile.rtx -t factual-recall:rtx .
+python scripts/run_rtx.py --output /app/results/full
 ```
 
-Smoke output is isolated in `results/smoke/` and explicitly marked as a smoke
-run. Its values do not reproduce the paper. The smoke run still performs one seed of
-the full Experiment 1 sweeps and intervention analysis, with a reduced Jacobian
-sample and only two optimizer steps per Experiment 2 stage. Full Experiment 2 is substantially
-more expensive: 6,000 structured steps, up to 12,000 joint steps, and the reported
-continuations for each seed. The three seed processes run concurrently, each with
-one numerical thread. Use `--workers 1` for sequential execution. An interrupted
-training stage restarts from its beginning; completed stages can be reused.
+The first image supplies the pinned Debian snapshot, Cairo, fonts and LaTeX. The
+RTX runtime installs the SHA-256-verified public Python archive and hash-locked
+CUDA environment. The reporting-only Cairo additions are also hash pinned. The
+launcher checks the certified CPU, GPU and driver, passes through that GPU and
+its driver libraries without changing Docker's daemon, and disables networking.
+Builds download dependencies; training and report generation are offline.
 
-The `--stage experiment1`, `--stage experiment2`, and `--stage paper` options are
-for diagnosis. The default `all` stage is the complete reproduction command.
-`--output PATH` selects a separate artifact directory. Reuse only results made by
-the same locked source revision; `--resume` verifies source/configuration and
-checkpoint hashes before reuse.
-
-## Docker
+The full command trains seeds 19, 31 and 47, recomputes both experiments and all
+interventions, aggregates the hash-verified LMEnt observations, generates numerical
+prose, four tables and six figures, compiles the PDF, and audits the fresh outputs.
+The audit uses **zero tolerance** for synthetic values and checkpoint tensor hashes.
+The source manuscript is not overwritten by a run. An audit mismatch returns a
+nonzero status and preserves the generated evidence.
 
 ```sh
-docker build -t factual-recall:reproducible .
-docker run --rm -v "$PWD/results:/app/results" factual-recall:reproducible
-# Fast integration validation:
-docker run --rm -v "$PWD/results:/app/results" factual-recall:reproducible --smoke
+python scripts/run_rtx.py --smoke --output /app/results/smoke
+python scripts/run_rtx.py --python -m pytest -q
+python scripts/run_rtx.py --resume --output /app/results/full
 ```
 
-The Dockerfile pins Python and uv by registry digest and uses the immutable
-2026-10-01 Debian package snapshot. `uv sync --locked` installs hash-locked
-Python wheels; the container runs with `--frozen`. It includes the fonts and
-LaTeX dependencies needed to build the PDF. `/opt/os-packages.txt` records the
-resolved OS package versions. Docker build downloads the dependencies; the
-completed image can run without network access. Containers run as root by
-default, so bind-mounted output ownership follows the Docker host's mapping.
+Smoke runs exercise the complete pipeline with one seed and shortened Experiment 2;
+they do not reproduce paper values. Resume checks source, runtime, configuration
+and artifact hashes before reusing completed stages. `--stage experiment1`,
+`--stage experiment2` and `--stage paper` are diagnostic entry points. `--no-pdf`
+omits LaTeX compilation. Three seed processes run concurrently with one numerical
+CPU thread each; the certified command uses the default three workers.
+
+For an independent repeatability check, use two unused output directories and
+omit `--resume`:
+
+```sh
+python scripts/run_rtx.py --output /app/results/repeat-a
+python scripts/run_rtx.py --output /app/results/repeat-b
+python scripts/run_rtx.py --python scripts/verify_rtx.py /app/results/repeat-a /app/results/repeat-b --output /app/results/repeat-check
+```
+
+The verifier compares all recorded numerical experiment outputs (including losses,
+training histories, permutation samples and intervention results), final gates,
+and the bytes of every saved tensor. Paths, elapsed time and container/PDF metadata
+are excluded. It writes evidence under `results/`; it never automatically replaces
+a paper baseline. `--reference historical` explicitly audits the original A100
+measurements instead, and is expected to report differences for fresh RTX training.
 
 ## Outputs and evidence
 
-- `manifest.json`: run status, source/lock hashes, platform, Python/PyTorch build,
-  installed packages, deterministic settings, seeds, duration and artifact hashes.
-- `experiment1/`: frequency and attribute-repetition sweeps, causal interventions,
-  four-fold affine fits, midpoint defects and exact Jacobian diagnostics.
-- `experiment2/`: per-seed configurations, training histories, checkpoints,
-  complete-table behavior, raw-embedding OLS, component/layer interventions,
-  logit lenses and residual patching.
-- `paper/main.pdf`: manuscript with newly generated tables and figures.
-- `paper/measurements.json`, `audit.json`, `audit.csv`: measured summaries and
-  comparisons with the archived paper. Prose remains the reference manuscript;
-  inspect the audit before interpreting a generated PDF when values differ.
+- `manifest.json`: source/lock hashes, packages, runtime, seeds, settings and artifact hashes.
+- `experiment1/`: sweeps, interventions, affine fits, midpoint and exact Jacobian diagnostics.
+- `experiment2/`: configurations, histories, checkpoints, complete-table behavior,
+  raw-embedding OLS, component/layer interventions, logit lenses and residual patching.
+- `paper/main.pdf`, `paper/result_values.tex`, `paper/measurements.json`: generated paper and numerical prose.
+- `audit.json`, `audit.csv`: exact comparison with the current baseline plus LMEnt checks.
+- `historical_audit.json`, `historical_audit.csv`: separately retained comparison with the original evidence.
 
-`paper/reference/` contains original synthetic measurements, used only for the
-final comparison. `paper/data/` contains the LMEnt observations and provenance.
-`paper/figures/` contains the six originally reported figures for reading the
-source paper. The scripts regenerate figures from fresh measurements in the
-output directory; they do not copy the archived figures or use hard-coded bars.
-The ACL `.sty`/`.bst` files remain because the current manuscript requires them.
+The committed baseline includes exact measurement/tensor-hash snapshots, readable
+analyses, final Experiment 2 checkpoints, repeatability evidence, and a claim review.
+The paper's checked-in figures and numerical macros come from this baseline.
+`paper/data/` contains LMEnt input snapshots and provenance. Complete intermediate
+artifacts are generated under ignored `results/`; Docker images are not Git artifacts.
+
+## Changes from the historical experiment
+
+The recovered stage limits and evaluation intervals are retained: 6,000 structured
+steps; up to 12,000 joint steps, evaluated every 500 steps for seed 19 and every
+1,000 for seeds 31/47; up to 8,000 continuation steps at 3e-4, evaluated every 200;
+and up to 3,000 steps at 1e-4 for seeds 19/31, evaluated every 100. Optimizer and RNG
+resets, datasets, losses and probes are unchanged.
+
+The RTX baseline requires deterministic operations, fixes the cuBLAS workspace,
+disables TF32 and cuDNN benchmarking, and uses one CPU thread per worker. Joint
+checkpoint selection and early stopping now include the existing prediction-symmetry
+threshold. Previously symmetry was checked only afterwards, allowing an early stop
+that failed the final gate. This is an explicit protocol correction, not a claim
+that the historical trained weights were recovered.
+
+The methods also clarify two inherited details: attribute batches sample 640
+examples **with replacement**, and structured pretraining adapts relation sampling
+to errors. Joint training retains its 10:1 random-to-individual-structured ratio.
+The exact null percentiles and intervention curves are specific to the newly
+reported solutions. The core claims remain supported, but seed 47's random-fit
+null percentile changes from 99.2 to 49.2 (seed 19: 38.2 to 94.8; seed 31: 98.4 to
+98.0). The former above-98th-percentile statement is removed. The manuscript also
+reports the actual minimum structured R-squared, 0.99485, instead of the old
+slightly overstated inequality. See the baseline's `claim_review.json`.
+
+## CPU and historical diagnostics
+
+The root `pyproject.toml`, `.python-version` and `uv.lock` retain the Python 3.13.11
+CPU workflow. With uv, Cairo, TeX Live and `latexmk` installed:
+
+```sh
+uv run --locked pytest -q
+uv run --locked reproduce --smoke
+uv run --locked reproduce --reference historical
+```
+
+CPU training is outside the RTX certification scope. Its full audit can fail;
+it must not be presented as successful reproduction of the RTX baseline.
+`--experiment2-device cuda --runtime-profile beta` retains the recovered
+nondeterministic training/stopping behavior for diagnosis. Runtime settings are
+recorded and included in resume signatures.
 
 The five data plots share `experiments/factual_recall/figure_style.py`: Times text
 rendered by LaTeX, 8 pt figure labels at the final ACL column/text width, and
@@ -113,40 +149,11 @@ uv run --locked python paper/make_dataset_figure.py --output-dir results/full/pa
 uv run --locked python paper/analyze_lment_frequency.py --output-dir results/full/paper
 ```
 
-Historical experiment projects, configuration searches, duplicate papers,
-review iterations, unused artwork, and editor/agent bundles live only on `backup`.
-
 ## Reproducibility boundaries
 
-The LMEnt faithfulness analysis is recomputed from 5,388 saved fact-level
-predictions/counts. Its separate intervention panel is recomputed from the saved
-56-relation aggregate. Both inputs are SHA-256 verified. The original pretrained
-model inference, Wikipedia extraction and individual intervention trials are
-external inputs; this repository cannot regenerate them from training data.
-The provenance manifests retain their original source paths and hashes.
-
-The original Experiment 2 checkpoints and training logs were not committed.
-The runner reconstructs the manuscript's width-20, eight-layer configuration and
-its 6,000/12,000-step curriculum, followed by 200 steps at 3e-4 (all seeds) and
-100 steps at 1e-4 (seeds 19 and 31). It preserves the existing training functions,
-including optimizer and RNG resets at each continuation. The structured/joint
-evaluation interval is explicitly 500 steps; continuation intervals are 100.
-The original analysis JSON contains stale defaults rather than the full training
-configuration, so exact recovery of the selected checkpoints is not established
-by that JSON. The audit detects discrepancies instead of silently substituting
-the archived measurements or retuning seeds to match them.
-
-The implementation samples 640 attribute examples with replacement per batch;
-this differs from the manuscript's statement that every batch contains all 640
-facts. Structured pretraining also adapts its relation sampling to errors. Joint
-training keeps the stated 10:1 random-to-individual-structured sampling ratio.
-The training loop ranks evaluated checkpoints and stops joint stages on behavior
-and geometry; prediction symmetry is checked afterwards. These inherited details
-are retained and exposed for review rather than silently changing the experiment.
-
-Experiment 1's archived tables/analyses use population SD; Experiment 2 uses
-sample SD. The attribute-transition figure uses sample SD. Seeded deterministic
-CPU operations improve repeatability on the same runtime, but do not guarantee
-identical optimization across hardware or library builds. See the official
-[PyTorch reproducibility notes](https://docs.pytorch.org/docs/stable/notes/randomness.html)
-and [uv Docker guide](https://docs.astral.sh/uv/guides/integration/docker/).
+LMEnt aggregation uses 5,388 saved fact-level predictions/counts and a separate
+56-relation intervention aggregate, both hash verified. Original pretrained-model
+inference, Wikipedia extraction and individual intervention trials remain external
+inputs. Neither deterministic training nor adoption of a new synthetic baseline
+recreates those observations. Experiment 1 uses population SD; Experiment 2 and
+the attribute-transition figure use sample SD.

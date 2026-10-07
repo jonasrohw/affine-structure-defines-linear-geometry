@@ -179,6 +179,22 @@ def train_structured_geometry(
 
 
 
+def joint_gate(attribute_accuracy, relation_accuracy, minimum_symmetry,
+               minimum_structured_r2, arbitrary_r2, target_accuracy):
+    """The same acceptance rule for selection, stopping, and final validation."""
+    return bool(attribute_accuracy >= target_accuracy
+                and min(relation_accuracy) >= target_accuracy
+                and minimum_symmetry >= target_accuracy
+                and minimum_structured_r2 >= 0.95 and arbitrary_r2 < 0.50)
+
+
+def joint_checkpoint_score(behavior_pass, geometry_pass, symmetry_pass,
+                           minimum_accuracy, minimum_structured_r2, arbitrary_r2):
+    return (bool(behavior_pass and geometry_pass and symmetry_pass),
+            behavior_pass, geometry_pass, minimum_accuracy,
+            minimum_structured_r2 - max(arbitrary_r2 - 0.50, 0.0))
+
+
 def train_joint_geometry(
     cfg: TransformerLookupConfig,
     checkpoint: Path,
@@ -214,7 +230,7 @@ def train_joint_geometry(
     ] * arbitrary_repeats
     history: list[dict[str, object]] = []
     best_state: dict[str, torch.Tensor] | None = None
-    best_score = (-1.0, -1.0, -1.0, -1.0)
+    best_score = (-1.0, -1.0, -1.0, -1.0, -1.0)
 
     for step in range(1, cfg.joint_steps + 1):
         relations, subjects, objects, values = _sample_relation_batch(
@@ -271,6 +287,14 @@ def train_joint_geometry(
             attributes >= cfg.target_accuracy
             and min(relations_accuracy) >= cfg.target_accuracy
         )
+        # Symmetry is expensive to evaluate and can only complete the gate once
+        # behavior and geometry pass. Historical beta replay retains its old rule.
+        minimum_symmetry = None
+        if cfg.require_symmetry_for_stopping and behavior_pass and geometry_pass:
+            minimum_symmetry = min(relation_symmetry_agreements(model, world, vocab, device))
+        symmetry_pass = (not cfg.require_symmetry_for_stopping
+                         or (minimum_symmetry is not None
+                             and minimum_symmetry >= cfg.target_accuracy))
         row = {
             "step": step,
             "loss": float(loss.item()),
@@ -285,14 +309,11 @@ def train_joint_geometry(
             "mean_raw_structured_full_r2": float(np.mean(structured_r2)),
             "arbitrary_raw_full_r2": arbitrary_r2,
             "arbitrary_raw_cv_r2": ols[world.arbitrary_relation]["cv_r2"],
+            "min_symmetry_agreement": minimum_symmetry,
         }
         history.append(row)
-        score = (
-            behavior_pass,
-            geometry_pass,
-            min(relations_accuracy),
-            min(structured_r2) - max(arbitrary_r2 - 0.50, 0.0),
-        )
+        score = joint_checkpoint_score(behavior_pass, geometry_pass, symmetry_pass,
+                                       min(relations_accuracy), min(structured_r2), arbitrary_r2)
         if score > best_score:
             best_score = score
             best_state = {
@@ -300,7 +321,7 @@ def train_joint_geometry(
                 for key, value in model.state_dict().items()
             }
         print(json.dumps(row), flush=True)
-        if behavior_pass and geometry_pass:
+        if behavior_pass and geometry_pass and symmetry_pass:
             break
         model.train()
 
@@ -348,17 +369,10 @@ def train_joint_geometry(
             },
         },
     }
-    result["passes_joint_gate"] = bool(
-        result["final"]["attribute_accuracy"] >= cfg.target_accuracy
-        and min(result["final"]["relation_accuracy"]) >= cfg.target_accuracy
-        and result["final"]["min_symmetry_agreement"] >= cfg.target_accuracy
-        and result["final"]["raw_embedding_ols"][
-            "min_structured_full_r2"
-        ]
-        >= 0.95
-        and result["final"]["raw_embedding_ols"]["arbitrary"]["full_r2"]
-        < 0.50
-        and result["frozen_parameter_count"] == 0
-    )
+    result["passes_joint_gate"] = joint_gate(
+        result["final"]["attribute_accuracy"], final_relations, min(final_symmetry),
+        result["final"]["raw_embedding_ols"]["min_structured_full_r2"],
+        result["final"]["raw_embedding_ols"]["arbitrary"]["full_r2"], cfg.target_accuracy
+    ) and result["frozen_parameter_count"] == 0
     result["_state_dict"] = best_state
     return result

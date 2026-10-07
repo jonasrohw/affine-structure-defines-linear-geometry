@@ -17,3 +17,13 @@
 !paper/data/**
 !paper/reference/
 !paper/reference/**
+!Dockerfile.rtx
+!experiments/tests/
+!experiments/tests/*.py
+!paper/baselines/
+!paper/baselines/**
+!scripts/
+!scripts/*.py
+!docker/
+!docker/rtx/
+!docker/rtx/cairo-requirement.txt

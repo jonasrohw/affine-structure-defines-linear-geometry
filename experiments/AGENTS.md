@@ -12,3 +12,9 @@ specified in `/home/jonas/.codex/RTK.md`.
 - Preserve dataset RNG ordering, losses, checkpoint selection and probe definitions
   in refactors. Record changes to those choices explicitly.
 - Generated artifacts belong in `results/`, not in the Python package.
+
+The canonical manuscript baseline is now `paper/baselines/rtx4090-v1/`, explicitly
+adopted after two matching fresh RTX runs. Follow the root README's pinned RTX
+Docker workflow for exact paper reproduction; the root uv environment remains a
+CPU diagnostic. New baselines require explicit scientific review and repeatability
+evidence. Never overwrite `paper/reference/` or silently loosen audit tolerances.
