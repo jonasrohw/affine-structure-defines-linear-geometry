@@ -28,8 +28,8 @@ archived references are never overwritten. A numerical disagreement produces
 `audit.json` and `audit.csv` and a nonzero exit status. Do not treat completion of
 training alone as successful reproduction of the paper.
 
-Local requirements: uv, Cairo (for the SVG dataset figure), and a TeX Live
-installation with `latexmk`, the ACL template's packages, and Inconsolata.
+Local requirements: uv, Cairo (for the SVG dataset figure), and a TeX Live installation with `latexmk`, the ACL
+template's packages, Inconsolata, `cm-super`, and `dvipng` (for figure text).
 Python 3.13.11 is selected by `.python-version`. All Python dependencies,
 including transitive dependencies and wheel hashes, are pinned in `uv.lock`.
 Linux uses the pinned CPU PyTorch wheel; no GPU or external dataset download is
@@ -93,6 +93,26 @@ final comparison. `paper/data/` contains the LMEnt observations and provenance.
 source paper. The scripts regenerate figures from fresh measurements in the
 output directory; they do not copy the archived figures or use hard-coded bars.
 The ACL `.sty`/`.bst` files remain because the current manuscript requires them.
+
+The five data plots share `experiments/factual_recall/figure_style.py`: Times text
+rendered by LaTeX, 8 pt figure labels at the final ACL column/text width, and
+10 pt Times captions supplied by the ACL template. The sea-green/coral palette
+is shared across experiments, with lavender, apricot, and blue supporting series.
+Hatching, markers, and line styles supplement color where applicable. These plots
+export as vector PDF and SVG, plus 1200-DPI PNG. The manuscript includes the
+vector PDFs, which remain sharp at any magnification; DPI applies only to raster
+exports. Plot SVG text is outlined so the appearance does not depend on viewer fonts.
+The data-generation schematic retains its original layout, typography, and export
+settings, with only its colors updated to match the palette.
+
+To restyle existing measurements without training or changing manuscript tables:
+
+```sh
+uv run --locked python paper/make_paper_figures.py --results results/full --figures-only
+uv run --locked python paper/make_dataset_figure.py --output-dir results/full/paper/figures
+uv run --locked python paper/analyze_lment_frequency.py --output-dir results/full/paper
+```
+
 Historical experiment projects, configuration searches, duplicate papers,
 review iterations, unused artwork, and editor/agent bundles live only on `backup`.
 

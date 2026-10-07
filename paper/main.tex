@@ -17,6 +17,8 @@
 \usepackage{url}
 \usepackage{hyperref}
 
+% ACL defines 10 pt captions; explicitly keep every figure caption roman.
+\captionsetup[figure]{font={10pt,rm},labelfont=rm,textfont=rm}
 \graphicspath{{figures/}}
 
 \newcommand{\Rsem}{R_{\mathrm{sem}}}
@@ -56,7 +58,7 @@ affine-decoder faithfulness.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=.9\textwidth]{frequency_not_enough.pdf}
+  \includegraphics[width=\textwidth]{frequency_not_enough.pdf}
   \caption{Frequency does not determine affine relation geometry in the two
   controlled settings. \textbf{A:} At 16 occurrences per trained triple, the
   attribute-defined relation generalizes and an OLS map transfers to subjects
@@ -64,7 +66,7 @@ affine-decoder faithfulness.
   Chance is $1/32$ for recall and OLS accuracy. \textbf{B:} A random relation
   sampled ten times as often as each structured control during joint training is
   memorized almost perfectly, but its full-data affine $R^2$ remains far below
-  every structured relation. Blue solid bars denote structured relations, and red
+  every structured relation. Sea-green solid bars denote structured relations, and coral
   hatched bars denote random controls. Bars report means over three seeds; the
   structured bars in B report the minimum relation score. The OLS metrics differ by design: held-out
   nearest-object accuracy in A and overdetermined full-data $R^2$ in B. Neither
@@ -479,7 +481,7 @@ computation.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=.85\textwidth]{goal2_raw_transformer_mechanism.pdf}
+  \includegraphics[width=\textwidth]{goal2_raw_transformer_mechanism.pdf}
   \caption{The frequent random relation is implemented by distributed transformer
   computation. \textbf{A:} A logit lens reads the random answer mainly in the last
   two blocks. \textbf{B:} Global interventions on GELU, attention routing, MLP

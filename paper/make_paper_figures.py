@@ -3,15 +3,21 @@
 from pathlib import Path
 import argparse
 import json
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "experiments"))
+from factual_recall.figure_style import (
+    COLORS, COLUMN_WIDTH, TEXT_WIDTH, apply_style, save_figure,
+)
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
 
-BLUE = "#176B8A"
-RED = "#B84A3A"
-GRAY = "#5C6670"
+BLUE = COLORS["structured"]
+RED = COLORS["random"]
+GRAY = COLORS["muted"]
 
 
 def add_labels(ax, bars, digits=3):
@@ -24,14 +30,16 @@ def add_labels(ax, bars, digits=3):
             f"{value:.{digits}f}",
             ha="center",
             va="top" if inside else "bottom",
-            fontsize=7.2,
-            color="white" if inside else "black",
+            fontsize=8,
+            color=COLORS["ink"],
         )
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results", type=Path, required=True)
+    parser.add_argument("--figures-only", action="store_true",
+                        help="Render figures without rewriting manuscript tables")
     args = parser.parse_args()
     output = args.results / "paper/figures"
     output.mkdir(parents=True, exist_ok=True)
@@ -43,23 +51,9 @@ def main():
                          r["relations"][relation]["heldout_check"]["recall"],
                          r["relations"][relation]["probe_accuracy"]] for r in selected], axis=0)
 
-    plt.rcParams.update(
-        {
-            "font.family": "DejaVu Sans",
-            "font.size": 8,
-            "axes.titlesize": 8.2,
-            "axes.labelsize": 8,
-            "xtick.labelsize": 7.5,
-            "ytick.labelsize": 7.5,
-            "legend.fontsize": 7.5,
-            "axes.spines.top": False,
-            "axes.spines.right": False,
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
-        }
-    )
+    apply_style()
 
-    fig, axes = plt.subplots(1, 2, figsize=(5.5, 2.25), constrained_layout=True)
+    fig, axes = plt.subplots(1, 2, figsize=(TEXT_WIDTH, 2.6), constrained_layout=True)
 
     ax = axes[0]
     metrics = ["trained\nrecall", "held-out\nrecall", "held-out\nOLS accuracy"]
@@ -80,7 +74,7 @@ def main():
         random,
         width,
         color=RED,
-        edgecolor="#6F2C24",
+        edgecolor=COLORS["muted"],
         hatch="//",
         label="matched random",
     )
@@ -90,9 +84,9 @@ def main():
     ax.set_xticks(x, metrics)
     ax.set_ylim(0, 1.13)
     ax.set_ylabel("score")
-    ax.set_title("A  Structured relation, $F=16$", loc="left", fontweight="bold")
-    ax.legend(frameon=False, loc="upper left")
-    ax.grid(axis="y", alpha=0.2)
+    ax.set_title(r"\textbf{A  Attribute-defined relation ($F=16$)}", loc="left")
+    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.24))
+    ax.grid(axis="y")
 
     ax = axes[1]
     metrics = ["complete-table\naccuracy", "full-data\nOLS $R^2$"]
@@ -112,7 +106,7 @@ def main():
         random,
         width,
         color=RED,
-        edgecolor="#6F2C24",
+        edgecolor=COLORS["muted"],
         hatch="//",
         label="random relation",
     )
@@ -120,14 +114,17 @@ def main():
     add_labels(ax, b2)
     ax.set_xticks(x, metrics)
     ax.set_ylim(0, 1.13)
-    ax.set_title("B  Random relation, 10$\\times$/control (joint)", loc="left", fontweight="bold")
-    ax.grid(axis="y", alpha=0.2)
+    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.24))
+    ax.set_title(r"\textbf{B  Random relation (10$\times$ per control)}", loc="left")
+    ax.grid(axis="y")
 
-    fig.savefig(output / "frequency_not_enough.pdf", bbox_inches="tight")
-    fig.savefig(output / "frequency_not_enough.png", dpi=240, bbox_inches="tight")
+    save_figure(fig, output / "frequency_not_enough")
     plt.close(fig)
-    fig, ax = plt.subplots(figsize=(3.4, 2.5), constrained_layout=True)
-    for triples, style, label in ((128, "-", "one occurrence"), (0, "--", "no relation triples")):
+    fig, ax = plt.subplots(figsize=(COLUMN_WIDTH, 2.5), constrained_layout=True)
+    for triples, style, color, marker, label in (
+        (128, "-", BLUE, "o", "one occurrence"),
+        (0, "--", COLORS["lavender"], "s", "no relation triples"),
+    ):
         points = []
         for repeats in (2, 4, 8, 16, 24):
             rows = [r for r in sweep if r["config"]["n_triples"] == triples
@@ -135,20 +132,21 @@ def main():
             values = [r["relations"]["semantic"]["probe_accuracy"] for r in rows]
             points.append((repeats, np.mean(values), np.std(values, ddof=1) if len(values) > 1 else 0.0))
         x, y, sd = np.array(points).T
-        ax.plot(x, y, style, color=BLUE, marker="o", label=label)
-        ax.fill_between(x, y - sd, y + sd, color=BLUE, alpha=.12)
+        ax.plot(x, y, style, color=color, marker=marker, label=label)
+        ax.fill_between(x, y - sd, y + sd, color=color, alpha=.12)
     ax.axhline(1 / 32, color=GRAY, linestyle=":")
     ax.set(xlabel="Attribute sentence repetitions", ylabel="Held-out OLS accuracy", ylim=(0, 1.05))
     ax.legend(frameon=False)
-    for suffix in ("pdf", "png"):
-        fig.savefig(output / f"linear_shift_transition.{suffix}", dpi=240)
+    ax.grid(axis="y")
+    save_figure(fig, output / "linear_shift_transition")
     plt.close(fig)
     from factual_recall.symmetric_lookup_transformer_raw_analysis import plot_results, plot_mechanism
     plot_results(lookup["seeds"], output / "goal2_raw_transformer_results",
                  {int(seed): history for seed, history in lookup["histories"].items()})
     plot_mechanism(lookup["seeds"], output / "goal2_raw_transformer_mechanism")
-    from factual_recall.paper_audit import write_tables
-    write_tables(args.results)
+    if not args.figures_only:
+        from factual_recall.paper_audit import write_tables
+        write_tables(args.results)
 
 
 

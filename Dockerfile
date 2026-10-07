@@ -7,7 +7,7 @@ FROM python:3.13.11-slim-bookworm@sha256:20080e807bfc404f8450b185cf0fc95d5534626
 RUN rm -f /etc/apt/sources.list.d/debian.sources \
     && printf 'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/20261001T000000Z bookworm main\n' > /etc/apt/sources.list \
     && apt-get update \
-    && apt-get install -y --no-install-recommends libcairo2 fonts-dejavu-core latexmk texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra \
+    && apt-get install -y --no-install-recommends libcairo2 fonts-dejavu-core latexmk texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra cm-super dvipng \
     && dpkg-query -W > /opt/os-packages.txt \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=uv /uv /usr/local/bin/uv

@@ -15,6 +15,7 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 
+from .figure_style import COLORS, TEXT_WIDTH, apply_style, save_figure
 from .symmetric_lookup import build_world, ols_relation_metrics
 from .symmetric_lookup_transformer import (
     LookupTokenVocabulary,
@@ -244,16 +245,17 @@ def summarize(rows: list[dict[str, object]]) -> dict[str, object]:
 
 
 def _style_axis(axis: plt.Axes, panel: str, title: str) -> None:
-    axis.set_title(f"{panel}  {title}", loc="left", fontweight="bold")
+    axis.set_title(rf"\textbf{{{panel}  {title}}}", loc="left")
     axis.spines[["top", "right"]].set_visible(False)
-    axis.grid(axis="y", alpha=0.18, linewidth=0.7)
+    axis.grid(axis="y")
 
 
 def plot_results(rows: list[dict[str, object]], output_stem: Path, histories: dict[int, list]) -> None:
-    structured_color = "#1f5a7a"
-    arbitrary_color = "#b24a3a"
+    apply_style()
+    structured_color = COLORS["structured"]
+    arbitrary_color = COLORS["random"]
     figure, axes = plt.subplots(
-        2, 2, figsize=(11.2, 7.4), constrained_layout=True
+        2, 2, figsize=(TEXT_WIDTH, 5.15), constrained_layout=True
     )
 
     axis = axes[0, 0]
@@ -272,22 +274,22 @@ def plot_results(rows: list[dict[str, object]], output_stem: Path, histories: di
     axis.bar(
         np.arange(4),
         values.mean(axis=0),
-        color=("#4d7c8a", structured_color, arbitrary_color, "#748c5b"),
+        color=(COLORS["blue"], structured_color, arbitrary_color, COLORS["lavender"]),
         alpha=0.82,
     )
     for seed_index, seed_values in enumerate(values):
         axis.scatter(
             np.arange(4) + (seed_index - 1) * 0.045,
             seed_values,
-            color="black",
+            color=COLORS["ink"],
             s=13,
             zorder=3,
         )
-    axis.axhline(0.995, color="black", linestyle="--", linewidth=0.8)
+    axis.axhline(0.995, color=COLORS["ink"], linestyle="--", linewidth=0.8)
     axis.set_ylim(0.99, 1.0005)
     axis.set_xticks(np.arange(4), categories)
-    axis.set_ylabel("complete-table accuracy / agreement")
-    _style_axis(axis, "A", "The transformer learns and preserves every table")
+    axis.set_ylabel("Accuracy / agreement")
+    _style_axis(axis, "A", "Complete-table behavior")
 
     axis = axes[0, 1]
     for seed_index, row in enumerate(rows):
@@ -325,16 +327,16 @@ def plot_results(rows: list[dict[str, object]], output_stem: Path, histories: di
             s=38,
             zorder=4,
         )
-    axis.axhline(0.95, color="black", linestyle="--", linewidth=0.8)
-    axis.axhline(0.0, color="black", linewidth=0.6)
+    axis.axhline(0.95, color=COLORS["ink"], linestyle="--", linewidth=0.8)
+    axis.axhline(0.0, color=COLORS["ink"], linewidth=0.6)
     axis.set_xticks([0, 2, 4, 6, 8, 10.7], ["r0", "r2", "r4", "r6", "r8", "random"])
     axis.set_xlim(-0.6, 11.25)
     axis.set_ylim(-1.05, 1.05)
     axis.set_ylabel(r"raw-embedding OLS $R^2$")
-    axis.scatter([], [], color="black", label="full-data fit")
-    axis.scatter([], [], facecolors="none", edgecolors="black", label="4-fold CV")
+    axis.scatter([], [], color=COLORS["ink"], label="full-data fit")
+    axis.scatter([], [], facecolors="none", edgecolors=COLORS["ink"], label="4-fold CV")
     axis.legend(frameon=False, loc="lower left")
-    _style_axis(axis, "B", "One OLS test separates structured and random")
+    _style_axis(axis, "B", "Affine fit by relation")
 
     axis = axes[1, 0]
     for row in rows:
@@ -344,14 +346,14 @@ def plot_results(rows: list[dict[str, object]], output_stem: Path, histories: di
         axis.plot(
             steps,
             [item["arbitrary_accuracy"] for item in history],
-            color=arbitrary_color,
-            alpha=0.5,
+            color=arbitrary_color, linestyle="--",
+            alpha=0.8,
         )
         axis.plot(
             steps,
             [item["min_structured_accuracy"] for item in history],
             color=structured_color,
-            alpha=0.42,
+            alpha=0.8,
         )
         axis.scatter(
             [history[-1]["step"]],
@@ -366,13 +368,13 @@ def plot_results(rows: list[dict[str, object]], output_stem: Path, histories: di
             s=16,
         )
     axis.plot([], [], color=structured_color, label="structured minimum")
-    axis.plot([], [], color=arbitrary_color, label="random")
-    axis.axhline(0.995, color="black", linestyle="--", linewidth=0.8)
+    axis.plot([], [], color=arbitrary_color, linestyle="--", label="random")
+    axis.axhline(0.995, color=COLORS["ink"], linestyle="--", linewidth=0.8)
     axis.set_xlabel("joint-training step")
     axis.set_ylabel("complete-table accuracy")
     axis.set_ylim(0.45, 1.01)
     axis.legend(frameon=False, loc="lower right")
-    _style_axis(axis, "C", "Random facts are learned without forgetting")
+    _style_axis(axis, "C", "Learning during joint training")
 
     axis = axes[1, 1]
     full_values = [
@@ -388,19 +390,18 @@ def plot_results(rows: list[dict[str, object]], output_stem: Path, histories: di
     x = np.arange(len(rows))
     width = 0.24
     axis.bar(x - width, full_values, width, color=arbitrary_color, label=r"full $R^2$")
-    axis.bar(x, cv_values, width, color="#c99789", label=r"CV $R^2$")
-    axis.bar(x + width, precision_values, width, color="#777777", label="CV positive precision")
-    axis.axhline(0.5, color="black", linestyle=":", linewidth=0.8)
-    axis.axhline(0.0, color="black", linewidth=0.6)
+    axis.bar(x, cv_values, width, color=COLORS["apricot"], hatch="//", label=r"CV $R^2$")
+    axis.bar(x + width, precision_values, width, color=COLORS["lavender"], label="CV positive precision")
+    axis.axhline(0.5, color=COLORS["ink"], linestyle=":", linewidth=0.8)
+    axis.axhline(0.0, color=COLORS["ink"], linewidth=0.6)
     axis.set_xticks(x, [f"seed {row['seed']}" for row in rows])
     axis.set_ylim(-1.05, 0.62)
     axis.set_ylabel("score")
     axis.legend(frameon=False, fontsize=8)
-    _style_axis(axis, "D", "All tested random facts were memorized")
+    _style_axis(axis, "D", "Random-relation fit by seed")
 
     output_stem.parent.mkdir(parents=True, exist_ok=True)
-    for suffix in ("pdf", "png", "svg"):
-        figure.savefig(output_stem.with_suffix(f".{suffix}"), dpi=220)
+    save_figure(figure, output_stem)
     plt.close(figure)
 
 
@@ -416,10 +417,11 @@ def _curve_summary(rows: list[dict[str, object]], path: tuple[str, ...]) -> tupl
 
 
 def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
-    structured_color = "#1f5a7a"
-    arbitrary_color = "#b24a3a"
+    apply_style()
+    structured_color = COLORS["structured"]
+    arbitrary_color = COLORS["random"]
     figure, axes = plt.subplots(
-        2, 2, figsize=(11.2, 7.4), constrained_layout=True
+        2, 2, figsize=(TEXT_WIDTH, 5.15), constrained_layout=True
     )
     boundaries = np.arange(9)
     boundary_labels = ["input"] + [f"B{i}" for i in range(1, 9)]
@@ -430,18 +432,19 @@ def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
         (("logit_lens", "arbitrary"), arbitrary_color, "random"),
     ):
         mean, sd = _curve_summary(rows, path)
-        axis.plot(boundaries, mean, marker="o", color=color, label=label)
+        axis.plot(boundaries, mean, marker="s" if label == "random" else "o",
+                  linestyle="--" if label == "random" else "-", color=color, label=label)
         axis.fill_between(boundaries, mean - sd, mean + sd, color=color, alpha=0.13)
-    axis.axhline(0.5, color="black", linestyle=":", linewidth=0.8)
+    axis.axhline(0.5, color=COLORS["ink"], linestyle=":", linewidth=0.8)
     axis.set_xticks(boundaries, boundary_labels)
     axis.set_ylim(0.35, 1.02)
     axis.set_ylabel("binary logit-lens accuracy")
     axis.legend(frameon=False)
-    _style_axis(axis, "A", "Pair labels become readable late")
+    _style_axis(axis, "A", "Pair-label readout")
 
     axis = axes[0, 1]
     modes = ("full", "gelu_identity", "uniform_attention", "no_mlp", "no_attention")
-    names = ("full", "GELU to\nidentity", "uniform\nattention", "no MLP", "no attention")
+    names = ("full", "GELU to\nidentity", "uniform\nattention", "no MLP", "no\nattention")
     x = np.arange(len(modes))
     width = 0.36
     structured = [
@@ -453,25 +456,26 @@ def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
         for mode in modes
     ]
     axis.bar(x - width / 2, structured, width, color=structured_color, label="structured mean")
-    axis.bar(x + width / 2, arbitrary, width, color=arbitrary_color, label="random")
+    axis.bar(x + width / 2, arbitrary, width, color=arbitrary_color,
+             edgecolor=COLORS["muted"], hatch="//", label="random")
     for seed_index, row in enumerate(rows):
         offset = (seed_index - 1) * 0.028
         axis.scatter(
             x - width / 2 + offset,
             [row["component_ablations"][mode]["structured_mean"] for mode in modes],
-            color="black", s=8, zorder=3,
+            color=COLORS["ink"], s=8, zorder=3,
         )
         axis.scatter(
             x + width / 2 + offset,
             [row["component_ablations"][mode]["arbitrary"] for mode in modes],
-            color="black", s=8, zorder=3,
+            color=COLORS["ink"], s=8, zorder=3,
         )
-    axis.axhline(0.5, color="black", linestyle=":", linewidth=0.8)
+    axis.axhline(0.5, color=COLORS["ink"], linestyle=":", linewidth=0.8)
     axis.set_xticks(x, names)
     axis.set_ylim(0.0, 1.02)
     axis.set_ylabel("binary-choice accuracy")
     axis.legend(frameon=False, loc="upper right")
-    _style_axis(axis, "B", "Nonlinear components are causal")
+    _style_axis(axis, "B", "Component interventions")
 
     axis = axes[1, 0]
     for group, color, linestyle in (
@@ -486,17 +490,18 @@ def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
                 marker=marker, label=f"{label_group}, {position}",
             )
             axis.fill_between(boundaries, mean - sd, mean + sd, color=color, alpha=0.08)
-    axis.axhline(0.0, color="black", linewidth=0.6)
+    axis.axhline(0.0, color=COLORS["ink"], linewidth=0.6)
     axis.set_xticks(boundaries, boundary_labels)
     axis.set_ylabel("normalized yes-logit recovery")
-    axis.legend(frameon=False, ncol=2, fontsize=8)
+    axis.legend(frameon=False, ncol=2, columnspacing=0.6,
+                loc="upper center", bbox_to_anchor=(0.5, -0.15))
     _style_axis(axis, "C", "Subject-to-object integration")
 
     axis = axes[1, 1]
     layers = np.arange(1, 9)
     for component, color, marker in (
-        ("attention", "#6a51a3", "o"),
-        ("mlp", "#e08214", "s"),
+        ("attention", COLORS["lavender"], "o"),
+        ("mlp", COLORS["apricot"], "s"),
     ):
         data = np.asarray(
             [
@@ -508,15 +513,14 @@ def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
         sd = data.std(axis=0, ddof=1) if len(data) > 1 else np.zeros_like(data[0])
         axis.plot(layers, mean, color=color, marker=marker, label=f"remove one {component}")
         axis.fill_between(layers, mean - sd, mean + sd, color=color, alpha=0.13)
-    axis.axhline(0.5, color="black", linestyle=":", linewidth=0.8)
+    axis.axhline(0.5, color=COLORS["ink"], linestyle=":", linewidth=0.8)
     axis.set_xticks(layers)
     axis.set_ylim(0.45, 1.02)
     axis.set_xlabel("block")
     axis.set_ylabel("random-relation accuracy")
     axis.legend(frameon=False)
-    _style_axis(axis, "D", "The lookup circuit is distributed across blocks")
+    _style_axis(axis, "D", "Layer interventions")
 
     output_stem.parent.mkdir(parents=True, exist_ok=True)
-    for suffix in ("pdf", "png", "svg"):
-        figure.savefig(output_stem.with_suffix(f".{suffix}"), dpi=220)
+    save_figure(figure, output_stem)
     plt.close(figure)

@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -19,6 +20,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "experiments"))
+from factual_recall.figure_style import COLORS, TEXT_WIDTH, apply_style, save_figure
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data/lment_frequency"
@@ -246,11 +250,9 @@ def main():
                      f"{row.correct_high}/{row.n_high} " + r"\\")
     table += [r"\bottomrule", r"\end{tabular}"]
     (DATA / "examples_table.tex").write_text("\n".join(table) + "\n")
-    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 8,
-                         "axes.spines.top": False, "axes.spines.right": False,
-                         "pdf.fonttype": 42, "ps.fonttype": 42})
-    fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.85), layout="constrained")
-    colors = ["#176B8A", "#B84A3A", "#807143"]
+    apply_style()
+    fig, axes = plt.subplots(1, 2, figsize=(TEXT_WIDTH, 2.85), layout="constrained")
+    colors = [COLORS["structured"], COLORS["random"], COLORS["lavender"]]
     # Panel A uses actual held-out interventions; panel B retains the historical
     # faithfulness analysis. The two cohorts must not be treated as identical.
     causal_data = ROOT / "data/lment_causality"
@@ -267,33 +269,32 @@ def main():
     axes[0].scatter(1 + group.mean_count, group.value,
                     color=colors[0], s=20, alpha=.8, edgecolors="white", linewidths=.3)
     axes[0].set(xscale="log", ylim=(0, 1), yticks=np.linspace(0, 1, 6),
-                ylabel="Causality (pairwise intervention success)",
+                ylabel="Pairwise intervention success",
                 xlabel="1 + mean subject–object document count")
     axes[0].text(.97, .95, f"{len(group)} relations; Pearson r = {correlation:.3f}",
-                 transform=axes[0].transAxes, fontsize=7, ha="right", va="top")
-    axes[0].tick_params(axis="x", labelsize=7)
-    axes[0].set_title("A  Frequency and causality across relations", loc="left", fontsize=9)
-    axes[0].grid(axis="y", alpha=0.2)
+                 transform=axes[0].transAxes, fontsize=8, ha="right", va="top")
+    axes[0].tick_params(axis="x", labelsize=8)
+    axes[0].set_title(r"\textbf{A  Frequency and causality}", loc="left", fontsize=8)
+    axes[0].grid(axis="y")
     rng = np.random.default_rng(42)
     for x, (metric, (_, label)) in enumerate(AXES.items()):
         values = eligible[eligible.metric == metric].delta_pp.to_numpy()
         jitter = rng.uniform(-0.19, 0.19, len(values))
         axes[1].scatter(x + jitter, values, s=18, alpha=.8, linewidths=.3,
                         edgecolors="white", c=np.where(values < 0, colors[1], colors[0]))
-        axes[1].scatter(x, values.mean(), marker="D", c="black", s=25, zorder=4)
+        axes[1].scatter(x, values.mean(), marker="D", c=COLORS["ink"], s=25, zorder=4)
         row = stats[x]
-        axes[1].text(x, 47, f"{row['decreasing']}↓  {row['equal']}=  {row['increasing']}↑",
-                     ha="center", fontsize=7)
-    axes[1].axhline(0, color="#777777", lw=.8, ls="--")
+        axes[1].text(x, 47, rf"{row['decreasing']}$\downarrow$  {row['equal']}=  {row['increasing']}$\uparrow$",
+                     ha="center", fontsize=8)
+    axes[1].axhline(0, color=COLORS["muted"], lw=.8, ls="--")
     axes[1].set(xticks=range(3), xticklabels=["Subject", "Subject\n+ object", "Subject\n+ cue"],
                 ylim=(-45, 53), yticks=[-40, -20, 0, 20, 40],
-                ylabel="Upper − lower quartile (percentage points)",
-                xlabel="One point per eligible relation; ◆ mean")
-    axes[1].set_title("B  Frequency differences within relations", loc="left", fontsize=9)
-    axes[1].grid(axis="y", alpha=.2)
+                ylabel="Faithfulness difference (percentage points)",
+                xlabel="One point per relation; diamond: mean")
+    axes[1].set_title(r"\textbf{B  Within-relation frequency contrasts}", loc="left", fontsize=8)
+    axes[1].grid(axis="y")
     (ROOT / "figures").mkdir(exist_ok=True)
-    for extension in ["pdf", "png"]:
-        fig.savefig(ROOT / f"figures/lment_frequency_aggregate.{extension}", dpi=220)
+    save_figure(fig, ROOT / "figures/lment_frequency_aggregate")
     plt.close(fig)
     print(json.dumps(summary, indent=2))
 

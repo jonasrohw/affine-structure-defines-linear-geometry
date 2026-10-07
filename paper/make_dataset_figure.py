@@ -25,8 +25,8 @@ OUT = parser.parse_args().output_dir
 OUT.mkdir(parents=True, exist_ok=True)
 W, H = 1440, 938
 C = dict(ink="#202C38", muted="#5D6B79", line="#D8DFE6", pale="#F3F5F7",
-         blue="#286AA6", blue_light="#EAF2F9", red="#BE514F", red_light="#FAEFED",
-         attr="#758694", attr_light="#E2E8ED", white="#FFFFFF")
+         blue="#69BDB0", blue_light="#E8F5F2", red="#F098A0", red_light="#FCECEF",
+         attr="#AF9BDC", attr_light="#EEE9F8", white="#FFFFFF")
 svg = []
 def add(s): svg.append(s)
 def rect(x,y,w,h,fill,stroke="none",sw=1,rx=0,extra=""):
@@ -240,7 +240,7 @@ bx,by,bw=997,851,408
 for k in range(10):
     rect(bx+k*bw/20,by,bw/20-1,22,C['blue'])
 rect(bx+bw/2,by,bw/2,22,C['red'])
-for k in range(10):line(bx+bw/2+k*bw/20+3,by+21,bx+bw/2+k*bw/20+17,by+1,'#D7807B',.7)
+for k in range(10):line(bx+bw/2+k*bw/20+3,by+21,bx+bw/2+k*bw/20+17,by+1,'#CB7381',.7)
 text(bx+bw/4,898,'10 equality relations',17,C['blue'],600,'middle')
 text(bx+3*bw/4,898,'1 random relation',17,C['red'],600,'middle')
 text(1201,925,'Random: 10× each equality relation',17,C['red'],600,'middle')
