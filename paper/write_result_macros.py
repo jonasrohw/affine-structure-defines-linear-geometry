@@ -5,6 +5,9 @@ from pathlib import Path
 import numpy as np
 from factual_recall.paper_audit import experiment1_summary
 
+RESULTS_START = '% BEGIN GENERATED RTX RESULTS'
+RESULTS_END = '% END GENERATED RTX RESULTS'
+
 
 def write(results):
     def load(name):
@@ -74,8 +77,17 @@ def write(results):
         curve = np.mean([r['causal_trace']['arbitrary'][position] for r in rows], axis=0)
         sequence('ExpTwo' + tag + 'Trace', curve)
     path = results / 'paper/result_values.tex'
-    path.write_text('% Generated from this run; do not edit numerical values by hand.\n' +
-                    ''.join('\\newcommand{\\' + key + '}{' + value + '}\n' for key, value in macros.items()))
+    definitions = ('% Generated from measured results; refresh with write_result_macros.py.\n' +
+                   ''.join('\\newcommand{\\' + key + '}{' + value + '}\n' for key, value in macros.items()))
+    manuscript_path = results / 'paper/main.tex'
+    manuscript = manuscript_path.read_text()
+    if manuscript.count(RESULTS_START) != 1 or manuscript.count(RESULTS_END) != 1:
+        raise ValueError('main.tex must contain one generated RTX results block')
+    start = manuscript.index(RESULTS_START) + len(RESULTS_START)
+    end = manuscript.index(RESULTS_END, start)
+    manuscript_path.write_text(manuscript[:start] + '\n' + definitions + manuscript[end:])
+    # Keep the standalone export for inspection; main.tex contains its own values.
+    path.write_text(definitions)
 
 
 if __name__ == '__main__':

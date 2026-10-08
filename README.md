@@ -11,6 +11,17 @@ All 23 tests pass. This evidence was required before adoption.
 The [validation record](validation.json) records the verification and claim review.
 Historical A100 measurements in `paper/reference/` remain unchanged.
 
+The source manuscript `paper/main.tex` contains the RTX numerical definitions
+and result tables directly. It uses the committed figures in `paper/figures/`
+and can be compiled without any generated `results/` directory:
+
+```sh
+latexmk -cd -pdf paper/main.tex
+```
+
+This writes `paper/main.pdf`. The reproduction pipeline refreshes the marked
+numerical block in its generated copy of `main.tex` from each run's measurements.
+
 ## Reproduce the paper on the certified RTX setup
 
 Certification is scoped to the Ryzen 9 7950X3D CPU, one RTX 4090, NVIDIA driver

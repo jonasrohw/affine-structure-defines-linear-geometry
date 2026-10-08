@@ -41,7 +41,7 @@
     "pages": 16,
     "pdf": "results/rtx-reproducibility/paper-final/paper/main.pdf",
     "sha256": "ad0e806a5f1d78d92c3840b4ab72777c6a4cd2458dc376d75de31efb14b626bf",
-    "numerical_prose": "paper/result_values.tex",
+    "numerical_prose": "paper/main.tex",
     "claim_review": "paper/baselines/rtx4090-v1/claim_review.json"
   },
   "method_change": "Symmetry is now required during joint checkpoint selection and stopping, using the existing final-gate threshold.",
