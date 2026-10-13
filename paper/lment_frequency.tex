@@ -1,4 +1,4 @@
-\section{Motivation: frequency does not consistently predict affine decoding}
+\section{Affine decoders in a pretrained model track answer sharing, not exposure}
 \label{sec:lment-frequency}
 
 \citet{merullo2025frequency} report that relations with more frequent
@@ -12,40 +12,93 @@ Writing their OLMo-7B relation-level comparison as
   \label{eq:merullo-frequency}
 \end{equation}
 $n(s,o)$ counts co-occurrences and $C_r$ measures how successfully LRE-based
-interventions change the predicted object. They also report consistently high
-causality scores above model-dependent frequency thresholds. These observations
-suggest exposure frequency as an explanation for relational linearity.
+interventions change the predicted object. These observations suggest exposure
+frequency as an explanation for relational linearity.
 
-We examine its broader applicability in LMEnt-1B, a one-billion-parameter model
-pretrained on English Wikipedia \citep{gottesman2025lment}. We evaluate 5,388 facts
-across 58 relations using mean-Jacobian affine decoders
-$\hat o_r(s)=D(\beta W_r h_s+b_r)$ \citep{hernandez2024linearity}, where $D$
-decodes the top-1 token. Our score is first-token faithfulness,
-$\phi_r=\Pr[\hat o_r(s)=o_{\mathrm{LM}}(s,r)]$; frequency counts subject-linked
-corpus documents containing the gold object label.
+We examine this in LMEnt-1B, a one-billion-parameter model pretrained on English
+Wikipedia \citep{gottesman2025lment}. We evaluate 5,388 facts across 58 relations
+using mean-Jacobian affine decoders $\hat o_r(s)=D(\beta W_r h_s+b_r)$
+\citep{hernandez2024linearity}, where $D$ decodes the top-1 token. Our score is
+first-token faithfulness, $\phi_r=\Pr[\hat o_r(s)=o_{\mathrm{LM}}(s,r)]$;
+frequency counts subject-linked corpus documents containing the gold object label.
 
-For a separate held-out intervention evaluation of the custom dataset,
-Figure~\ref{fig:lment-frequency}A reports a causal success rate on $[0,1]$:
-the fraction of LRE edits for which the target object's first-token probability
-exceeds that of the original object. Across 56 eligible relations and 15,874 test
-trials over three split seeds, its correlation with $\log(1+\bar f_r)$
-is $0.393$. Operators are selected on validation data; counts
-measure literal subject--object co-occurrence in corpus documents.
-The historical faithfulness evaluation above instead gives
-$\operatorname{corr}_r(\log(1+\bar f_r),\phi_r)=0.095$ across 48 relations
-with at least two distinct predicted answer tokens.
-Within relations, higher frequency can also accompany lower faithfulness.
-Comparing upper and lower subject--object frequency quartiles, 11 of 27 eligible
-relations decrease, three are unchanged, and 13 increase. Official-language
-faithfulness falls from $84.4\%$ to $50.6\%$, whereas country currency rises from
-$42.3\%$ to $69.0\%$ (Figure~\ref{fig:lment-frequency}B).
+\paragraph{The score needs a baseline.}
+$\phi_r$ is uncorrected for a decoder that always emits a relation's most common
+answer, and only 14 of 30 relations with at least 30 facts beat that constant
+guess. Person employer and astronomical parent body reach $\phi_r=1.000$ because
+the model emits one answer token for every fact in them. We therefore screen
+relations on answer and decoder diversity alone, never on corpus counts: we keep a
+relation with at least 30 facts, five distinct model answers, ten distinct decoder
+outputs, and faithfulness at least five points above its modal baseline. Eleven of
+58 relations survive, and ten support the per-fact analyses below, covering
+1,826 facts.
 
-Thus, frequency does not consistently predict affine-decoder faithfulness in
-this model. The historical faithfulness metric and corpus counts differ from those underlying
-Equation~\ref{eq:merullo-frequency}, so this is evidence against a universal
-frequency-only explanation, rather than a refutation of their measured
-correlation. This motivates our controlled experiments: can low exposure support
-affine geometry, and can high exposure fail to produce it?
+\paragraph{Frequency is a weak relation-level predictor.}
+Causal success correlates with $\log(1+\bar f_r)$ at $0.393$ over 56 relations and
+15{,}874 held-out trials (Figure~\ref{fig:lment-frequency}A), and faithfulness at
+$0.095$ over 48 relations with at least two distinct predicted answers.
+Within-relation frequency quartiles move in both directions
+(Figure~\ref{fig:lment-frequency}B); those comparisons are not corrected for the
+modal baseline and we do not rely on them.
+
+\paragraph{What predicts decoder success is how many entities share an answer.}
+For each fact we count the other entities in its relation that receive the same
+model answer. Faithfulness rises monotonically with that count
+(Table~\ref{tab:lment-sharing}). In a logistic regression over the 1{,}219
+non-modal facts, with relation fixed effects and standardized predictors, answer
+sharing gives $+0.598$ (95\% CI $[+0.398,+0.796]$) while subject--object
+co-occurrence gives $+0.026$ (95\% CI $[-0.159,+0.226]$). Holding answer sharing
+fixed, exposure is indistinguishable from zero. A decoder succeeds when an answer
+is a category spanning many entities, not when a pair was seen often.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+Other entities sharing the answer & Facts & $\phi$ \\
+\midrule
+0 (answer unique to this entity) & 176 & 0.409 \\
+1--9   & 422 & 0.524 \\
+10--29 & 357 & 0.692 \\
+30+    & 871 & 0.762 \\
+\bottomrule
+\end{tabular}
+\caption{Decoder faithfulness by how many other entities in the same relation
+receive the same model answer, over 1,826 facts in ten screened relations.}
+\label{tab:lment-sharing}
+\end{table}
+
+\paragraph{Both synthetic conditions occur inside one relation.}
+Lavertezzo is a municipality in the Italian-speaking canton of Ticino. It has 13
+linked corpus documents and four containing the object label; an LLM reading all 13
+finds none that states its official language and nine that place it in Ticino. Both
+the model and the affine decoder answer \texttt{Italian}. Switzerland, in the same
+relation and under the same operator, has 24{,}928 subject--object co-occurrences
+across 106{,}201 documents. The model answers \texttt{French} correctly, the
+decoder answers \texttt{Swiss}, and a linear probe on the same subject state also
+fails. Low exposure with shared structure is decodable, and heavy exposure without
+it is not. The Ticino result is not in-context interpolation: rebuilt from
+demonstrations containing no Swiss entity and no Italian example, the decoder still
+returns \texttt{Italian} for all six held-out Ticino municipalities.
+
+\paragraph{The decoder measures separability, and measures it off-axis.}
+A leave-one-out nearest-centroid classifier on the same subject states scores
+$0.581$ across the ten screened relations, against $0.575$ for the affine decoder:
+the relation-specific operator adds little over how well subject representations
+already cluster by answer. It is also misaligned. Pulling each answer contrast back
+through the decoder's own mean Jacobian and comparing it with the corresponding
+centroid difference gives a mean principal-angle cosine of $0.341$ and a subspace
+overlap of $0.136$, against $0.022$ for random directions in 2048 dimensions.
+Decoder failure is therefore weak evidence about representation: of 622 facts the
+decoder misses, a probe recovers 282 ($45\%$). Claims that a relation is not
+affinely represented should be made against a probe rather than against the decoder
+alone.
+
+These measurements identify which property tracks affine decodability in a
+pretrained model, but cannot manipulate it, since exposure, answer sharing and
+entity prominence are confounded in natural text. The controlled corpora that
+follow vary structure and exposure independently.
 Appendix~\ref{app:lment-frequency} gives the evaluation and aggregation details.
 
 \begin{figure*}[t]
@@ -58,6 +111,7 @@ Appendix~\ref{app:lment-frequency} gives the evaluation and aggregation details.
   exact full-object generation.
   \textbf{B:} Upper-minus-lower-quartile faithfulness for every eligible relation
   in the historical evaluation on three frequency axes. Each tail has at least ten facts. Diamonds show means;
-  counts above columns give decreases, ties, and increases.}
+  counts above columns give decreases, ties, and increases. These quartile
+  comparisons are not corrected for the modal-answer baseline.}
   \label{fig:lment-frequency}
 \end{figure*}
