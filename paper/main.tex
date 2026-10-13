@@ -360,11 +360,8 @@ similarity. The chance accuracy is $1/32$.
 Experiment B contains 64 entities and ten explicit binary attributes. Every
 attribute column has 32 zeros and 32 ones, all 64 attribute rows are unique, and the
 centered attribute matrix has rank ten. Relation $r_i$ returns \texttt{y} exactly
-when its two entities agree on attribute $i$:
-\begin{equation}
-  y_i(s,o)=\mathbb{1}[a_i(s)=a_i(o)].
-  \label{eq:equality}
-\end{equation}
+when its two entities agree on attribute $i$:\\[0.1cm]
+$  y_i(s,o)=\mathbb{1}[a_i(s)=a_i(o)].$\\[0.1cm]
 Each structured table is symmetric, contains the diagonal, and has 32 positive and
 32 negative objects per subject.
 
@@ -399,10 +396,10 @@ linear classifier on concatenated subject and object rows would instead test an
 additive pair score, which cannot express equality without interaction terms and
 would not provide the intended structured affine control.
 
-\section{Low exposure is compatible with affine geometry}
+\section{Low exposure: compatible w.\ affinity}
 \label{sec:goal1-results}
 
-At $F=16$, $\Rsem$ reaches \ExpOneSemanticTrained{} recall on trained subjects and \ExpOneSemanticHeldout{} on held-out
+At $F$$=$$16$, $\Rsem$ reaches \ExpOneSemanticTrained{} recall on trained subjects and \ExpOneSemanticHeldout{} on held-out
 subjects (Table~\ref{tab:goal1}). The held-out OLS map selects the correct object
 with $\ExpOneSemanticProbeStats$ accuracy. The frequency-matched random relation reaches only
 \ExpOneRandomTrained{} trained recall, chance held-out recall, and chance OLS transfer. The semantic
@@ -441,9 +438,9 @@ including when relation triples are absent from transformer training.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=.7\linewidth]{linear_shift_transition.pdf}
+  \includegraphics[width=.5\linewidth]{linear_shift_transition.pdf}
   \caption{Attribute training creates the affine-decodability transition in
-  Experiment A. Each semantic triple occurs once in the solid curve. The dashed
+  Exp.\ A. Each semantic triple occurs once in the solid curve. The dashed
   curve contains no relation triples. Both use a fixed 128-pair OLS fit and 64
   held-out subjects. Curves show means over three seeds with one
   sample-standard-deviation band.}
@@ -483,7 +480,7 @@ does not prevent the model from learning the structured facts.
 
 \begin{table}[t]
 \centering
-\small
+\scriptsize
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lrrrr}
 \toprule
@@ -557,8 +554,8 @@ The two experiments reverse the expected association in controlled settings. In
 Experiment~A, attribute supervision creates an affine entity geometry with little
 direct relation exposure. In Experiment~B, repeated sampling lets a Transformer
 memorize an arbitrary relation without bringing its raw-embedding geometry close
-to the structured affine controls. Natural corpora can couple frequency to many
-other properties, including shared attributes, paraphrase diversity, and entity
+to the structured affine controls. Natural corpora  couple frequency to many
+other properties, including shared attributes, paraphrase diversity,  entity
 coverage. Any causal account of observed relational linearity must model those
 signals as well.
 The LMEnt aggregation finds the corresponding variation in natural-language
@@ -584,14 +581,20 @@ used to label an entire circuit linear or nonlinear.
 \section{Conclusion}
 
 Exposure frequency alone does not determine whether a transformer relation admits
-an affine representation. Shared attribute training can create affine geometry
-before a relation is recalled, while a highly sampled arbitrary relation can be
-memorized without a comparably accurate affine map in raw entity space. In
-pretrained LMEnt-1B, the measured corpus frequencies also fail to consistently
-order mean-Jacobian decoder faithfulness within relations. Careful
+an affine representation, for neither synthetic nor 
+natural data.
+Careful
 claims about relational linearity should state the behavior being learned, the
 representations connected by the proposed map, and whether the evidence concerns a
 decoder or the executed computation.
+
+
+%. Shared attribute training can create affine geometry
+%before a relation is recalled, while a highly sampled arbitrary relation can be
+%memorized without a comparably accurate affine map in raw entity space. In
+%pretrained LMEnt-1B, the measured corpus frequencies also fail to consistently
+%order mean-Jacobian decoder faithfulness within relations.
+
 
 \section*{Limitations}
 
