@@ -21,10 +21,15 @@ identify another factor,
 objects share),
 that plays an important role in shaping geometry.
 We construct two controlled synthetic
-settings, A and B. The transformer in A sees each attribute-defined
-relation fact with low frequency. It reaches \ExpOneSemanticHeldout{} recall on subjects absent from relation
-training, while an ordinary least-squares (OLS) map fitted on trained subjects
-selects the correct held-out object with \ExpOneSemanticProbe{} accuracy. A frequency-matched random
+settings, A and B. The transformer in A sees each
+fact of $k$
+attribute-defined
+relations $r_i$ with low frequency, yet
+a probe diagnoses the $r_i$ as highly linear and the model
+predicts correct objects for held-out subject with
+\ExpOneSemanticHeldout{} recall, demonstrating
+good generalization.
+A frequency-matched random
 relation remains at chance under the same probe.
 The transformer in B
 memorizes a random (i.e., no attribute structure) symmetric relation
