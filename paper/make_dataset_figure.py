@@ -217,8 +217,8 @@ def pair_table(x,y,r,color,pale):
     text(x+17,y+6*cell+28,'s₀, s₁ →',19,color,600)
     chip(x+113,y+6*cell+8,34,'y' if r==0 else 'n',color,pale)
 
-pair_table(462,652,0,C['blue'],C['blue_light'])
-pair_table(734,652,10,C['red'],C['red_light'])
+pair_table(462,668,0,C['blue'],C['blue_light'])
+pair_table(734,668,10,C['red'],C['red_light'])
 text(550,905,'r₀ shown',17,C['muted'],anchor='middle')
 text(822,905,'31 links + self per entity',17,C['muted'],anchor='middle')
 arrow(948,708,978,708)

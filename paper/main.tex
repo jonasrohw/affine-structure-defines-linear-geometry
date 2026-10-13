@@ -211,8 +211,8 @@ relations and memorizes the random table, yet an affine map leaves most
 random-relation target variation unexplained, even when fitted to every learned
 row. In the analogy, the model remembers the recorded meeting assignments, but
 one affine map cannot accurately recover their relational targets from the
-employee representations. This failure concerns already learned assignments.
-It does not depend on predicting unseen random pairings.
+employee representations. This failure concerns reconstruction of already learned
+assignments.
 
 The experiments support three conclusions:
 
@@ -481,7 +481,8 @@ normalized midpoint defects and dispersion of exact Jacobians. The full
 subject-to-logit map has cross-validated affine $R^2=\ExpOneAffine$, yet its midpoint
 defect is $\ExpOneMidpoint$ and Jacobian dispersion is $\ExpOneJacobian$. Dispersion on the
 empirical subject-difference subspace is $\ExpOneTangent$. An exactly affine map has
-zero defect and constant Jacobian. An affine map thus closely approximates the trained lookup on these examples.
+zero defect and constant Jacobian. An affine map thus closely approximates the
+trained lookup on these examples.
 The nonzero defects and varying Jacobians establish that the lookup is nonlinear.
 
 Causal analysis identifies how the nonlinear model uses the shared representation.
@@ -549,7 +550,8 @@ no corresponding attribute rule.
 
 The random table retains a partial affine trace. A simultaneous row-column
 permutation null has mean $R^2$ near \ExpTwoNullMean{}. The random scores have null
-percentile ranks of \ExpTwoNullPercentiles{} for seeds 19, 31, and 47, respectively. These scores indicate a partial affine fit. The relevant separation is between a
+percentile ranks of \ExpTwoNullPercentiles{} for seeds 19, 31, and 47, respectively.
+These scores indicate a partial affine fit. The relevant separation is between a
 nearly exact behavioral lookup, $R^2=\ExpTwoRandomRsq$ for its best raw-embedding affine map,
 and a minimum $R^2=\ExpTwoStructuredLowestRsq$ across the structured controls.
 
@@ -583,12 +585,12 @@ The causal effect of exposure remains untested in this analysis.
 \paragraph{The representation must be named.}
 Our conclusions concern explicit maps. Experiment~1 uses input subject embeddings
 and output object rows. Experiment~2 uses raw tied entity embeddings and positive
-object centroids. The results do not rule out an affine random-relation feature at
-some hidden layer or under a different target construction. They do show that the
-proposed raw subject-to-object map cannot approximate the learned random table at
-the level achieved by the matched structured controls. We did not conduct a
-systematic affine-probe search over intermediate layers, so the claim should not
-be read as layer-independent.
+object centroids. The proposed raw subject-to-object map leaves substantially more
+reconstruction error for the learned random relation than for the matched
+structured controls. Affine random-relation features at hidden layers or under
+other target constructions remain possible. We did not conduct a systematic
+affine-probe search over intermediate layers, so the claim is specific to the
+tested representations.
 
 \paragraph{Representation and computation are distinct.}
 Experiment~1 has excellent affine transfer while direct midpoint and Jacobian tests
@@ -619,12 +621,13 @@ entities or facts.
 
 \paragraph{The curriculum is specialized.}
 The inverse attribute examples in Experiment~2 deliberately organize the tied raw
-embeddings. They organize the embeddings through the standard next-token training
-objective, with no direct embedding penalty. Generic language-model pretraining
-need not supply an equivalent signal. We did not ablate these examples after selecting the final configuration.
+embeddings through the standard next-token training objective, with no direct
+embedding penalty. Generic language-model pretraining need not supply an equivalent
+signal. We did not ablate these examples after selecting the final configuration.
 The near-perfect structured raw-embedding fits are therefore conditional on this
 curriculum. Whether the random relation's raw-embedding $R^2$ changes without that
-signal remains untested. We evaluated one selected architecture. Its global minimality remains untested. The LMEnt analysis adds natural text and hidden
+signal remains untested. We evaluated one selected architecture. Its global
+minimality remains untested. The LMEnt analysis adds natural text and hidden
 representations at one pretrained checkpoint, but does not reproduce these
 curriculum interventions. Broader model coverage, other relation arities, and
 causal tests during natural-language pretraining remain open settings.
@@ -690,8 +693,8 @@ Primary affine test & held-out OLS accuracy & full-data OLS $R^2$ \\
 \bottomrule
 \end{tabular}
 \caption{The two experiments target different directions of the proposed
-frequency effect. Direct metric values should be compared within each experiment, using its
-specified target and metric.}
+frequency effect. Direct metric values should be compared within each experiment,
+using its specified target and metric.}
 \label{tab:design}
 \end{table*}
 
@@ -707,8 +710,8 @@ Every training sentence contains five tokens. Attribute sentences have the form
 \texttt{x subject relation object x}. The vocabulary contains 265 tokens: one
 separator, two relations, 192 subjects, 32 objects, 32 $f$ values, and six $g$
 values. Object $b_j$ has attributes $(f_{(j+3)\bmod32},g_0)$, while the semantic
-target of $a_i$ is $b_{i\bmod32}$. Thus semantic targets are linked through a consistent shift in attribute values.
-Their attribute strings differ by this shift.
+target of $a_i$ is $b_{i\bmod32}$. Thus semantic targets are linked through a
+consistent shift in attribute values. Their attribute strings differ by this shift.
 
 For each $f$ value, a seed-dependent split assigns four subjects to relation
 training and two to evaluation. The random target function is balanced within both

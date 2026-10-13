@@ -45,14 +45,16 @@ modal baseline and we do not rely on them.
 For each fact we count the other entities in its relation that receive the same
 model answer. Faithfulness rises monotonically with that count and is flat across
 co-occurrence quartiles (Figure~\ref{fig:lment-sharing}A). The joint distribution
-shows the same thing without marginalising: faithfulness varies down the rows of
-Figure~\ref{fig:lment-sharing}B and not along its columns, over cells holding
-between 37 and 272 facts. In a logistic regression over the 1{,}219
+shows the same thing without marginalising: faithfulness varies across
+answer-sharing groups and is flat across co-occurrence quartiles in
+Figure~\ref{fig:lment-sharing}B, over cells holding between 37 and 272 facts.
+In a logistic regression over the 1{,}219
 non-modal facts, with relation fixed effects and standardized predictors, answer
 sharing gives $+0.598$ (95\% CI $[+0.398,+0.796]$) while subject--object
 co-occurrence gives $+0.026$ (95\% CI $[-0.159,+0.226]$). Holding answer sharing
-fixed, exposure is indistinguishable from zero. Decoder agreement increases with answer sharing in the selected relations.
-The co-occurrence coefficient is close to zero.
+fixed, exposure is indistinguishable from zero. Decoder agreement increases with
+answer sharing in the selected relations. The co-occurrence coefficient is close
+to zero.
 
 \begin{figure*}[t]
   \centering
@@ -63,7 +65,8 @@ The co-occurrence coefficient is close to zero.
   against the number of other entities receiving the same model answer, binned at
   $0$, $1$--$9$, $10$--$29$ and $30+$ ($0.409$, $0.524$, $0.692$, $0.762$).
   \textbf{B:} the same quantity over the joint, with 37 to 272 facts per cell.
-  Faithfulness varies down the rows and not along the columns. \textbf{C:} the
+  Faithfulness varies across answer-sharing groups and is flat across
+  co-occurrence quartiles. \textbf{C:} the
   decoder against a leave-one-out nearest-centroid probe on the same subject
   states, one point per relation, with the identity line. The relation-specific
   operator adds little on average over how well subject representations already
@@ -80,8 +83,8 @@ relation and under the same operator, has 24{,}928 subject--object co-occurrence
 across 106{,}201 documents. The model answers \texttt{French} correctly, the
 decoder answers \texttt{Swiss}, and a linear probe on the same subject state also
 fails. Low exposure with shared structure is decodable, and heavy exposure without
-it is not. Rebuilt from demonstrations containing no Swiss entity and no Italian example,
-the decoder still returns \texttt{Italian} for all six held-out Ticino municipalities.
+it is not. Rebuilt from demonstrations containing no Swiss entity and no Italian
+example, the decoder still returns \texttt{Italian} for all six held-out Ticino municipalities.
 The result therefore persists with those examples excluded from the context.
 
 \paragraph{The decoder measures separability, and measures it off-axis.}
@@ -94,8 +97,9 @@ through the decoder's own mean Jacobian and comparing it with the corresponding
 centroid difference gives a mean principal-angle cosine of $0.341$ and a subspace
 overlap of $0.136$, against $0.022$ for random directions in 2048 dimensions.
 Decoder failure is therefore weak evidence about representation: of 622 facts the
-decoder misses, a probe recovers 282 ($45\%$). Claims about a relation's affine representation require a probe of the subject
-states in addition to the decoder evaluation.
+decoder misses, a probe recovers 282 ($45\%$). Claims about a relation's affine
+representation require a probe of the subject states in addition to the decoder
+evaluation.
 
 These measurements identify which property tracks affine decodability in a
 pretrained model, but cannot manipulate it, since exposure, answer sharing and
