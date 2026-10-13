@@ -534,48 +534,8 @@ reconstruction error of one affine map across rows the model has already learned
 Appendix~\ref{app:goal2-extra} reports cross-validation only as a
 fit-stability diagnostic.
 
-\section{The frequent random lookup uses distributed nonlinear computation}
-\label{sec:mechanism}
 
-We modify the forward pass of each trained model while keeping its weights fixed.
-Replacing every GELU by the identity reduces random-relation accuracy from \ExpTwoRandom{} to
-$\ExpTwoRandomGelu$. Uniform causal attention gives $\ExpTwoRandomUniform$, removing all MLP
-outputs gives $\ExpTwoRandomNoMlp$, and removing all attention outputs gives $\ExpTwoRandomNoAttention$. The
-learned affine weights and residual additions remain unchanged in the GELU
-intervention, so nonlinear activation is causally necessary for the trained
-computation.
-
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=\textwidth]{goal2_raw_transformer_mechanism.pdf}
-  \caption{The frequent random relation is implemented by distributed transformer
-  computation. \textbf{A:} A logit lens tracks when the random answer becomes readable
-  across the eight blocks. \textbf{B:} Global interventions on GELU, attention routing, MLP
-  outputs, or attention outputs damage both relation types. \textbf{C:} Residual
-  patching shows pair information moving from the subject position to the object
-  position. \textbf{D:} Removing any one attention or MLP sublayer impairs random
-  recall, but no single layer contains the entire lookup. Lines and bars show means
-  over three seeds; bands and error bars show one sample standard deviation.}
-  \label{fig:goal2-mechanism}
-\end{figure*}
-
-Layerwise diagnostics locate the computation (Figure~\ref{fig:goal2-mechanism}). A
-logit lens at the input and after each of the eight blocks reads the random answer
-with mean accuracies \ExpTwoLens{}. Removing one attention
-sublayer at a time lowers mean random accuracy to \ExpTwoAttentionRange{}; removing one MLP sublayer
-gives \ExpTwoMlpRange{}. The table is not localized to one block.
-
-Residual-stream patching tracks where pair information travels. At successive
-block boundaries, patching the clean subject state into a corrupted prompt recovers
-\ExpTwoSubjectTrace{} of the clean answer
-margin. Patching the clean object-position state recovers \ExpTwoObjectTrace{}. Attention moves subject and relation information
-to the object position, while the later GELU MLPs transform the combined state into
-the final \texttt{y}/\texttt{n} margin.
-
-The interventions also damage the structured relations. They establish that the
-trained forward computation uses nonlinear components, but they do not by
-themselves distinguish how the two relation types are represented. The full-data
-raw-embedding OLS comparison supplies that relation-specific evidence.
+\input{eight}
 
 \section{Discussion}
 
