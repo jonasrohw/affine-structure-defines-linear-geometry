@@ -22,18 +22,18 @@ using mean-Jacobian affine decoders $\hat o_r(s)=D(\beta W_r h_s+b_r)$
 first-token faithfulness, $\phi_r=\Pr[\hat o_r(s)=o_{\mathrm{LM}}(s,r)]$.
 Frequency counts subject-linked corpus documents containing the gold object label.
 
-\paragraph{The score needs a baseline.}
+\paragraph{Our baseline.}
 $\phi_r$ is uncorrected for a decoder that always emits a relation's most common
 answer, and only 14 of 30 relations with at least 30 facts beat that constant
 guess. Person employer and astronomical parent body reach $\phi_r=1.000$ because
 the model emits one answer token for every fact in them. We therefore screen
-relations on answer and decoder diversity alone, never on corpus counts: we keep a
+relations on answer and decoder diversity alone, not on corpus counts: we keep a
 relation with at least 30 facts, five distinct model answers, ten distinct decoder
 outputs, and faithfulness at least five points above its modal baseline. Eleven of
-58 relations survive, and ten support the per-fact analyses below, covering
+58 relations meet these criteria, and ten support the per-fact analyses below, covering
 1,826 facts.
 
-\paragraph{What predicts decoder success is how many entities share an answer.}
+\paragraph{Decoder success is predicted by how many entities share an answer.}
 For each fact we count the other entities in its relation that receive the same
 model answer. Faithfulness rises monotonically with that count and is flat across
 co-occurrence quartiles (Figure~\ref{fig:lment-sharing}A). The joint distribution
