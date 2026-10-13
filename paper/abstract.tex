@@ -1,20 +1,46 @@
-Prior work finds that relations expressed more often in pretraining data are more
-likely to admit linear decoders in language-model representations. Does exposure
-frequency itself determine this geometry? We separate three properties that are
+
+\enote{hs}{
+   We separate three properties that are
 often conflated: recalling a relation, representing it with an affine map, and
-executing it with affine computation. We then construct two controlled synthetic
-settings. In the first, a one-layer transformer sees each attribute-defined
-relation fact 16 times. It reaches \ExpOneSemanticHeldout{} recall on subjects absent from relation
+executing it with affine computation. --
+Component interventions show that the forward computation requires
+content-dependent attention and GELU MLPs. --
+As far as the
+abstract is concerned: maybe we shouldn't
+cover this  since it would be quite difficult
+to do this part justice in the available space?}
+
+
+Prior work shows that relations expressed more often in pretraining data are more
+likely to admit linear decoders in language-model
+representations. We find
+that corpus
+frequency by itself does not determine this geometry, but we
+identify another factor,
+\emph{semantic structure} (the attributes that subjects and
+objects share),
+that plays an important role in shaping geometry.
+We construct two controlled synthetic
+settings, A and B. The transformer in A sees each attribute-defined
+relation fact with low frequency. It reaches \ExpOneSemanticHeldout{} recall on subjects absent from relation
 training, while an ordinary least-squares (OLS) map fitted on trained subjects
 selects the correct held-out object with \ExpOneSemanticProbe{} accuracy. A frequency-matched random
-relation remains at chance under the same probe. In the second, an eight-layer
-GPT-style transformer memorizes a random symmetric relation sampled ten times
-as often as each of ten attribute-equality controls during joint training.
-Random-relation accuracy is
-\ExpTwoRandom{}, yet the best overdetermined affine fit on all learned entity rows explains
-only \ExpTwoRandomRsq{} of target variance, compared with a mean per-seed minimum of \ExpTwoStructuredRsq{} for
-the structured controls. Component interventions show that the forward computation requires
-content-dependent attention and GELU MLPs. These results give controlled
-counterexamples to a frequency-only account. An aggregation of 5,388 LMEnt-1B
-predictions likewise finds mixed associations between corpus frequency and
-affine-decoder faithfulness.
+relation remains at chance under the same probe.
+The transformer in B
+memorizes a random (i.e., no attribute structure) symmetric relation
+ $\Rrnd$
+sampled ten times
+as often as each of ten controls $r_i$ with rich semantic structure.
+ $\Rrnd$'s  accuracy is
+\ExpTwoRandom{}, yet the best overdetermined affine fit on its learned entity rows explains
+only \ExpTwoRandomRsq{} of target variance, compared to \ExpTwoStructuredRsq{} for
+the $r_i$.  These results give controlled
+counterexamples to a frequency-only account and point to the
+importance of semantic structure for relation geometry.
+Finally, in our analysis of relations in
+the LMEnt-1B model, we find only a weak association 
+between corpus frequency and
+affine-decoder faithfulness, suggesting that
+frequency is only one of many factors in
+the emergence
+of linear relation geometry in both synthetic and natural data.
