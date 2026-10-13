@@ -24,7 +24,7 @@
 \newcommand{\Rsem}{R_{\mathrm{sem}}}
 \newcommand{\Rrnd}{R_{\mathrm{rnd}}}
 % BEGIN GENERATED RTX RESULTS
-% Generated from measured results; refresh with write_result_macros.py.
+% Generated from measured results.
 \newcommand{\ExpOneTransitionLow}{0.06}
 \newcommand{\ExpOneTransitionHigh}{0.98}
 \newcommand{\ExpTwoAttribute}{1.000}
@@ -97,9 +97,6 @@
 \title{Semantic Structure and Relation Geometry in
   Transformers: Synthetic vs Natural Language Data}
 
-\enote{hs}{new title: just an idea to get us started on
-  finding a good one}
-
 % The ACL review option anonymizes the author block.
 \author{Anonymous authors}
 
@@ -118,6 +115,9 @@ $>>>$\hspace{1cm}}}}}
 \begin{document}
 
 \maketitle
+
+\enote{hs}{new title: just an idea to get us started on
+  finding a good one}
 
 \begin{abstract}
 Prior work finds that relations expressed more often in pretraining data are more
@@ -644,7 +644,7 @@ experiments, implement and edit software, generate synthetic data and plots,
 analyze and interpret experimental outputs, search and summarize literature, and
 draft and edit this manuscript. The authors inspected the generated code, ran the
 reported experiments and automated tests, checked numerical claims against
-archived result files, reviewed the cited primary sources, and revised the
+experimental results, reviewed the cited primary sources, and revised the
 resulting text. The authors take responsibility for the paper's claims and
 contents.
 
@@ -656,22 +656,16 @@ contents.
 \section{Reproducibility statement}
 Sections~\ref{sec:design}--\ref{sec:mechanism} define the datasets, architectures,
 training curricula, metrics, and interventions. The appendix gives optimization
-details, per-seed results, and the complete affine tests. The supplementary code
-contains deterministic data generators, saved configurations, result manifests,
-and figure scripts for seeds 19, 31, and 47.
-The reported synthetic values use the versioned RTX 4090 baseline. Two independent
+details, per-seed results, and the complete affine tests. The synthetic experiments
+use seeds 19, 31, and 47. Two independent
 full runs from fresh initialization reproduce every recorded numerical result and
 checkpoint tensor exactly on the certified Ryzen 9 7950X3D/RTX 4090 host, NVIDIA
 driver 610.57.04, Python 3.14.2, and PyTorch 2.12.0+cu130. Deterministic algorithms
 are required; TF32 is disabled and cuBLAS uses a fixed workspace configuration.
-The Docker build and \texttt{python scripts/run\_rtx.py} workflow regenerate the
-measurements, numerical prose, tables, figures, and PDF. An exact audit compares
-fresh outputs with this baseline. Historical A100 measurements remain separate.
 This certification does not assert identical training across hardware or software
 versions; precise intervention curves describe the reported trained solutions.
 Section~\ref{sec:lment-frequency} and Appendix~\ref{app:lment-frequency} describe
-the pretrained-model aggregation, with a saved prediction/count snapshot, source
-hashes, and a script that reproduces its tables and figure.
+the pretrained-model evaluation and aggregation procedures.
 
 
 \section{Complete training protocols}

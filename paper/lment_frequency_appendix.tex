@@ -96,14 +96,9 @@ estimate for all natural-language relations.
   \label{tab:lment-examples}
 \end{table*}
 
-The paper's \texttt{analyze\_lment\_frequency.py} script rebuilds the figures and
-tables from \texttt{data/lment\_frequency/facts.csv}. The snapshot joins predictions
-to document counts by relation, subject, and object, with a one-to-one merge and
-no missing counts. Its provenance manifest records input hashes and the original
-evaluation and counting configurations. We checked every exact-frequency count
-against all 174 raw curves in the original browser payload and verified that
-estimation facts do not overlap evaluation facts. The analysis files include
-per-bin denominators, every relation's quartile cutoffs and scores, and the tail
-size sensitivity results. No model was retrained or re-evaluated for this
+We join predictions to document counts by relation, subject, and object, with a
+one-to-one merge and no missing counts. We checked every exact-frequency count
+against all 174 original frequency curves and verified that estimation facts do
+not overlap evaluation facts. No model was retrained or re-evaluated for this
 aggregation. The pretrained evidence is limited to this checkpoint; the synthetic
 interventions remain the causal tests of the frequency-only explanation.
