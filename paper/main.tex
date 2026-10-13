@@ -93,10 +93,27 @@
 \newcommand{\ExpTwoObjectTrace}{0.000, 0.235, 0.426, 0.548, 0.577, 0.639, 0.764, 0.922, and 1.000}
 % END GENERATED RTX RESULTS
 
-\title{Semantic Structure defines Relation Geometry in Transformers}
+%\title{Semantic Structure defines Relation Geometry in Transformers}
+\title{Semantic Structure and Relation Geometry in
+  Transformers: Synthetic vs Natural Language Data}
+
+\enote{hs}{new title: just an idea to get us started on
+  finding a good one}
 
 % The ACL review option anonymizes the author block.
 \author{Anonymous authors}
+
+\newcounter{notecounter}
+\newcommand{\enotesoff}{\long\gdef\enote##1##2{}}
+\newcommand{\enoteson}{\long\gdef\enote##1##2{{
+\stepcounter{notecounter}
+{\large\bf
+\hspace{0cm}\arabic{notecounter} $<<<$ ##1: ##2
+$>>>$\hspace{1cm}}}}}
+
+\enoteson
+%\enotesoff
+
 
 \begin{document}
 
@@ -123,6 +140,7 @@ content-dependent attention and GELU MLPs. These results give controlled
 counterexamples to a frequency-only account. An aggregation of 5,388 LMEnt-1B
 predictions likewise finds mixed associations between corpus frequency and
 affine-decoder faithfulness.
+\enote{hs}{we need to cover the analysis here}
 \end{abstract}
 
 \begin{figure*}[t]
@@ -210,6 +228,9 @@ The experiments support three conclusions:
 The result does not dispute a correlation between corpus frequency and linear
 decodability in natural language models. It shows that frequency cannot, by
 itself, explain that correlation.
+
+\enote{hs}{need to rewrite parts of second half to add
+  natural data}
 
 \section{Three levels of relational linearity}
 \label{sec:definitions}
