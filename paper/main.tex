@@ -333,7 +333,7 @@ the rows already memorized by the model. A score of 1 means exact reconstruction
 Numerical values should be compared within each experiment, using its
 specified target and metric.
 
-\subsection{Experiment 1: Generalization from Shared Attributes}
+\subsection{Experiment A: Generalization from Shared Attributes}
 
 Each subject $a_i$ has attributes
 $(f_{i\bmod 32},g_{\lfloor i/32\rfloor})$, so the 192 subjects cover all
@@ -358,7 +358,7 @@ embedding of its target object. We fit on 128 relation-training pairs. On each o
 the 64 held-out subjects, we select the nearest of 32 object rows by cosine
 similarity. The chance accuracy is $1/32$.
 
-\subsection{Experiment 2: Memorization of Arbitrary Relations}
+\subsection{Experiment B: Memorization of Arbitrary Relations}
 
 The second setting contains 64 entities and ten explicit binary attributes. Every
 attribute column has 32 zeros and 32 ones, all 64 attribute rows are unique, and the
@@ -371,8 +371,6 @@ when its two entities agree on attribute $i$:
 Each structured table is symmetric, contains the diagonal, and has 32 positive and
 32 negative objects per subject.
 
-\enote{hs}{are you using A vs B and experiment 1 vs 2 to
-  refer to the same distinction?}
 
 The eleventh relation, $\Rrnd$, is a random symmetric table. We sample a simple
 31-regular graph, randomize it with degree-preserving edge swaps, and add self
@@ -430,7 +428,7 @@ $F$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$ \\
 16 & $0.990\pm0.007$ & $0.036\pm0.007$ & 0.672 & 0.167 & 0.635 & 0.031 \\
 \bottomrule
 \end{tabular}
-\caption{Experiment 1 results, mean $\pm$ standard deviation over three seeds.
+\caption{Experiment A results, mean $\pm$ standard deviation over three seeds.
 $F$ is the number of occurrences of each trained relation triple. OLS is fitted on
 the 128 trained subjects and evaluated on the 64 subjects excluded from all
 relation triples.}
@@ -448,7 +446,7 @@ including when relation triples are absent from transformer training.
   \centering
   \includegraphics[width=.8\linewidth]{linear_shift_transition.pdf}
   \caption{Attribute training creates the affine-decodability transition in
-  Experiment 1. Each semantic triple occurs once in the solid curve. The dashed
+  Experiment A. Each semantic triple occurs once in the solid curve. The dashed
   curve contains no relation triples. Both use a fixed 128-pair OLS fit and 64
   held-out subjects. Curves show means over three seeds with one
   sample-standard-deviation band.}
@@ -503,7 +501,7 @@ Seed & Min. struct. & Random & Min. struct. & Random \\
 Mean & 0.99976 & 0.99984 & 0.99527 & 0.37493 \\
 \bottomrule
 \end{tabular}
-\caption{Complete-table behavior and full-data raw-embedding OLS in Experiment 2.
+\caption{Complete-table behavior and full-data raw-embedding OLS in Experiment B.
 The structured columns report the minimum over ten equality relations. OLS fits all
 64 subject rows, including every row whose relation behavior is evaluated.}
 \label{tab:goal2}
@@ -549,8 +547,8 @@ fit-stability diagnostic.
 
 \paragraph{Shared structure helps explain affine decodability.}
 The two experiments reverse the expected association in controlled settings. In
-Experiment~1, attribute supervision creates an affine entity geometry with little
-direct relation exposure. In Experiment~2, repeated sampling lets a transformer
+Experiment~A, attribute supervision creates an affine entity geometry with little
+direct relation exposure. In Experiment~B, repeated sampling lets a transformer
 memorize an arbitrary relation without bringing its raw-embedding geometry close
 to the structured affine controls. Natural corpora can couple frequency to many
 other properties, including shared attributes, paraphrase diversity, and entity
@@ -563,8 +561,8 @@ decoders support an observational association within the evaluated sample.
 The causal effect of exposure remains untested in this analysis.
 
 \paragraph{The representation must be named.}
-Our conclusions concern explicit maps. Experiment~1 uses input subject embeddings
-and output object rows. Experiment~2 uses raw tied entity embeddings and positive
+Our conclusions concern explicit maps. Experiment~A uses input subject embeddings
+and output object rows. Experiment~B uses raw tied entity embeddings and positive
 object centroids. The proposed raw subject-to-object map leaves substantially more
 reconstruction error for the learned random relation than for the matched
 structured controls. Affine random-relation features at hidden layers or under
@@ -573,8 +571,8 @@ affine-probe search over intermediate layers, so the claim is specific to the
 tested representations.
 
 \paragraph{Representation and computation are distinct.}
-Experiment~1 has excellent affine transfer while direct midpoint and Jacobian tests
-reject exact affinity of the lookup. Experiment~2 combines a poor raw-embedding
+Experiment~A has excellent affine transfer while direct midpoint and Jacobian tests
+reject exact affinity of the lookup. Experiment~B combines a poor raw-embedding
 affine fit with causal dependence on GELU and content-dependent attention. These
 measurements answer different questions. Probe performance alone should not be
 used to label an entire circuit linear or nonlinear.
@@ -600,7 +598,7 @@ known table can be stored, but it does not model systematic generalization to ne
 entities or facts.
 
 \paragraph{The curriculum is specialized.}
-The inverse attribute examples in Experiment~2 deliberately organize the tied raw
+The inverse attribute examples in Experiment~B deliberately organize the tied raw
 embeddings through the standard next-token training objective, with no direct
 embedding penalty. Generic language-model pretraining need not supply an equivalent
 signal. We did not ablate these examples after selecting the final configuration.
