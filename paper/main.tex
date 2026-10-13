@@ -93,9 +93,11 @@
 \newcommand{\ExpTwoObjectTrace}{0.000, 0.235, 0.426, 0.548, 0.577, 0.639, 0.764, 0.922, and 1.000}
 % END GENERATED RTX RESULTS
 
-%\title{Semantic Structure defines Relation Geometry in Transformers}
-\title{Semantic Structure and Relation Geometry in
-  Transformers: Synthetic vs Natural Language Data}
+\title{Semantic Structure defines Relation Geometry in Transformers}
+%\title{Semantic Structure and Relation Geometry in
+%  Transformers: Synthetic vs Natural Language Data}
+
+
 
 % The ACL review option anonymizes the author block.
 \author{Anonymous authors}
@@ -116,31 +118,9 @@ $>>>$\hspace{1cm}}}}}
 
 \maketitle
 
-\enote{hs}{new title: just an idea to get us started on
-  finding a good one}
 
 \begin{abstract}
-Prior work finds that relations expressed more often in pretraining data are more
-likely to admit linear decoders in language-model representations. Does exposure
-frequency itself determine this geometry? We separate three properties that are
-often conflated: recalling a relation, representing it with an affine map, and
-executing it with affine computation. We then construct two controlled synthetic
-settings. In the first, a one-layer transformer sees each attribute-defined
-relation fact 16 times. It reaches \ExpOneSemanticHeldout{} recall on subjects absent from relation
-training, while an ordinary least-squares (OLS) map fitted on trained subjects
-selects the correct held-out object with \ExpOneSemanticProbe{} accuracy. A frequency-matched random
-relation remains at chance under the same probe. In the second, an eight-layer
-GPT-style transformer memorizes a random symmetric relation sampled ten times
-as often as each of ten attribute-equality controls during joint training.
-Random-relation accuracy is
-\ExpTwoRandom{}, yet the best overdetermined affine fit on all learned entity rows explains
-only \ExpTwoRandomRsq{} of target variance, compared with a mean per-seed minimum of \ExpTwoStructuredRsq{} for
-the structured controls. Component interventions show that the forward computation requires
-content-dependent attention and GELU MLPs. These results give controlled
-counterexamples to a frequency-only account. An aggregation of 5,388 LMEnt-1B
-predictions likewise finds mixed associations between corpus frequency and
-affine-decoder faithfulness.
-\enote{hs}{we need to cover the analysis here}
+\input{abstract}
 \end{abstract}
 
 \begin{figure*}[t]
@@ -160,6 +140,7 @@ affine-decoder faithfulness.
   metric asserts that the transformer's forward computation is affine.}
   \label{fig:summary}
 \end{figure*}
+
 
 \section{Introduction}
 
@@ -230,8 +211,7 @@ The result is compatible with a correlation between corpus frequency and linear
 decodability in natural language models. Explaining that correlation requires
 factors beyond frequency alone.
 
-\enote{hs}{need to rewrite parts of second half to add
-  natural data}
+
 
 \section{Three levels of relational linearity}
 \label{sec:definitions}
@@ -393,6 +373,9 @@ when its two entities agree on attribute $i$:
 \end{equation}
 Each structured table is symmetric, contains the diagonal, and has 32 positive and
 32 negative objects per subject.
+
+\enote{hs}{are you using A vs B and experiment 1 vs 2 to
+  refer to the same distinction?}
 
 The eleventh relation, $\Rrnd$, is a random symmetric table. We sample a simple
 31-regular graph, randomize it with degree-preserving edge swaps, and add self
