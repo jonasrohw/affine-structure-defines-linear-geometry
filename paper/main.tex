@@ -598,13 +598,13 @@ decoder or the executed computation.
 
 \section*{Limitations}
 
-\paragraph{The random relation tests recall of previously learned pairs.}
+\textbf{The random relation tests recall of previously learned pairs.}
 The model repeatedly samples a finite random graph and evaluation enumerates that
 graph. There is no latent rule for unseen random edges. This setting isolates how a
 known table can be stored, but it does not model systematic generalization to new
 entities or facts.
 
-\paragraph{The curriculum is specialized.}
+\textbf{The curriculum is specialized.}
 The inverse attribute examples in Experiment~B deliberately organize the tied raw
 embeddings through the standard next-token training objective, with no direct
 embedding penalty. Generic language-model pretraining need not supply an equivalent
@@ -617,7 +617,7 @@ representations at one pretrained checkpoint, but does not reproduce these
 curriculum interventions. Broader model coverage, other relation arities, and
 causal tests during natural-language pretraining remain open settings.
 
-\paragraph{The controlled experiments establish outcomes under selected training conditions.}
+\textbf{The controlled experiments establish outcomes under selected training conditions.}
 The study shows that low exposure can coexist with affine geometry and that high relative exposure
 can coexist with non-affine geometry. It does not estimate a monotonic response to
 frequency. Each configuration was selected using behavioral and geometry gates and
@@ -651,7 +651,7 @@ runs each completed in under one hour on consumer-grade hardware: a Ryzen 9
 numerical results and checkpoint tensors exactly on this setup. The pipeline
 uses saved LMEnt observations rather than rerunning pretrained-model inference.
 
-\paragraph{Implementation and numerical settings.}
+\textbf{Implementation and numerical settings.}
 Training uses PyTorch 2.12.0 with CUDA 13.0 \citep{paszke2019pytorch}; affine
 fits use scikit-learn 1.9.0 \citep{pedregosa2011scikit}. The Docker environment
 pins dependencies and enables deterministic computation. OLS includes an
@@ -664,7 +664,7 @@ its transition plot and Experiment~B use sample standard deviations. LMEnt
 rank correlations use average ranks for ties and quartiles use linear
 interpolation.
 
-\paragraph{Data and model scope.}
+\textbf{Data and model scope.}
 The synthetic corpora contain generated categorical symbols; construction and
 splits appear in Appendix~\ref{app:training}. The natural-language analysis uses
 LMEnt-1B-1E at step 109,672 \citep{gottesman2025lment}, pretrained on English
