@@ -547,7 +547,7 @@ already learned.
 \paragraph{Shared structure helps explain affine decodability.}
 The two experiments reverse the expected association in controlled settings. In
 Experiment~A, attribute supervision creates an affine entity geometry with little
-direct relation exposure. In Experiment~B, repeated sampling lets a transformer
+direct relation exposure. In Experiment~B, repeated sampling lets a Transformer
 memorize an arbitrary relation without bringing its raw-embedding geometry close
 to the structured affine controls. Natural corpora can couple frequency to many
 other properties, including shared attributes, paraphrase diversity, and entity
@@ -607,9 +607,7 @@ curriculum interventions. Broader model coverage, other relation arities, and
 causal tests during natural-language pretraining remain open settings.
 
 \paragraph{The controlled experiments establish outcomes under selected training conditions.}
-Occurrence counts are meaningful within each controlled corpus but are not directly
-comparable across the two tokenizations and optimization schedules. The study shows
-that low exposure can coexist with affine geometry and that high relative exposure
+The study shows that low exposure can coexist with affine geometry and that high relative exposure
 can coexist with non-affine geometry. It does not estimate a monotonic response to
 frequency. Each configuration was selected using behavioral and geometry gates and
 evaluated over three seeds. The large within-setting separations are stable across
