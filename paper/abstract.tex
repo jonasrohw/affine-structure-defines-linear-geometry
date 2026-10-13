@@ -1,0 +1,20 @@
+Prior work finds that relations expressed more often in pretraining data are more
+likely to admit linear decoders in language-model representations. Does exposure
+frequency itself determine this geometry? We separate three properties that are
+often conflated: recalling a relation, representing it with an affine map, and
+executing it with affine computation. We then construct two controlled synthetic
+settings. In the first, a one-layer transformer sees each attribute-defined
+relation fact 16 times. It reaches \ExpOneSemanticHeldout{} recall on subjects absent from relation
+training, while an ordinary least-squares (OLS) map fitted on trained subjects
+selects the correct held-out object with \ExpOneSemanticProbe{} accuracy. A frequency-matched random
+relation remains at chance under the same probe. In the second, an eight-layer
+GPT-style transformer memorizes a random symmetric relation sampled ten times
+as often as each of ten attribute-equality controls during joint training.
+Random-relation accuracy is
+\ExpTwoRandom{}, yet the best overdetermined affine fit on all learned entity rows explains
+only \ExpTwoRandomRsq{} of target variance, compared with a mean per-seed minimum of \ExpTwoStructuredRsq{} for
+the structured controls. Component interventions show that the forward computation requires
+content-dependent attention and GELU MLPs. These results give controlled
+counterexamples to a frequency-only account. An aggregation of 5,388 LMEnt-1B
+predictions likewise finds mixed associations between corpus frequency and
+affine-decoder faithfulness.
