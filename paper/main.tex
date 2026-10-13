@@ -510,6 +510,20 @@ only 34--40\% of the target variance. Thus, the transformer predicts the random
 table almost perfectly even though an affine map leaves most of its centroid
 variation unexplained.
 
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=.7\textwidth]{goal2_raw_transformer_mechanism.pdf}
+  \caption{The frequent random relation is implemented by distributed transformer
+  computation. \textbf{A:} A logit lens tracks when the random answer becomes readable
+  across the eight blocks. \textbf{B:} Global interventions on GELU, attention routing, MLP
+  outputs, or attention outputs damage both relation types. \textbf{C:} Residual
+  patching shows pair information moving from the subject position to the object
+  position. \textbf{D:} Removing any one attention or MLP sublayer impairs random
+  recall, but no single layer contains the entire lookup. Lines and bars show means
+  over three seeds. Bands and error bars show one sample standard deviation.}
+  \label{fig:goal2-mechanism}
+\end{figure*}
+
 The structured relations have an analytic affine target. Writing
 $b_i(s)=2a_i(s)-1$, let $\mu_i^+$ and $\mu_i^-$ be the object-embedding centroids
 for the two values of attribute $i$. Then
