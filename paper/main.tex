@@ -125,7 +125,7 @@ $>>>$\hspace{1cm}}}}}
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=.7\textwidth]{frequency_not_enough.pdf}
+  \includegraphics[width=.5\textwidth]{frequency_not_enough.pdf}
   \caption{Frequency does not determine affine relation geometry in the two
   controlled settings. \textbf{A:} At 16 occurrences per trained triple, the
   attribute-defined relation generalizes and an OLS map transfers to subjects
@@ -396,8 +396,9 @@ linear classifier on concatenated subject and object rows would instead test an
 additive pair score, which cannot express equality without interaction terms and
 would not provide the intended structured affine control.
 
-\section{Low exposure: compatible w.\ affinity}
+\section{Low exposure and high exposure}
 \label{sec:goal1-results}
+\subsection{Low exposure: compatible w.\ affinity}
 
 At $F$$=$$16$, $\Rsem$ reaches \ExpOneSemanticTrained{} recall on trained subjects and \ExpOneSemanticHeldout{} on held-out
 subjects (Table~\ref{tab:goal1}). The held-out OLS map selects the correct object
@@ -469,7 +470,7 @@ mechanism transports an attribute-class code through attention and converts it t
 an object direction through a nonlinear but accurately affine-approximable
 readout.
 
-\section{High exposure is compatible with non-affine geometry}
+\subsection{High exposure is compatible with non-affine geometry}
 \label{sec:goal2-results}
 
 The model learns both the structured and random relations almost perfectly.
