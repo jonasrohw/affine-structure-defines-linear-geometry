@@ -231,16 +231,16 @@ across subjects:
   t_r(s) \approx M_r e(s)+b_r.
   \label{eq:affine-map}
 \end{equation}
-The choice of $e$ and $t_r$ is part of the claim. Exp.\~A maps input subject
+The choice of $e$ and $t_r$ is part of the claim. Exp.~A maps input subject
 embeddings to output object embeddings and tests the map on subjects excluded from
-relation training. Exp.\~B maps raw tied subject embeddings to the centroid
+relation training. Exp.~B maps raw tied subject embeddings to the centroid
 of positive object embeddings and measures residual error on all learned rows.
 
 \textbf{Executed computation.}
 A transformer's relation-conditioned state transition is affine only if it has a
 constant Jacobian and preserves affine combinations on the tested domain.
-Exp.\~A measures departures from these conditions through midpoint defects
-and exact-Jacobian dispersion. Exp.\~B uses interventions on GELU activations
+Exp.~A measures departures from these conditions through midpoint defects
+and exact-Jacobian dispersion. Exp.~B uses interventions on GELU activations
 and attention routing to identify components needed for recall. A high affine probe score
 does not imply an affine forward pass, and a nonlinear forward pass does not by
 itself prove that a particular representation lacks affine geometry.
@@ -321,9 +321,9 @@ The tables show the same six-entity excerpt from the full 64-entity dataset. App
 \label{fig:dataset-generation}
 \end{figure*}
 
-The two experiments require different affine metrics. In Exp.\~A, held-out
+The two experiments require different affine metrics. In Exp.~A, held-out
 nearest-object accuracy measures transfer to subjects absent from relation
-training. Exp.\~B uses a finite random table with no rule for unseen entries.
+training. Exp.~B uses a finite random table with no rule for unseen entries.
 Full-data $R^2$ measures how closely one overdetermined affine map reconstructs
 the rows already memorized by the model. A score of 1 means exact reconstruction.
 0 means no improvement over predicting the same mean target for every subject.
@@ -553,8 +553,8 @@ already learned.
 
 \textbf{Shared structure helps explain affine decodability.}
 The two experiments reverse the expected association in controlled settings. In
-Exp.\~A, attribute supervision creates an affine entity geometry with little
-direct relation exposure. In Exp.\~B, repeated sampling lets a Transformer
+Exp.~A, attribute supervision creates an affine entity geometry with little
+direct relation exposure. In Exp.~B, repeated sampling lets a Transformer
 memorize an arbitrary relation without bringing its raw-embedding geometry close
 to the structured affine controls. Natural corpora  couple frequency to many
 other properties, including shared attributes, paraphrase diversity,  entity
@@ -574,8 +574,8 @@ We did not systematically probe intermediate layers, so our results
 leave this possibility open.
 
 \textbf{Representation and computation are distinct.}
-Exp.\~A has excellent affine transfer while direct midpoint and Jacobian tests
-reject exact affinity of the lookup. Exp.\~B combines a poor raw-embedding
+Exp.~A has excellent affine transfer while direct midpoint and Jacobian tests
+reject exact affinity of the lookup. Exp.~B combines a poor raw-embedding
 affine fit with causal dependence on GELU and content-dependent attention. These
 measurements answer different questions. Probe performance alone should not be
 used to label an entire circuit linear or nonlinear.
@@ -607,7 +607,7 @@ known table can be stored, but it does not model systematic generalization to ne
 entities or facts.
 
 \textbf{The curriculum is specialized.}
-The inverse attribute examples in Exp.\~B deliberately organize the tied raw
+The inverse attribute examples in Exp.~B deliberately organize the tied raw
 embeddings through the standard next-token training objective, with no direct
 embedding penalty. Generic language-model pretraining need not supply an equivalent
 signal. We did not ablate these examples after selecting the final configuration.
@@ -657,12 +657,12 @@ uses saved LMEnt observations rather than rerunning pretrained-model inference.
 Training uses PyTorch 2.12.0 with CUDA 13.0 \citep{paszke2019pytorch}; affine
 fits use scikit-learn 1.9.0 \citep{pedregosa2011scikit}. The Docker environment
 pins dependencies and enables deterministic computation. OLS includes an
-intercept and no regularization. Exp.\~B uses double precision and four
+intercept and no regularization. Exp.~B uses double precision and four
 shuffled cross-validation folds with the experiment seed. AdamW uses
 $\beta_1=0.9$, $\beta_2=0.999$, and $\epsilon=10^{-8}$; remaining training
 settings appear in Appendix~\ref{app:training}. Results aggregate seeds 19, 31,
-and 47. Exp.\~A numerical summaries use population standard deviations;
-its transition plot and Exp.\~B use sample standard deviations. LMEnt
+and 47. Exp.~A numerical summaries use population standard deviations;
+its transition plot and Exp.~B use sample standard deviations. LMEnt
 rank correlations use average ranks for ties and quartiles use linear
 interpolation.
 
