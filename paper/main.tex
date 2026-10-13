@@ -478,12 +478,11 @@ readout.
 \section{High exposure is compatible with non-affine geometry}
 \label{sec:goal2-results}
 
-The GPT-style model learns all tasks together. Across the three seeds, attribute
-accuracy is \ExpTwoAttribute{}, the minimum structured-relation accuracy is
-$\ExpTwoMinStructuredStats$, and random-relation accuracy is
-$\ExpTwoRandomStats$ (Table~\ref{tab:goal2}). The minimum prediction symmetry over
-all eleven relations is $\ExpTwoSymmetryStats$. The comparison therefore does not
-trade random-table memorization for loss of the structured facts.
+The model learns both the structured and random relations almost perfectly.
+Across three seeds, attribute accuracy is 100\%, and relation accuracies range
+from 99.98\% to 100\% (Table~\ref{tab:goal2}). Minimum prediction symmetry across
+all eleven relations rounds to 99.95\%. Memorizing the random table therefore
+does not prevent the model from learning the structured facts.
 
 \begin{table}[t]
 \centering
@@ -491,54 +490,54 @@ trade random-table memorization for loss of the structured facts.
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lrrrr}
 \toprule
- & \multicolumn{2}{c}{Accuracy} & \multicolumn{2}{c}{Affine $R^2$} \\
+ & \multicolumn{2}{c}{Accuracy (\%)} & \multicolumn{2}{c}{Affine $R^2$} \\
 Seed & Min. struct. & Random & Min. struct. & Random \\
 \midrule
-19 & 0.99976 & 1.00000 & 0.99569 & 0.38385 \\
-31 & 0.99976 & 0.99976 & 0.99529 & 0.40066 \\
-47 & 0.99976 & 0.99976 & 0.99485 & 0.34028 \\
+19 & 99.98 & 100.00 & 0.996 & 0.384 \\
+31 & 99.98 & 99.98 & 0.995 & 0.401 \\
+47 & 99.98 & 99.98 & 0.995 & 0.340 \\
 \midrule
-Mean & 0.99976 & 0.99984 & 0.99527 & 0.37493 \\
+Mean & 99.98 & 99.98 & 0.995 & 0.375 \\
 \bottomrule
 \end{tabular}
-\caption{Complete-table behavior and full-data raw-embedding OLS in Experiment B.
-The structured columns report the minimum over ten equality relations. OLS fits all
-64 subject rows, including every row whose relation behavior is evaluated.}
+\caption{Complete-table accuracy and full-data affine fits in Experiment B.
+Structured columns report the minimum over ten equality relations within each
+seed; the final row averages the seed-level values. OLS maps raw subject embeddings
+to positive-object centroids using all 64 subjects.}
 \label{tab:goal2}
 \end{table}
 
-The representation geometries differ sharply despite the behavioral match. Across
-all 30 structured fits, mean full-data $R^2$ is \ExpTwoStructuredMeanRsq{} and the smallest individual
-fit is \ExpTwoStructuredLowestRsq{}. The three random-relation fits explain \ExpTwoRandomRsqSeeds{} of the
-target variance. Their relative reconstruction errors are \ExpTwoRandomErrors{}.
-An affine map therefore fails to approximate most of the learned random centroid
-variation, even though the transformer predicts the underlying table almost
-perfectly.
+Despite this similar accuracy, the representation geometries differ sharply.
+Across the 30 structured fits, mean $R^2$ is 0.997, and every fit exceeds 0.994.
+For the random relation, $R^2$ ranges from 0.340 to 0.401: the affine maps explain
+only 34--40\% of the target variance. Thus, the transformer predicts the random
+table almost perfectly even though an affine map leaves most of its centroid
+variation unexplained.
 
-The structured control has an analytic affine target. Writing
+The structured relations have an analytic affine target. Writing
 $b_i(s)=2a_i(s)-1$, let $\mu_i^+$ and $\mu_i^-$ be the object-embedding centroids
 for the two values of attribute $i$. Then
 \begin{equation}
   c_i(s)=\mu_i^-+\frac{b_i(s)+1}{2}(\mu_i^+-\mu_i^-).
   \label{eq:structured-affine}
 \end{equation}
-The inverse attribute examples align $b_i$ with the raw entity rows, allowing OLS
-to recover this map. The random graph has the same observable table statistics but
-no corresponding attribute rule.
+The inverse attribute examples align $b_i$ with the raw entity embeddings,
+allowing OLS to recover this map. The random graph matches the structured tables'
+observable statistics but has no corresponding attribute rule.
 
-The random table retains a partial affine trace. A simultaneous row-column
-permutation null has mean $R^2$ near \ExpTwoNullMean{}. The random scores have null
-percentile ranks of \ExpTwoNullPercentiles{} for seeds 19, 31, and 47, respectively.
-These scores indicate a partial affine fit. The relevant separation is between a
-nearly exact behavioral lookup, $R^2=\ExpTwoRandomRsq$ for its best raw-embedding affine map,
-and a minimum $R^2=\ExpTwoStructuredLowestRsq$ across the structured controls.
+The random relation retains some affine structure. A simultaneous row-column
+permutation null has mean $R^2\approx\ExpTwoNullMean$; the observed fits lie at
+approximately the 95th, 98th, and 49th percentiles for seeds 19, 31, and 47.
+Evidence for an affine trace therefore varies across seeds. The central result is
+the gap between nearly perfect recall and a mean affine $R^2$ of
+\ExpTwoRandomRsq{}, compared with the consistently near-perfect structured fits.
 
-Four-fold cross-validated random $R^2$ is negative and serves as a
-fit-stability diagnostic. A held-out portion of a random table cannot be inferred by
-either a transformer or an affine probe. The full-data residual measures the
-reconstruction error of one affine map across rows the model has already learned.
-Appendix~\ref{app:goal2-extra} reports cross-validation only as a
-fit-stability diagnostic.
+Four-fold cross-validated $R^2$ is negative for the random relation. We report it
+only as a fit-stability diagnostic (Appendix~\ref{app:goal2-extra}): unseen random
+entries cannot be inferred from the observed portion of the table. The full-data
+fit addresses the relevant question here---how well one affine map reconstructs
+the centroid geometry across subjects whose relation behavior the model has
+already learned.
 
 
 \input{eight}
