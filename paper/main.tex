@@ -565,15 +565,12 @@ coexist under the same frequency measurement. Its proxy counts and selected
 decoders support an observational association within the evaluated sample.
 The causal effect of exposure remains untested in this analysis.
 
-\paragraph{The representation must be named.}
-Our conclusions concern explicit maps. Experiment~1 uses input subject embeddings
-and output object rows. Experiment~2 uses raw tied entity embeddings and positive
-object centroids. The proposed raw subject-to-object map leaves substantially more
-reconstruction error for the learned random relation than for the matched
-structured controls. Affine random-relation features at hidden layers or under
-other target constructions remain possible. We did not conduct a systematic
-affine-probe search over intermediate layers, so the claim is specific to the
-tested representations.
+\paragraph{Affine structure may differ across representations.}
+The memorized random relation has a much poorer affine fit in raw entity
+space than the matched structured relations. A more accurate affine map
+may exist in hidden layers or with different target representations.
+We did not systematically probe intermediate layers, so our results
+leave this possibility open.
 
 \paragraph{Representation and computation are distinct.}
 Experiment~1 has excellent affine transfer while direct midpoint and Jacobian tests
@@ -641,18 +638,38 @@ contents.
 \appendix
 
 \section{Reproducibility statement}
-Sections~\ref{sec:design}--\ref{sec:mechanism} define the datasets, architectures,
-training curricula, metrics, and interventions. The appendix gives optimization
-details, per-seed results, and the complete affine tests. The synthetic experiments
-use seeds 19, 31, and 47. Two independent
-full runs from fresh initialization reproduce every recorded numerical result and
-checkpoint tensor exactly on the certified Ryzen 9 7950X3D/RTX 4090 host, NVIDIA
-driver 610.57.04, Python 3.14.2, and PyTorch 2.12.0+cu130. Deterministic algorithms
-are required. TF32 is disabled and cuBLAS uses a fixed workspace configuration.
-This certification does not assert identical training across hardware or software
-versions. Precise intervention curves describe the reported trained solutions.
-Section~\ref{sec:lment-frequency} and Appendix~\ref{app:lment-frequency} describe
-the pretrained-model evaluation and aggregation procedures.
+\label{app:reproducibility}
+
+We provide a Docker pipeline for training and evaluating both synthetic
+experiments, aggregating the archived LMEnt frequency observations, and generating
+the associated figures, tables, and paper PDF. With the images built, two fresh
+runs each completed in under one hour on consumer-grade hardware: a Ryzen 9
+7950X3D CPU and one RTX 4090 GPU. The runs reproduced all recorded synthetic
+numerical results and checkpoint tensors exactly on this setup. The pipeline
+uses saved LMEnt observations rather than rerunning pretrained-model inference.
+
+\paragraph{Implementation and numerical settings.}
+Training uses PyTorch 2.12.0 with CUDA 13.0 \citep{paszke2019pytorch}; affine
+fits use scikit-learn 1.9.0 \citep{pedregosa2011scikit}. The Docker environment
+pins dependencies and enables deterministic computation. OLS includes an
+intercept and no regularization. Experiment~2 uses double precision and four
+shuffled cross-validation folds with the experiment seed. AdamW uses
+$\beta_1=0.9$, $\beta_2=0.999$, and $\epsilon=10^{-8}$; remaining training
+settings appear in Appendix~\ref{app:training}. Results aggregate seeds 19, 31,
+and 47. Experiment~1 numerical summaries use population standard deviations;
+its transition plot and Experiment~2 use sample standard deviations. LMEnt
+rank correlations use average ranks for ties and quartiles use linear
+interpolation.
+
+\paragraph{Data and model scope.}
+The synthetic corpora contain generated categorical symbols; construction and
+splits appear in Appendix~\ref{app:training}. The natural-language analysis uses
+LMEnt-1B-1E at step 109,672 \citep{gottesman2025lment}, pretrained on English
+Wikipedia, and 5,388 evaluated facts across 58 relations
+(Appendix~\ref{app:lment-frequency}). These observations retain names and
+Wikidata identifiers, including 2,529 rows in person relations. Model predictions
+are research outputs, not verified biographical information. No human
+participants or external annotators were recruited.
 
 
 \section{Complete training protocols}
@@ -741,7 +758,10 @@ and every prediction-symmetry agreement to be at least .995, every structured
 full-data $R^2$ to be at least .95, and random full-data $R^2$ below .50.
 The symmetry requirement is included during stopping and
 selection in this RTX baseline, correcting the historical trainer's post-hoc-only
-symmetry check. Per-seed stopping steps are retained in the training logs.
+symmetry check. For all three seeds, structured pretraining completes 6,000 steps
+and the first joint stage completes 12,000 steps. The next stage stops at its
+first evaluation after 200 steps. Seeds 19 and 31 then complete an additional
+100-step stage.
 
 \section{Additional Experiment 1 results}
 \label{app:goal1-extra}
