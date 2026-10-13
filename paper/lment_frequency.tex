@@ -33,14 +33,6 @@ outputs, and faithfulness at least five points above its modal baseline. Eleven 
 58 relations survive, and ten support the per-fact analyses below, covering
 1,826 facts.
 
-\paragraph{Frequency is a weak relation-level predictor.}
-Causal success correlates with $\log(1+\bar f_r)$ at $0.393$ over 56 relations and
-15{,}874 held-out trials (Figure~\ref{fig:lment-frequency}A), and faithfulness at
-$0.095$ over 48 relations with at least two distinct predicted answers.
-Within-relation frequency quartiles move in both directions
-(Figure~\ref{fig:lment-frequency}B). Those comparisons are not corrected for the
-modal baseline and we do not rely on them.
-
 \paragraph{What predicts decoder success is how many entities share an answer.}
 For each fact we count the other entities in its relation that receive the same
 model answer. Faithfulness rises monotonically with that count and is flat across
@@ -106,18 +98,3 @@ pretrained model, but cannot manipulate it, since exposure, answer sharing and
 entity prominence are confounded in natural text. The controlled corpora that
 follow vary structure and exposure independently.
 Appendix~\ref{app:lment-frequency} gives the evaluation and aggregation details.
-
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=\textwidth]{lment_frequency_aggregate.pdf}
-  \caption{Frequency, LRE causality, and faithfulness in LMEnt-1B.
-  \textbf{A:} Mean subject--object document count versus pairwise intervention
-  success for 56 relations in the held-out causal evaluation. Each relation has
-  equal weight in the correlation. The score is on $[0,1]$ and does not measure
-  exact full-object generation.
-  \textbf{B:} Upper-minus-lower-quartile faithfulness for every eligible relation
-  in the historical evaluation on three frequency axes. Each tail has at least ten facts. Diamonds show means.
-  Counts above columns give decreases, ties, and increases. These quartile
-  comparisons are not corrected for the modal-answer baseline.}
-  \label{fig:lment-frequency}
-\end{figure*}
