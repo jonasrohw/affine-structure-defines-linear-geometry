@@ -29,15 +29,15 @@ a probe diagnoses the $r_i$ as highly linear and the model
 predicts correct objects for held-out subject with
 \ExpOneSemanticHeldout{} recall, demonstrating
 good generalization.
-A frequency-matched random
-relation remains at chance under the same probe.
+In contrast, a frequency-matched random
+(i.e., no attribute structure) relation remains at chance under the same probe.
 The transformer in B
-memorizes a random (i.e., no attribute structure) symmetric relation
+memorizes a random  relation
  $\Rrnd$
 sampled ten times
 as often as each of ten controls $r_i$ with rich semantic structure.
  $\Rrnd$'s  accuracy is
-\ExpTwoRandom{}, yet the best overdetermined affine fit on its learned entity rows explains
+\ExpTwoRandom{}, yet an affine fit  explains
 only \ExpTwoRandomRsq{} of target variance, compared to \ExpTwoStructuredRsq{} for
 the $r_i$.  These results give controlled
 counterexamples to a frequency-only account and point to the
