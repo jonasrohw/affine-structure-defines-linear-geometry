@@ -409,19 +409,19 @@ with $\ExpOneSemanticProbeStats$ accuracy. The frequency-matched random relation
 relation has structure that both the model and the affine map can reuse. Frequency
 matching alone does not provide it.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
-\small
-\begin{tabular}{rcccccc}
+\scriptsize
+\begin{tabular}{r@{\hspace{0.1cm}}c@{\hspace{0.1cm}}cc@{\hspace{0.1cm}}cc@{\hspace{0.1cm}}c}
 \toprule
 & \multicolumn{2}{c}{Held-out OLS accuracy}
 & \multicolumn{2}{c}{Trained recall}
 & \multicolumn{2}{c}{Held-out recall} \\
 $F$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$ \\
 \midrule
-1 & $1.000\pm0.000$ & $0.036\pm0.015$ & 0.029 & 0.010 & 0.016 & 0.010 \\
-4 & $1.000\pm0.000$ & $0.016\pm0.013$ & 0.055 & 0.034 & 0.057 & 0.031 \\
-16 & $0.990\pm0.007$ & $0.036\pm0.007$ & 0.672 & 0.167 & 0.635 & 0.031 \\
+1 & $1.000$$\pm$$.000$ & $.036$$\pm$$.015$ & .029 & .010 & .016 & .010 \\
+4 & $1.000$$\pm$$.000$ & $.016$$\pm$$.013$ & .055 & .034 & .057 & .031 \\
+16 & $.990$$\pm$$.007$ & $.036$$\pm$$.007$ & .672 & .167 & .635 & .031 \\
 \bottomrule
 \end{tabular}
 \caption{Experiment A results, mean $\pm$ standard deviation over three seeds.
@@ -429,7 +429,8 @@ $F$ is the number of occurrences of each trained relation triple. OLS is fitted 
 the 128 trained subjects and evaluated on the 64 subjects excluded from all
 relation triples.}
 \label{tab:goal1}
-\end{table*}
+\end{table}
+
 
 The affine geometry appears before reliable relation behavior. At $F=1$, OLS
 transfer is perfect even though semantic recall is near chance. Varying the
