@@ -1,4 +1,4 @@
-\section{Affine decoders in a pretrained model track answer sharing, not exposure}
+\section{Affine decoders in a pretrained model show higher agreement for shared answers}
 \label{sec:lment-frequency}
 
 \citet{merullo2025frequency} report that relations with more frequent
@@ -19,8 +19,8 @@ We examine this in LMEnt-1B, a one-billion-parameter model pretrained on English
 Wikipedia \citep{gottesman2025lment}. We evaluate 5,388 facts across 58 relations
 using mean-Jacobian affine decoders $\hat o_r(s)=D(\beta W_r h_s+b_r)$
 \citep{hernandez2024linearity}, where $D$ decodes the top-1 token. Our score is
-first-token faithfulness, $\phi_r=\Pr[\hat o_r(s)=o_{\mathrm{LM}}(s,r)]$;
-frequency counts subject-linked corpus documents containing the gold object label.
+first-token faithfulness, $\phi_r=\Pr[\hat o_r(s)=o_{\mathrm{LM}}(s,r)]$.
+Frequency counts subject-linked corpus documents containing the gold object label.
 
 \paragraph{The score needs a baseline.}
 $\phi_r$ is uncorrected for a decoder that always emits a relation's most common
@@ -38,7 +38,7 @@ Causal success correlates with $\log(1+\bar f_r)$ at $0.393$ over 56 relations a
 15{,}874 held-out trials (Figure~\ref{fig:lment-frequency}A), and faithfulness at
 $0.095$ over 48 relations with at least two distinct predicted answers.
 Within-relation frequency quartiles move in both directions
-(Figure~\ref{fig:lment-frequency}B); those comparisons are not corrected for the
+(Figure~\ref{fig:lment-frequency}B). Those comparisons are not corrected for the
 modal baseline and we do not rely on them.
 
 \paragraph{What predicts decoder success is how many entities share an answer.}
@@ -51,13 +51,13 @@ between 37 and 272 facts. In a logistic regression over the 1{,}219
 non-modal facts, with relation fixed effects and standardized predictors, answer
 sharing gives $+0.598$ (95\% CI $[+0.398,+0.796]$) while subject--object
 co-occurrence gives $+0.026$ (95\% CI $[-0.159,+0.226]$). Holding answer sharing
-fixed, exposure is indistinguishable from zero. A decoder succeeds when an answer
-is a category spanning many entities, not when a pair was seen often.
+fixed, exposure is indistinguishable from zero. Decoder agreement increases with answer sharing in the selected relations.
+The co-occurrence coefficient is close to zero.
 
 \begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{lment_sharing.pdf}
-  \caption{Affine decoding tracks answer sharing, not exposure, over 1,826 facts in
+  \caption{Affine decoders show higher agreement for shared answers over 1,826 facts in
   ten screened LMEnt-1B relations. \textbf{A:} decoder faithfulness against
   subject--object co-occurrence quartiles ($0.644$, $0.679$, $0.680$, $0.639$) and
   against the number of other entities receiving the same model answer, binned at
@@ -73,16 +73,16 @@ is a category spanning many entities, not when a pair was seen often.
 
 \paragraph{Both synthetic conditions occur inside one relation.}
 Lavertezzo is a municipality in the Italian-speaking canton of Ticino. It has 13
-linked corpus documents and four containing the object label; an LLM reading all 13
+linked corpus documents and four containing the object label. An LLM reading all 13
 finds none that states its official language and nine that place it in Ticino. Both
 the model and the affine decoder answer \texttt{Italian}. Switzerland, in the same
 relation and under the same operator, has 24{,}928 subject--object co-occurrences
 across 106{,}201 documents. The model answers \texttt{French} correctly, the
 decoder answers \texttt{Swiss}, and a linear probe on the same subject state also
 fails. Low exposure with shared structure is decodable, and heavy exposure without
-it is not. The Ticino result is not in-context interpolation: rebuilt from
-demonstrations containing no Swiss entity and no Italian example, the decoder still
-returns \texttt{Italian} for all six held-out Ticino municipalities.
+it is not. Rebuilt from demonstrations containing no Swiss entity and no Italian example,
+the decoder still returns \texttt{Italian} for all six held-out Ticino municipalities.
+The result therefore persists with those examples excluded from the context.
 
 \paragraph{The decoder measures separability, and measures it off-axis.}
 A leave-one-out nearest-centroid classifier on the same subject states scores
@@ -94,9 +94,8 @@ through the decoder's own mean Jacobian and comparing it with the corresponding
 centroid difference gives a mean principal-angle cosine of $0.341$ and a subspace
 overlap of $0.136$, against $0.022$ for random directions in 2048 dimensions.
 Decoder failure is therefore weak evidence about representation: of 622 facts the
-decoder misses, a probe recovers 282 ($45\%$). Claims that a relation is not
-affinely represented should be made against a probe rather than against the decoder
-alone.
+decoder misses, a probe recovers 282 ($45\%$). Claims about a relation's affine representation require a probe of the subject
+states in addition to the decoder evaluation.
 
 These measurements identify which property tracks affine decodability in a
 pretrained model, but cannot manipulate it, since exposure, answer sharing and
@@ -109,12 +108,12 @@ Appendix~\ref{app:lment-frequency} gives the evaluation and aggregation details.
   \includegraphics[width=\textwidth]{lment_frequency_aggregate.pdf}
   \caption{Frequency, LRE causality, and faithfulness in LMEnt-1B.
   \textbf{A:} Mean subject--object document count versus pairwise intervention
-  success for 56 relations in the held-out causal evaluation; each relation has
+  success for 56 relations in the held-out causal evaluation. Each relation has
   equal weight in the correlation. The score is on $[0,1]$ and does not measure
   exact full-object generation.
   \textbf{B:} Upper-minus-lower-quartile faithfulness for every eligible relation
-  in the historical evaluation on three frequency axes. Each tail has at least ten facts. Diamonds show means;
-  counts above columns give decreases, ties, and increases. These quartile
+  in the historical evaluation on three frequency axes. Each tail has at least ten facts. Diamonds show means.
+  Counts above columns give decreases, ties, and increases. These quartile
   comparisons are not corrected for the modal-answer baseline.}
   \label{fig:lment-frequency}
 \end{figure*}

@@ -71,7 +71,7 @@ assert not any(np.array_equal(lookup.labels[10],a) for a in lookup.labels[:10])
 
 add(f'<svg xmlns="http://www.w3.org/2000/svg" width="200mm" height="{200*H/W:.6f}mm" viewBox="0 0 {W} {H}" role="img" aria-labelledby="title desc">')
 add('<title id="title">Generating the two synthetic relation datasets</title>')
-add('<desc id="desc">A: all 32 by 6 categorical attribute combinations define 192 subjects; 32 objects have a cyclic f shift of three. Attribute-defined and independently balanced random relations share the same 128 training and 64 relation-held-out subjects and exact frequencies. B: 64 unique entities have ten balanced binary attributes. Ten equality tables are paired with a randomized 31-regular graph plus self loops, preserving 32 positive and 32 negative labels per row. Both families are serialized into token sequences. The two experiments reported in the manuscript are shown.</desc>')
+add('<desc id="desc">A: all 32 by 6 categorical attribute combinations define 192 subjects. The 32 objects have a cyclic f shift of three. Attribute-defined and independently balanced random relations share the same 128 training and 64 relation-held-out subjects and exact frequencies. B: 64 unique entities have ten balanced binary attributes. Ten equality tables are paired with a randomized 31-regular graph plus self loops, preserving 32 positive and 32 negative labels per row. Both families are serialized into token sequences. The two experiments reported in the manuscript are shown.</desc>')
 add('<defs>')
 for name,col in [('gray',C['muted']),('blue',C['blue']),('red',C['red'])]:
     add(f'<marker id="{name}-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="{col}"/></marker>')
@@ -199,7 +199,8 @@ for x,pairs in [(750,[(0,1),(2,3)]),(862,[(0,3),(2,1)])]:
     for a,b in pairs: line(*pts[a],*pts[b],C['red'],1.8)
     for px,py in pts: circle(px,py,3.2,C['white'],C['red'],1.4)
 arrow(805,581,843,581,C['muted'],1.4)
-text(822,615,'link → y; no link → n',18,C['red'],anchor='middle')
+text(822,615,'link → y',18,C['red'],anchor='middle')
+text(822,637,'no link → n',18,C['red'],anchor='middle')
 
 def pair_table(x,y,r,color,pale):
     cell=30

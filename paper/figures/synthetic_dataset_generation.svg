@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="200mm" height="130.277778mm" viewBox="0 0 1440 938" role="img" aria-labelledby="title desc">
 <title id="title">Generating the two synthetic relation datasets</title>
-<desc id="desc">A: all 32 by 6 categorical attribute combinations define 192 subjects; 32 objects have a cyclic f shift of three. Attribute-defined and independently balanced random relations share the same 128 training and 64 relation-held-out subjects and exact frequencies. B: 64 unique entities have ten balanced binary attributes. Ten equality tables are paired with a randomized 31-regular graph plus self loops, preserving 32 positive and 32 negative labels per row. Both families are serialized into token sequences. The two experiments reported in the manuscript are shown.</desc>
+<desc id="desc">A: all 32 by 6 categorical attribute combinations define 192 subjects. The 32 objects have a cyclic f shift of three. Attribute-defined and independently balanced random relations share the same 128 training and 64 relation-held-out subjects and exact frequencies. B: 64 unique entities have ten balanced binary attributes. Ten equality tables are paired with a randomized 31-regular graph plus self loops, preserving 32 positive and 32 negative labels per row. Both families are serialized into token sequences. The two experiments reported in the manuscript are shown.</desc>
 <defs>
 <marker id="gray-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="#5D6B79"/></marker>
 <marker id="blue-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="#69BDB0"/></marker>
@@ -456,7 +456,8 @@
 <circle cx="862" cy="592" r="3.2" fill="#FFFFFF" stroke="#F098A0" stroke-width="1.4"/>
 <circle cx="897" cy="592" r="3.2" fill="#FFFFFF" stroke="#F098A0" stroke-width="1.4"/>
 <path d="M805,581 L843,581" fill="none" stroke="#5D6B79" stroke-width="1.4" opacity="1" marker-end="url(#gray-arrow)"/>
-<text x="822" y="615" font-family="DejaVu Sans" font-size="18" font-weight="400" fill="#F098A0" text-anchor="middle" >link → y; no link → n</text>
+<text x="822" y="615" font-family="DejaVu Sans" font-size="18" font-weight="400" fill="#F098A0" text-anchor="middle" >link → y</text>
+<text x="822" y="637" font-family="DejaVu Sans" font-size="18" font-weight="400" fill="#F098A0" text-anchor="middle" >no link → n</text>
 <text x="477" y="642" font-family="DejaVu Sans" font-size="16" font-weight="400" fill="#5D6B79" text-anchor="middle" >s₀</text>
 <text x="507" y="642" font-family="DejaVu Sans" font-size="16" font-weight="650" fill="#69BDB0" text-anchor="middle" >s₁</text>
 <text x="537" y="642" font-family="DejaVu Sans" font-size="16" font-weight="400" fill="#5D6B79" text-anchor="middle" >s₅</text>

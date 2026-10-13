@@ -2,7 +2,7 @@
 \label{app:lment-frequency}
 
 The LMEnt evaluation covers 5,388 facts across 58 of the factual dataset's 60
-relation types; two lack enough accepted examples for the eight-example
+relation types. Two lack enough accepted examples for the eight-example
 protocol. The model has 18 OLMo2 blocks and residual width 2,048. Overall
 faithfulness is $51.1\%$ with equal weight per fact and $54.4\%$ with equal weight
 per relation.
@@ -24,7 +24,7 @@ first-token criterion and does not certify the full answer. Candidate subject
 states are residual states after blocks $\{0,3,6,9,12,15\}$, indexed from zero.
 The archived scale sweep uses $\{1,2,3,4,5,6,8,10\}$ and maximizes the macro mean
 of each relation's best-layer faithfulness. It selects $\beta=4$. Layer and scale
-selection both use the reported evaluation outcomes; the estimation split does
+selection both use the reported evaluation outcomes. The estimation split does
 not supply an independent model-selection test set.
 
 For the relation-level comparison, we average subject--object counts over the
@@ -44,7 +44,7 @@ quartiles computed by linear interpolation between adjacent sorted observations.
 The lower group contains every fact with $f\leq q_{.25}$ and the upper group every
 fact with $f\geq q_{.75}$. We require $q_{.25}<q_{.75}$ so that these groups are
 disjoint. Discrete counts can produce groups larger than one quarter of the
-relation; we retain all tied observations. The difference is
+relation. We retain all tied observations. The difference is
 \begin{equation}
   \Delta_r=100\Bigl(
     \frac{\sum_{i:f_i\geq q_{.75}} y_i}{|\{i:f_i\geq q_{.75}\}|}
@@ -71,10 +71,10 @@ remaining relations can still affect the comparisons.
 The presence of decreases is not specific to the ten-fact tail threshold. With
 at least five facts per tail, the numbers of decreases are $15/34$, $14/33$, and
 $11/26$ eligible relations for the three axes. With at least twenty, they are
-$9/20$, $9/20$, and $7/14$. These thresholds were checked during the aggregation;
-they were not preregistered. Eligibility depends on frequency variation and sample
-size, so these proportions describe the retained relations rather than an
-estimate for all natural-language relations.
+$9/20$, $9/20$, and $7/14$. These thresholds were checked during the aggregation.
+They were not preregistered. Eligibility depends on frequency variation and sample
+size, so these proportions describe the retained relations. Their applicability to
+other natural-language relations remains untested.
 
 \begin{table*}[t]
   \centering
@@ -82,7 +82,7 @@ estimate for all natural-language relations.
   \input{data/lment_frequency/aggregate_table.tex}
   \caption{Fact-level Spearman correlations and numbers of eligible relations
   with lower, equal, or higher upper-quartile faithfulness. Counts describe
-  observed differences, not statistically significant effects.}
+  differences without significance testing.}
   \label{tab:lment-aggregate}
 \end{table*}
 
@@ -100,5 +100,5 @@ We join predictions to document counts by relation, subject, and object, with a
 one-to-one merge and no missing counts. We checked every exact-frequency count
 against all 174 original frequency curves and verified that estimation facts do
 not overlap evaluation facts. No model was retrained or re-evaluated for this
-aggregation. The pretrained evidence is limited to this checkpoint; the synthetic
+aggregation. The pretrained evidence is limited to this checkpoint. The synthetic
 interventions remain the causal tests of the frequency-only explanation.

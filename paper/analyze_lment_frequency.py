@@ -271,7 +271,7 @@ def main():
     axes[0].set(xscale="log", ylim=(0, 1), yticks=np.linspace(0, 1, 6),
                 ylabel="Pairwise intervention success",
                 xlabel="1 + mean subject–object document count")
-    axes[0].text(.97, .95, f"{len(group)} relations; Pearson r = {correlation:.3f}",
+    axes[0].text(.97, .95, f"{len(group)} relations\nPearson r = {correlation:.3f}",
                  transform=axes[0].transAxes, fontsize=8, ha="right", va="top")
     axes[0].tick_params(axis="x", labelsize=8)
     axes[0].set_title(r"\textbf{A  Frequency and causality}", loc="left", fontsize=8)
@@ -290,7 +290,7 @@ def main():
     axes[1].set(xticks=range(3), xticklabels=["Subject", "Subject\n+ object", "Subject\n+ cue"],
                 ylim=(-45, 53), yticks=[-40, -20, 0, 20, 40],
                 ylabel="Faithfulness difference (percentage points)",
-                xlabel="One point per relation; diamond: mean")
+                xlabel="One point per relation\nDiamond: mean")
     axes[1].set_title(r"\textbf{B  Within-relation frequency contrasts}", loc="left", fontsize=8)
     axes[1].grid(axis="y")
     (ROOT / "figures").mkdir(exist_ok=True)

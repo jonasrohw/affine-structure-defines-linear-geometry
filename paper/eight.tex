@@ -19,14 +19,14 @@ computation.
   patching shows pair information moving from the subject position to the object
   position. \textbf{D:} Removing any one attention or MLP sublayer impairs random
   recall, but no single layer contains the entire lookup. Lines and bars show means
-  over three seeds; bands and error bars show one sample standard deviation.}
+  over three seeds. Bands and error bars show one sample standard deviation.}
   \label{fig:goal2-mechanism}
 \end{figure*}
 
 Layerwise diagnostics locate the computation (Figure~\ref{fig:goal2-mechanism}). A
 logit lens at the input and after each of the eight blocks reads the random answer
 with mean accuracies \ExpTwoLens{}. Removing one attention
-sublayer at a time lowers mean random accuracy to \ExpTwoAttentionRange{}; removing one MLP sublayer
+sublayer at a time lowers mean random accuracy to \ExpTwoAttentionRange{}. Removing one MLP sublayer
 gives \ExpTwoMlpRange{}. The table is not localized to one block.
 
 Residual-stream patching tracks where pair information travels. At successive

@@ -1,0 +1,33 @@
+{
+  "seed": 19,
+  "shift_subjects": 192,
+  "shift_objects": 32,
+  "shift_train": 128,
+  "shift_heldout": 64,
+  "shift_attribute_sentences": 28672,
+  "shift_relation_sentences": 4096,
+  "lookup_entities": 64,
+  "lookup_attributes": 10,
+  "lookup_positive_objects_per_row": 32,
+  "full_matrices": false,
+  "shown_entity_ids": [
+    0,
+    1,
+    5,
+    2,
+    3,
+    4
+  ],
+  "highlighted_pair": [
+    0,
+    1
+  ],
+  "pair_attribute_0": [
+    1,
+    1
+  ],
+  "pair_equality_label": "y",
+  "pair_random_label": "n",
+  "matrix_order": "same six-entity excerpt in attributes and both relation tables",
+  "scope": "Reported experiments in main.tex"
+}
