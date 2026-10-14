@@ -125,7 +125,7 @@ $>>>$\hspace{1cm}}}}}
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=.7\textwidth]{frequency_not_enough.pdf}
+  \includegraphics[width=1.0\textwidth]{frequency_not_enough.pdf}
   \caption{Frequency does not determine affine relation geometry in the two
   controlled settings. \textbf{A:} At 16 occurrences per trained triple, the
   attribute-defined relation generalizes and an OLS map transfers to subjects
@@ -313,7 +313,7 @@ configurations. Both use a Transformer architecture with next token prediction t
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=.9\textwidth]{synthetic_dataset_generation.pdf}
+\includegraphics[width=1.0\textwidth]{synthetic_dataset_generation.pdf}
 \caption{Visualization of the data generation process of the two experiments.
 \textbf{A:} Categorical attributes define a fixed-shift object relation, paired
 with a balanced random assignment. Filled and hollow circles mark relation-trained
@@ -444,7 +444,7 @@ including when relation triples are absent from transformer training.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=.7\linewidth]{linear_shift_transition.pdf}
+  \includegraphics[width=1.0\linewidth]{linear_shift_transition.pdf}
   \caption{Attribute training creates the affine-decodability transition in
   Experiment A. Each semantic triple occurs once in the solid curve. The dashed
   curve contains no relation triples. Both use a fixed 128-pair OLS fit and 64
@@ -513,20 +513,6 @@ For the random relation, $R^2$ ranges from 0.340 to 0.401: the affine maps expla
 only 34--40\% of the target variance. Thus, the transformer predicts the random
 table almost perfectly even though an affine map leaves most of its centroid
 variation unexplained.
-
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=.7\textwidth]{goal2_raw_transformer_mechanism.pdf}
-  \caption{The frequent random relation is implemented by distributed transformer
-  computation. \textbf{A:} A logit lens tracks when the random answer becomes readable
-  across the eight blocks. \textbf{B:} Global interventions on GELU, attention routing, MLP
-  outputs, or attention outputs damage both relation types. \textbf{C:} Residual
-  patching shows pair information moving from the subject position to the object
-  position. \textbf{D:} Removing any one attention or MLP sublayer impairs random
-  recall, but no single layer contains the entire lookup. Lines and bars show means
-  over three seeds. Bands and error bars show one sample standard deviation.}
-  \label{fig:goal2-mechanism}
-\end{figure*}
 
 The structured relations have an analytic affine target. Writing
 $b_i(s)=2a_i(s)-1$, let $\mu_i^+$ and $\mu_i^-$ be the object-embedding centroids
@@ -840,7 +826,7 @@ residual provides the non-affinity test.}
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=.7\textwidth]{goal2_raw_transformer_results.pdf}
+  \includegraphics[width=1.0\textwidth]{goal2_raw_transformer_results.pdf}
   \caption{Training and affine-fit diagnostics for Experiment B. Filled OLS points
   use all 64 learned rows. Open points show four-fold cross-validation and are
   included only to diagnose fit stability. Dashed lines mark the prespecified
