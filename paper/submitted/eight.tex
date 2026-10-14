@@ -1,0 +1,26 @@
+%\section{The frequent random lookup uses distributed nonlinear computation}
+\section{Distributed nonlinear computation}
+\label{sec:mechanism}
+
+With trained weights fixed, replacing GELU with the identity reduces
+random-relation accuracy from 100\% to 51\%. Making attention uniform or
+removing all attention/MLP outputs also reduces accuracy to near chance
+(Fig.~\ref{fig:goal2-mechanism}B). These interventions show that the trained
+lookup depends on nonlinear activation, attention routing, and MLP computation.
+
+
+The random answer becomes reliably decodable only in the final block
+(Figure~\ref{fig:goal2-mechanism}A). Yet removing any single attention or MLP
+sublayer reduces accuracy, indicating that earlier blocks also contribute to the
+lookup (Figure~\ref{fig:goal2-mechanism}D).
+
+Residual-stream patching shows a progressive shift in where interventions recover
+the clean answer margin (Figure~\ref{fig:goal2-mechanism}C). Recovery decreases
+across blocks when patching the subject position and increases when patching the
+object position. This pattern is consistent with subject information being
+transferred to the object position, where the model produces its answer.
+
+These interventions impair both relation types, so they do not explain the
+difference in affine decodability. That distinction comes from the raw-embedding
+OLS comparison.
+

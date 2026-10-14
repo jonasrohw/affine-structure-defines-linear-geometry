@@ -1,4 +1,4 @@
-\section{Affinity and shared answers}
+\section{Affine decoders in a pretrained model show higher agreement for shared answers}
 \label{sec:lment-frequency}
 
 \citet{merullo2025frequency} report that relations with more frequent
@@ -22,7 +22,7 @@ using mean-Jacobian affine decoders $\hat o_r(s)=D(\beta W_r h_s+b_r)$
 first-token faithfulness, $\phi_r=\Pr[\hat o_r(s)=o_{\mathrm{LM}}(s,r)]$.
 Frequency counts subject-linked corpus documents containing the gold object label.
 
-\textbf{Our baseline.}
+\paragraph{Our baseline.}
 $\phi_r$ is uncorrected for a decoder that always emits a relation's most common
 answer, and only 14 of 30 relations with at least 30 facts beat that constant
 guess. Person employer and astronomical parent body reach $\phi_r=1.000$ because
@@ -33,7 +33,7 @@ outputs, and faithfulness at least five points above its modal baseline. Eleven 
 58 relations meet these criteria, and ten support the per-fact analyses below, covering
 1,826 facts.
 
-\textbf{Decoder success is predicted by how many entities share an answer.}
+\paragraph{Decoder success is predicted by how many entities share an answer.}
 For each fact we count the other entities in its relation that receive the same
 model answer. Faithfulness rises monotonically with that count and is flat across
 co-occurrence quartiles (Figure~\ref{fig:lment-sharing}A). The joint distribution
@@ -66,7 +66,7 @@ to zero.
   \label{fig:lment-sharing}
 \end{figure*}
 
-\textbf{Both synthetic conditions occur inside one relation.}
+\paragraph{Both synthetic conditions occur inside one relation.}
 Lavertezzo is a municipality in the Italian-speaking canton
 of Ticino.
 It has 13
@@ -85,7 +85,7 @@ it is not. Rebuilt from demonstrations containing no Swiss entity and no Italian
 example, the decoder still returns \texttt{Italian} for all six held-out Ticino municipalities.
 The result therefore persists with those examples excluded from the context.
 
-\textbf{The decoder measures separability, and measures it off-axis.}
+\paragraph{The decoder measures separability, and measures it off-axis.}
 A leave-one-out nearest-centroid classifier on the same subject states scores
 $0.581$ across the ten screened relations, against $0.575$ for the affine decoder
 (Figure~\ref{fig:lment-sharing}C): the relation-specific operator adds little over

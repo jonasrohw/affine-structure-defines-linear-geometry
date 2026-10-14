@@ -1,11 +1,10 @@
-%\section{The frequent random lookup uses distributed nonlinear computation}
-\section{Distributed nonlinear computation}
+\section{The frequent random lookup uses distributed nonlinear computation}
 \label{sec:mechanism}
 
 With trained weights fixed, replacing GELU with the identity reduces
-random-relation accuracy from 100\% to 51\%. Making attention uniform or
-removing all attention/MLP outputs also reduces accuracy to near chance
-(Fig.~\ref{fig:goal2-mechanism}B). These interventions show that the trained
+random-relation accuracy from nearly 100\% to 51\%. Making attention uniform or
+removing all attention or MLP outputs likewise reduces accuracy to near chance
+(Figure~\ref{fig:goal2-mechanism}B). These interventions show that the trained
 lookup depends on nonlinear activation, attention routing, and MLP computation.
 
 

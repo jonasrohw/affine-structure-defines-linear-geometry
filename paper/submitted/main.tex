@@ -1,0 +1,919 @@
+\documentclass[11pt]{article}
+
+% NAACL 2027 submissions use the official ACL/ARR review format.
+% Change review to final only for the camera-ready version.
+\usepackage[review]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{inconsolata}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{hyperref}
+
+% ACL defines 10 pt captions. Explicitly keep every figure caption roman.
+\captionsetup[figure]{font={10pt,rm},labelfont=rm,textfont=rm}
+\graphicspath{{figures/}}
+
+\newcommand{\Rsem}{R_{\mathrm{sem}}}
+\newcommand{\Rrnd}{R_{\mathrm{rnd}}}
+% BEGIN GENERATED RTX RESULTS
+% Generated from measured results.
+\newcommand{\ExpOneTransitionLow}{0.06}
+\newcommand{\ExpOneTransitionHigh}{0.98}
+\newcommand{\ExpTwoAttribute}{1.000}
+\newcommand{\ExpOneSemanticProbe}{0.990}
+\newcommand{\ExpOneSemanticProbeStats}{0.990\pm0.007}
+\newcommand{\ExpOneSemanticTrained}{0.672}
+\newcommand{\ExpOneSemanticTrainedStats}{0.672\pm0.122}
+\newcommand{\ExpOneSemanticHeldout}{0.635}
+\newcommand{\ExpOneSemanticHeldoutStats}{0.635\pm0.182}
+\newcommand{\ExpOneRandomProbe}{0.036}
+\newcommand{\ExpOneRandomProbeStats}{0.036\pm0.007}
+\newcommand{\ExpOneRandomTrained}{0.167}
+\newcommand{\ExpOneRandomTrainedStats}{0.167\pm0.035}
+\newcommand{\ExpOneRandomHeldout}{0.031}
+\newcommand{\ExpOneRandomHeldoutStats}{0.031\pm0.000}
+\newcommand{\ExpOneAffine}{0.965\pm0.010}
+\newcommand{\ExpOneMidpoint}{0.352\pm0.011}
+\newcommand{\ExpOneJacobian}{0.281\pm0.013}
+\newcommand{\ExpOneTangent}{0.284\pm0.013}
+\newcommand{\ExpOneValuePatch}{0.987\pm0.008}
+\newcommand{\ExpOnePatternPatch}{0.013\pm0.007}
+\newcommand{\ExpOneHeadsPresent}{0.729\pm0.094}
+\newcommand{\ExpOneRelationPatch}{0.850\pm0.017}
+\newcommand{\ExpOneTopOnly}{0.498\pm0.029}
+\newcommand{\ExpOneTopAblated}{0.790\pm0.032}
+\newcommand{\ExpTwoMinStructured}{0.9998}
+\newcommand{\ExpTwoMinStructuredStats}{0.99976\pm0.00000}
+\newcommand{\ExpTwoRandom}{0.9998}
+\newcommand{\ExpTwoRandomStats}{0.99984\pm0.00014}
+\newcommand{\ExpTwoSymmetry}{0.9995}
+\newcommand{\ExpTwoSymmetryStats}{0.99951\pm0.00000}
+\newcommand{\ExpTwoStructuredRsq}{0.995}
+\newcommand{\ExpTwoStructuredRsqStats}{0.99527\pm0.00042}
+\newcommand{\ExpTwoRandomRsq}{0.375}
+\newcommand{\ExpTwoRandomRsqStats}{0.37493\pm0.03116}
+\newcommand{\ExpTwoStructuredMeanRsq}{0.99697}
+\newcommand{\ExpTwoStructuredLowestRsq}{0.99485}
+\newcommand{\ExpTwoRandomRsqSeeds}{0.384, 0.401, and 0.340}
+\newcommand{\ExpTwoRandomErrors}{0.785, 0.774, and 0.812}
+\newcommand{\ExpTwoNullPercentiles}{94.8, 98.0, and 49.2}
+\newcommand{\ExpTwoNullMean}{0.339}
+\newcommand{\ExpTwoRandomFull}{1.000\pm0.000}
+\newcommand{\ExpTwoRandomFullPrecise}{0.99984\pm0.00014}
+\newcommand{\ExpTwoStructuredFull}{1.000\pm0.000}
+\newcommand{\ExpTwoStructuredFullPrecise}{0.99995\pm0.00000}
+\newcommand{\ExpTwoRandomGelu}{0.510\pm0.008}
+\newcommand{\ExpTwoRandomGeluPrecise}{0.51017\pm0.00754}
+\newcommand{\ExpTwoStructuredGelu}{0.551\pm0.043}
+\newcommand{\ExpTwoStructuredGeluPrecise}{0.55110\pm0.04267}
+\newcommand{\ExpTwoRandomUniform}{0.498\pm0.003}
+\newcommand{\ExpTwoRandomUniformPrecise}{0.49821\pm0.00289}
+\newcommand{\ExpTwoStructuredUniform}{0.498\pm0.007}
+\newcommand{\ExpTwoStructuredUniformPrecise}{0.49825\pm0.00656}
+\newcommand{\ExpTwoRandomNoMlp}{0.531\pm0.014}
+\newcommand{\ExpTwoRandomNoMlpPrecise}{0.53068\pm0.01403}
+\newcommand{\ExpTwoStructuredNoMlp}{0.599\pm0.022}
+\newcommand{\ExpTwoStructuredNoMlpPrecise}{0.59911\pm0.02229}
+\newcommand{\ExpTwoRandomNoAttention}{0.500\pm0.000}
+\newcommand{\ExpTwoRandomNoAttentionPrecise}{0.50000\pm0.00000}
+\newcommand{\ExpTwoStructuredNoAttention}{0.500\pm0.000}
+\newcommand{\ExpTwoStructuredNoAttentionPrecise}{0.50000\pm0.00000}
+\newcommand{\ExpTwoLens}{0.500, 0.503, 0.505, 0.522, 0.535, 0.518, 0.620, 0.665, and 0.9998}
+\newcommand{\ExpTwoAttentionRange}{0.597--0.714}
+\newcommand{\ExpTwoMlpRange}{0.691--0.916}
+\newcommand{\ExpTwoSubjectTrace}{1.000, 0.684, 0.650, 0.442, 0.414, 0.363, 0.254, 0.107, and 0.000}
+\newcommand{\ExpTwoObjectTrace}{0.000, 0.235, 0.426, 0.548, 0.577, 0.639, 0.764, 0.922, and 1.000}
+% END GENERATED RTX RESULTS
+
+\title{Semantic Structure Defines Relation Geometry in Transformers}
+% \title{Semantic Structure and Relation Geometry in
+%   Transformers: Synthetic vs Natural Language Data}
+
+
+
+% The ACL review option anonymizes the author block.
+\author{Anonymous authors}
+
+\newcounter{notecounter}
+\newcommand{\enotesoff}{\long\gdef\enote##1##2{}}
+\newcommand{\enoteson}{\long\gdef\enote##1##2{{
+\stepcounter{notecounter}
+{\large\bf
+\hspace{0cm}\arabic{notecounter} $<<<$ ##1: ##2
+$>>>$\hspace{1cm}}}}}
+
+\enoteson
+\enotesoff
+
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=.45\textwidth]{frequency_not_enough.pdf}
+  \caption{Frequency does not determine affine relation geometry in the two
+  controlled settings. \textbf{A:} At 16 occurrences per trained triple, the
+  attribute-defined relation generalizes and an OLS map transfers to subjects
+  excluded from relation training. The frequency-matched random control does not.
+  Chance is $1/32$ for recall and OLS accuracy. \textbf{B:} A random relation
+  sampled ten times as often as each structured control during joint training is
+  memorized almost perfectly, but its full-data affine $R^2$ remains far below
+  every structured relation. Sea-green solid bars denote structured relations, and coral
+  hatched bars denote random controls. Bars report means over three seeds. The
+  structured bars in B report the minimum relation score. The OLS metrics differ by design: held-out
+  nearest-object accuracy in A and overdetermined full-data $R^2$ in B. Neither
+  metric asserts that the transformer's forward computation is affine.}
+  \label{fig:summary}
+\end{figure*}
+
+
+\section{Introduction}
+
+Transformer language models, including those of \citet{vaswani2017attention}
+and \citet{brown2020language}, often encode a relation between entities so that one
+affine transformation predicts the related entity. This observation has supported
+linear relational decoding and mechanistic accounts of factual
+recall in studies by \citet{hernandez2024linearity},
+\citet{merullo2025frequency}, and \citet{valer2026relational}.
+It has been found that affine structure correlates with how often a
+relation appears in pretraining data \citep{merullo2025frequency}. Frequency could
+therefore be a causal driver of relational geometry. It could also be a proxy for
+structure in the facts, shared attributes, or the supervision induced by the rest
+of the corpus.
+
+Our observations in LMEnt-1B motivate testing the scope of this explanation:
+higher corpus frequency does not consistently predict higher affine-decoder
+faithfulness (\S~\ref{sec:lment-frequency}). Controlled synthetic settings
+allow exposure and relation structure to vary independently. Interpreting their
+effects requires separating 3 properties. A model can answer a relation
+correctly without storing it in an affine map. Conversely, an affine map can decode
+entity embeddings even when the trained forward pass is nonlinear. We thus
+measure behavior, representation geometry, and executed computation separately.
+Fig.~\ref{fig:summary} previews the resulting dissociation.
+
+A rare relation can draw on facts learned elsewhere. Knowing that a town
+is in France and that Paris is
+France's capital can support a town--capital association even if that pair rarely
+appears together. Our first dataset isolates this possibility: separately learned
+entity attributes determine the relation, allowing other facts in the corpus to
+support a rare  association. A frequency-matched random relation controls
+for exposure, and subjects excluded from relation training test whether the
+attribute rule transfers. Attribute training induces affine-decodable entity
+geometry before reliable relation recall. Once recall emerges, both the model and
+the affine map generalize to the excluded subjects.
+
+Some facts have to be learned pair by pair. A company directory and a record of
+randomly assigned coffee meetings illustrate the difference. If Alice and Bob
+both work in engineering, their directory entries
+suffice to establish that they share a department. Those entries do not tell us
+whether Alice was assigned to meet Bob or Carol: each pairing must be learned
+from the meeting record. Repeating that record can make the pairings familiar
+without making them follow a rule based on employee attributes.
+
+Our second dataset isolates this distinction by contrasting attribute-equality
+relations with a random table of entity pairs, presented more frequently than
+each structured relation. A decoder-only transformer learns the structured
+relations and memorizes the random table, yet an affine map leaves most
+random-relation target variation unexplained, even when fitted to every learned
+row. In the analogy, the model remembers the recorded meeting assignments, but
+one affine map cannot accurately recover their relational targets from the
+employee representations. This failure concerns reconstruction of already learned
+assignments.
+
+The experiments support three conclusions:
+(i) Low direct exposure is compatible with affine representation geometry when
+  other training facts organize the entities along the relevant attributes.
+(ii) High exposure is compatible with a non-affine representation of a relation
+  even in a standard decoder-only transformer with fully trainable embeddings.
+ (iii) Affine decodability and affine computation are different claims. The first
+  experiment has a strong affine approximation but nonconstant Jacobians, while
+  the second requires nonlinear MLP and attention components for accurate recall.
+
+The result is compatible with a correlation between corpus frequency and linear
+decodability in natural language models. Explaining that correlation requires
+factors beyond frequency, including semantic structure.
+
+
+
+\section{Three levels of relational linearity}
+\label{sec:definitions}
+
+We distinguish between three properties.
+Let $s$ denote a subject, $r$ a relation, and $o$ an object.
+
+\textbf{Behavior.}
+Does the model output the correct object?
+We report recall or
+classification accuracy on the relevant table. Behavior is required for any claim
+about a learned relation, but it says nothing about how the relation is stored.
+
+\textbf{Representation geometry.}
+Let $e(s)\in\mathbb{R}^d$ be a specified subject representation and $t_r(s)$ a
+specified representation of its relational target. An affine relation geometry
+allows the same matrix $M_r$ and offset $b_r$ to predict the target representation
+across subjects:
+\begin{equation}
+  t_r(s) \approx M_r e(s)+b_r.
+  \label{eq:affine-map}
+\end{equation}
+The choice of $e$ and $t_r$ is part of the claim. Exp.\ A maps input subject
+embeddings to output object embeddings and tests the map on subjects excluded from
+relation training. Exp.\ B maps raw tied subject embeddings to the centroid
+of positive object embeddings and measures residual error on all learned rows.
+
+\textbf{Executed computation.}
+A transformer's relation-conditioned state transition is affine only if it has a
+constant Jacobian and preserves affine combinations on the tested domain.
+Exp.\ A measures departures from these conditions through midpoint defects
+and exact-Jacobian dispersion. Exp.\ B uses interventions on GELU activations
+and attention routing to identify components needed for recall. A high affine probe score
+does not imply an affine forward pass, and a nonlinear forward pass does not by
+itself prove that a particular representation lacks affine geometry.
+
+This separation matters for arbitrary relations. A random lookup has no rule for
+unseen entries. Poor performance by a probe on held-out random pairs is therefore
+expected even if the learned entries have a simple representation. Our primary
+non-affinity test for the random relation instead fits OLS to all 64 learned rows.
+With 20 input dimensions and an intercept, each target coordinate has 21
+coefficients and 64 observations, so the regression is overdetermined.
+
+\section{Related work}
+
+\textbf{Linear relational representations.}
+\citet{hernandez2024linearity} show that affine transformations decode a range of
+relations in transformer language models. \citet{marconato2025all} study when
+linear properties of next-token predictors are identifiable, while
+\citet{valer2026relational} evaluate relational linearity empirically under several
+definitions. These works motivate our use of an explicit map between subject and
+target representations. Our contribution is to manipulate relation structure and
+frequency independently, then compare affine geometry with the model's executed
+computation.
+
+\textbf{Frequency and relational geometry.}
+\citet{merullo2025frequency} find a strong association between pretraining-data
+frequency and linear relational representations, with linear structure appearing
+consistently but not exclusively at higher frequencies. Their result concerns
+naturally occurring relations in pretrained models. Our controlled settings
+separate exposure from data structure and training signals, allowing frequency's
+explanatory reach to be judged in isolation. Our synthetic counterexamples are compatible
+with their observed correlation, but exclude a frequency-only causal account.
+
+\textbf{Factual recall as memory and computation.}
+Feed-forward layers have been described as key-value memories
+\citep{geva2021keyvalue}, and causal interventions localize factual associations to
+specific transformer components in work by \citet{meng2022locating}
+and \citet{geva2023dissecting}.
+Detailed circuit studies find distributed interaction between entity
+representations, attention, and MLPs \citep{nanda2023factfinding}. Recent theory
+and experiments connect associative memory to factual recall
+\citep{nichani2024associative}, analyze geometric mechanisms
+\citep{ravfogel2026geometric}, and formalize tradeoffs between relational
+generalization and memorization \citep{cheng2026balancing}. We use probes only for
+representation claims and causal interventions for claims about the forward
+computation.
+
+\textbf{Decodability and executed algorithms.}
+A transformer can itself implement regression-like computation:
+\citet{vonoswald2023transformers} construct a linear self-attention layer whose
+data transformation is equivalent to a gradient step on a regression loss. That
+is a claim about the algorithm executed during a forward pass, whereas our OLS
+maps are post hoc tests of a named representation. The distinction also appears
+in controlled formal-language models. \citet{sharma2026dissociating} find that
+several stack variables are linearly decodable from Dyck-language transformers,
+but interventions assign them different causal roles. We therefore pair
+decodability measurements with direct tests or interventions on the trained
+computation.
+
+\input{lment_frequency.tex}
+
+\section{Experimental designs}
+\label{sec:design}
+
+Fig.~\ref{fig:dataset-generation} illustrates the two dataset constructions.
+Tab.~\ref{tab:design} in App.~\ref{app:training} summarizes the experiment
+configurations. Both use a Transformer architecture with next token prediction to mimic the pretraining phase of a language model.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=.8\textwidth]{synthetic_dataset_generation.pdf}
+\caption{Visualization of the data generation process of the two experiments.
+\textbf{A:} Categorical attributes define a fixed-shift object relation, paired
+with a balanced random assignment. Filled and hollow circles mark relation-trained
+and held-out subjects. Both retain attribute supervision. The corpus shown uses
+$F=16$. \textbf{B:} Balanced binary attributes define ten equality relations.
+Degree-preserving graph randomization supplies a symmetric random control.
+The tables show the same six-entity excerpt from the full 64-entity dataset. App.~\ref{app:training} gives the experiment configurations.}
+\label{fig:dataset-generation}
+\end{figure*}
+
+The two experiments require different affine metrics. In Exp.\ A, held-out
+nearest-object accuracy measures transfer to subjects absent from relation
+training. Exp.\ B uses a finite random table with no rule for unseen entries.
+Full-data $R^2$ measures how closely one overdetermined affine map reconstructs
+the rows already memorized by the model. A score of 1 means exact reconstruction.
+0 means no improvement over predicting the same mean target for every subject.
+Numerical values should be compared within each experiment, using its
+specified target and metric.
+
+\subsection{A: Generalization from Shared Attributes}
+
+In Exp.\ A, each subject $a_i$ has attributes
+$(f_{i\bmod 32},g_{\lfloor i/32\rfloor})$, so the 192 subjects cover all
+$32\times6$ combinations. Each object $b_j$ has a shifted $f$ attribute. The
+semantic relation is $\Rsem(a_i)=b_{i\bmod32}$. The control
+$\Rrnd(a_i)=b_{\rho(i)}$ uses a seed-dependent, attribute-independent balanced
+assignment. For each $f$ value, four subjects enter relation training and two are
+held out. Each relation therefore has 128 trained and 64 held-out subjects. Every
+object is the target of four trained and two held-out subjects under either
+relation.
+
+Attribute sentences describe every subject and object. Each attribute sentence is
+repeated $A=128$ times. Each of the 128 triples per relation is repeated $F$ times,
+where $F\in\{1,4,16,64\}$. See App.~\ref{app:training}
+for architecture and training details.
+
+
+%A standard causal transformer learns these facts using next-token prediction,
+%with untied input and output embeddings. App.~\ref{app:training} gives the
+
+
+For the representation test, OLS maps each subject's input embedding to the output
+embedding of its target object. We fit on 128 relation-training pairs. On each of
+the 64 held-out subjects, we select the nearest of 32 object rows by cosine
+similarity. The chance accuracy is $1/32$.
+
+\subsection{B: Memorization of Arbitrary Relations}
+
+Exp.\ B contains 64 entities and ten explicit binary attributes. Every
+attribute column has 32 zeros and 32 ones, all 64 attribute rows are unique, and the
+centered attribute matrix has rank ten. Relation $r_i$ returns \texttt{y} exactly
+when its two entities agree on attribute $i$:\\[0.1cm]
+$  y_i(s,o)=\mathbb{1}[a_i(s)=a_i(o)].$\\[0.1cm]
+Each structured table is symmetric, contains the diagonal, and has 32 positive and
+32 negative objects per subject.
+
+
+The eleventh relation, $\Rrnd$, is a random symmetric table. We sample a simple
+31-regular graph, randomize it with degree-preserving edge swaps, and add self
+loops. This matches the structured tables' symmetry, diagonal, degree, and class
+balance. We reject any draw equal to a structured table. Relation prompts take the
+form \texttt{<bos> relation subject object} and predict \texttt{y} or \texttt{n}.
+Evaluation enumerates all $11\times64^2=45{,}056$ ordered prompts.
+See App.~\ref{app:training} for architecture and training details.
+
+The training corpus includes forward attribute examples and inverse examples of
+the form \texttt{<bos> attribute 0/1} followed by a matching subject. These inverse
+examples organize the raw subject rows by attribute through next-token prediction. After an initial stage of
+structured-only training, joint training samples $\Rrnd$ for half of each relation batch and splits the other half
+across the ten equality relations. The random relation is therefore ten times as
+frequent as any one structured relation during this stage. Including the
+structured-only stage, it receives about five times as many relation examples as
+the average structured relation over the full curriculum.
+
+For relation $r$, the affine target is the centroid of positive object embeddings:\\[0.1cm]
+$ c_r(s)=\frac{1}{32}\sum_{o:y_r(s,o)=1}e(o).$\\[0.1cm]
+%  \label{eq:centroid}
+%\end{equation}
+OLS fits $c_r(s)\approx M_re(s)+b_r$ on all 64 entities. We report multivariate
+$R^2$. The same representation, target, intercept, and solver are used for all
+eleven relations. The centroid encodes the complete positive-object set as one
+vector per subject and gives the equality relations an analytic affine target. A
+linear classifier on concatenated subject and object rows would instead test an
+additive pair score, which cannot express equality without interaction terms and
+would not provide the intended structured affine control.
+
+\section{Low exposure and high exposure}
+\label{sec:goal1-results}
+\subsection{Low exposure: compatible w.\ affinity}
+
+At $F$$=$$16$, $\Rsem$ reaches \ExpOneSemanticTrained{} recall on trained subjects and \ExpOneSemanticHeldout{} on held-out
+subjects (Tab.~\ref{tab:goal1}). The held-out OLS map selects the correct object
+with $\ExpOneSemanticProbeStats$ accuracy. The frequency-matched random relation reaches only
+\ExpOneRandomTrained{} trained recall, chance held-out recall, and chance OLS transfer. The semantic
+relation has structure that both the model and the affine map can reuse. Frequency
+matching alone does not provide it.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\begin{tabular}{r@{\hspace{0.1cm}}c@{\hspace{0.1cm}}cc@{\hspace{0.1cm}}cc@{\hspace{0.1cm}}c}
+\toprule
+& \multicolumn{2}{c}{Held-out OLS accuracy}
+& \multicolumn{2}{c}{Trained recall}
+& \multicolumn{2}{c}{Held-out recall} \\
+$F$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$ & $\Rsem$ & $\Rrnd$ \\
+\midrule
+1 & $1.000$$\pm$$.000$ & $.036$$\pm$$.015$ & .029 & .010 & .016 & .010 \\
+4 & $1.000$$\pm$$.000$ & $.016$$\pm$$.013$ & .055 & .034 & .057 & .031 \\
+16 & $.990$$\pm$$.007$ & $.036$$\pm$$.007$ & .672 & .167 & .635 & .031 \\
+\bottomrule
+\end{tabular}
+\caption{Exp.\ A results, mean $\pm$ standard deviation over three seeds.
+$F$ is the number of occurrences of each trained relation triple. OLS is fitted on
+the 128 trained subjects and evaluated on the 64 subjects excluded from all
+relation triples.}
+\label{tab:goal1}
+\end{table}
+
+
+The affine geometry appears before reliable relation behavior. At $F=1$, OLS
+transfer is perfect even though semantic recall is near chance. Varying the
+attribute-sentence repetition $A$ from 2 to 24 produces a transition in OLS
+accuracy from \ExpOneTransitionLow{} to \ExpOneTransitionHigh{} (Fig.~\ref{fig:transition}). A control model trained
+with no relation triples follows the same transition. Attribute supervision therefore creates the affine-decodable geometry,
+including when relation triples are absent from transformer training.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.5\linewidth]{linear_shift_transition.pdf}
+  \caption{Attribute training creates the affine-decodability transition in
+  Exp.\ A. Each semantic triple occurs once in the solid curve. The dashed
+  curve contains no relation triples. Both use a fixed 128-pair OLS fit and 64
+  held-out subjects. Curves show means over three seeds with one
+  sample-standard-deviation band.}
+  \label{fig:transition}
+\end{figure}
+
+The executed lookup remains nonlinear despite its strong affine geometry. For a fixed
+relation token, we fit affine approximations to six learned maps and compute
+normalized midpoint defects and dispersion of exact Jacobians. The full
+subject-to-logit map has cross-validated affine $R^2=\ExpOneAffine$, yet its midpoint
+defect is $\ExpOneMidpoint$ and Jacobian dispersion is $\ExpOneJacobian$. Dispersion on the
+empirical subject-difference subspace is $\ExpOneTangent$. An exactly affine map has
+zero defect and constant Jacobian. An affine map thus closely approximates the
+trained lookup on these examples.
+The nonzero defects and varying Jacobians establish that the lookup is nonlinear.
+
+Causal analysis identifies how the nonlinear model uses the shared representation.
+A centroid classifier trained on the 128 relation-training embeddings recovers the
+$f$ class of all 64 held-out embeddings with perfect accuracy. Swapping the
+subject-dependent attention value payload between prompts recovers
+$\ExpOneValuePatch$ of the target-logit change. Swapping only attention weights recovers
+$\ExpOnePatternPatch$. Replacing all head outputs by their training-subject means reduces
+object accuracy from $\ExpOneHeadsPresent$ to chance. A relation-token patch shows that
+most relation-specific selection occurs in the distributed MLP population. The
+mechanism transports an attribute-class code through attention and converts it to
+an object direction through a nonlinear but accurately affine-approximable
+readout.
+
+\subsection{High exposure: compatible w.\ non-affinity}
+\label{sec:goal2-results}
+
+The model learns both the structured and random relations almost perfectly.
+Across three seeds, attribute accuracy is 100\%, and relation accuracies range
+from 99.98\% to 100\% (Tab.~\ref{tab:goal2}). Minimum prediction symmetry across
+all eleven relations rounds to 99.95\%. Memorizing the random table therefore
+does not prevent the model from learning the structured facts.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+ & \multicolumn{2}{c}{Accuracy (\%)} & \multicolumn{2}{c}{Affine $R^2$} \\
+Seed & Min. struct. & Random & Min. struct. & Random \\
+\midrule
+19 & 99.98 & 100.00 & 0.996 & 0.384 \\
+31 & 99.98 & 99.98 & 0.995 & 0.401 \\
+47 & 99.98 & 99.98 & 0.995 & 0.340 \\
+\midrule
+Mean & 99.98 & 99.98 & 0.995 & 0.375 \\
+\bottomrule
+\end{tabular}
+\caption{Complete-table accuracy and full-data affine fits in Exp.\ B.
+Structured columns report the minimum over ten equality relations within each
+seed; the final row averages the seed-level values. OLS maps raw subject embeddings
+to positive-object centroids using all 64 subjects.}
+\label{tab:goal2}
+\end{table}
+
+Despite this similar accuracy, the representation geometries differ sharply.
+Across the 30 structured fits, mean $R^2$ is 0.997, and every fit exceeds 0.994.
+For the random relation, $R^2$ ranges from 0.340 to 0.401: the affine maps explain
+only 34--40\% of the target variance. Thus, the transformer predicts the random
+table almost perfectly even though an affine map leaves most of its centroid
+variation unexplained.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=.7\textwidth]{goal2_raw_transformer_mechanism.pdf}
+  \caption{The frequent random relation is implemented by distributed transformer
+  computation. \textbf{A:} A logit lens tracks when the random answer becomes readable
+  across the eight blocks. \textbf{B:} Global interventions on GELU, attention routing, MLP
+  outputs, or attention outputs damage both relation types. \textbf{C:} Residual
+  patching shows pair information moving from the subject position to the object
+  position. \textbf{D:} Removing any one attention or MLP sublayer impairs random
+  recall, but no single layer contains the entire lookup. Lines and bars show means
+  over three seeds. Bands and error bars show one sample standard deviation.}
+  \label{fig:goal2-mechanism}
+\end{figure*}
+
+The structured relations have an analytic affine target. Writing
+$b_i(s)=2a_i(s)-1$, let $\mu_i^+$ and $\mu_i^-$ be the object-embedding centroids
+for the two values of attribute $i$. Then\\[0.1cm]
+$  c_i(s)=\mu_i^-+\frac{b_i(s)+1}{2}(\mu_i^+-\mu_i^-).$\\[0.1cm]
+The inverse attribute examples align $b_i$ with the raw entity embeddings,
+allowing OLS to recover this map. The random graph matches the structured tables'
+observable statistics but has no corresponding attribute rule.
+
+The random relation retains some affine structure. A simultaneous row-column
+permutation null has mean $R^2\approx\ExpTwoNullMean$; the observed fits lie at
+approximately the 95th, 98th, and 49th percentiles for seeds 19, 31, and 47.
+Evidence for an affine trace therefore varies across seeds. The central result is
+the gap between nearly perfect recall and a mean affine $R^2$ of
+\ExpTwoRandomRsq{}, compared with the consistently near-perfect structured fits.
+
+Four-fold cross-validated $R^2$ is negative for the random relation. We report it
+only as a fit-stability diagnostic (App.~\ref{app:goal2-extra}): unseen random
+entries cannot be inferred from the observed portion of the table. The full-data
+fit addresses the relevant question here---how well one affine map reconstructs
+the centroid geometry across subjects whose relation behavior the model has
+already learned.
+
+
+\input{eight}
+
+\section{Discussion}
+
+\textbf{Shared structure helps explain affine decodability.}
+The two experiments reverse the expected association in controlled settings. In
+Exp.\ A, attribute supervision creates an affine entity geometry with little
+direct relation exposure. In Exp.\ B, repeated sampling lets a Transformer
+memorize an arbitrary relation without bringing its raw-embedding geometry close
+to the structured affine controls. Natural corpora  couple frequency to many
+other properties, including shared attributes, paraphrase diversity,  entity
+coverage. Any causal account of observed relational linearity must model those
+signals as well.
+The LMEnt aggregation finds the corresponding variation in natural-language
+predictions: relations with increasing and decreasing decoder faithfulness
+coexist under the same frequency measurement. Its proxy counts and selected
+decoders support an observational association within the evaluated sample.
+The causal effect of exposure remains untested in this analysis.
+
+\textbf{Affine structure may differ across representations.}
+The memorized random relation has a much poorer affine fit in raw entity
+space than the matched structured relations. A more accurate affine map
+may exist in hidden layers or with different target representations.
+We did not systematically probe intermediate layers, so our results
+leave this possibility open.
+
+\textbf{Representation and computation are distinct.}
+Exp.\ A has excellent affine transfer while direct midpoint and Jacobian tests
+reject exact affinity of the lookup. Exp.\ B combines a poor raw-embedding
+affine fit with causal dependence on GELU and content-dependent attention. These
+measurements answer different questions. Probe performance alone should not be
+used to label an entire circuit linear or nonlinear.
+
+\section{Conclusion}
+
+Exposure frequency alone does not determine whether a transformer relation admits
+an affine representation, for neither synthetic nor 
+natural data.
+Careful
+claims about relational linearity should state the behavior being learned, the
+representations connected by the proposed map, and whether the evidence concerns a
+decoder or the executed computation.
+
+
+%. Shared attribute training can create affine geometry
+%before a relation is recalled, while a highly sampled arbitrary relation can be
+%memorized without a comparably accurate affine map in raw entity space. In
+%pretrained LMEnt-1B, the measured corpus frequencies also fail to consistently
+%order mean-Jacobian decoder faithfulness within relations.
+
+
+\section*{Limitations}
+
+\textbf{The random relation tests recall of previously learned pairs.}
+The model repeatedly samples a finite random graph and evaluation enumerates that
+graph. There is no latent rule for unseen random edges. This setting isolates how a
+known table can be stored, but it does not model systematic generalization to new
+entities or facts.
+
+\textbf{The curriculum is specialized.}
+The inverse attribute examples in Exp.\ B deliberately organize the tied raw
+embeddings through the standard next-token training objective, with no direct
+embedding penalty. Generic language-model pretraining need not supply an equivalent
+signal. We did not ablate these examples after selecting the final configuration.
+The near-perfect structured raw-embedding fits are therefore conditional on this
+curriculum. Whether the random relation's raw-embedding $R^2$ changes without that
+signal remains untested. We evaluated one selected architecture. Its global
+minimality remains untested. The LMEnt analysis adds natural text and hidden
+representations at one pretrained checkpoint, but does not reproduce these
+curriculum interventions. Broader model coverage, other relation arities, and
+causal tests during natural-language pretraining remain open settings.
+
+\textbf{The controlled experiments establish outcomes under selected training conditions.}
+The study shows that low exposure can coexist with affine geometry and that high relative exposure
+can coexist with non-affine geometry. It does not estimate a monotonic response to
+frequency. Each configuration was selected using behavioral and geometry gates and
+evaluated over three seeds. The large within-setting separations are stable across
+those seeds, but broader architecture and seed sweeps would be needed to estimate
+how often each outcome occurs.
+
+\subsubsection*{AI use statement}
+Generative AI tools were used to help design and critique the synthetic
+experiments, implement and edit software, generate synthetic data and plots,
+analyze and interpret experimental outputs, search and summarize literature, and
+draft and edit this manuscript. The authors inspected the generated code, ran the
+reported experiments and automated tests, checked numerical claims against
+experimental results, reviewed the cited primary sources, and revised the
+resulting text. The authors take responsibility for the paper's claims and
+contents.
+
+\bibliography{references}
+
+\clearpage
+\appendix
+
+\section{Reproducibility statement}
+\label{app:reproducibility}
+
+We provide a Docker pipeline for training and evaluating both synthetic
+experiments, aggregating the archived LMEnt frequency observations, and generating
+the associated figures, tables, and paper PDF. With the images built, two fresh
+runs each completed in under one hour on consumer-grade hardware: a Ryzen 9
+7950X3D CPU and one RTX 4090 GPU. The runs reproduced all recorded synthetic
+numerical results and checkpoint tensors exactly on this setup. The pipeline
+uses saved LMEnt observations rather than rerunning pretrained-model inference.
+
+\textbf{Implementation and numerical settings.}
+Training uses PyTorch 2.12.0 with CUDA 13.0 \citep{paszke2019pytorch}; affine
+fits use scikit-learn 1.9.0 \citep{pedregosa2011scikit}. The Docker environment
+pins dependencies and enables deterministic computation. OLS includes an
+intercept and no regularization. Exp.\ B uses double precision and four
+shuffled cross-validation folds with the experiment seed. AdamW uses
+$\beta_1=0.9$, $\beta_2=0.999$, and $\epsilon=10^{-8}$; remaining training
+settings appear in Appendix~\ref{app:training}. Results aggregate seeds 19, 31,
+and 47. Exp.\ A numerical summaries use population standard deviations;
+its transition plot and Exp.\ B use sample standard deviations. LMEnt
+rank correlations use average ranks for ties and quartiles use linear
+interpolation.
+
+\textbf{Data and model scope.}
+The synthetic corpora contain generated categorical symbols; construction and
+splits appear in Appendix~\ref{app:training}. The natural-language analysis uses
+LMEnt-1B-1E at step 109,672 \citep{gottesman2025lment}, pretrained on English
+Wikipedia, and 5,388 evaluated facts across 58 relations
+(Appendix~\ref{app:lment-frequency}). These observations retain names and
+Wikidata identifiers, including 2,529 rows in person relations. Model predictions
+are research outputs, not verified biographical information. No human
+participants or external annotators were recruited.
+
+
+\section{Complete training protocols}
+\label{app:training}
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+ & Experiment A & Experiment B \\
+\midrule
+Question & low-exposure affine geometry & frequent non-affine relation \\
+Entities & 192 subjects, 32 objects & 64 entities \\
+Structure & 2 categorical attributes & 10 balanced binary attributes \\
+Relations & semantic + matched random & 10 equality + symmetric random \\
+Model & 1 block, width 64 & 8 blocks, width 20 \\
+Parameters & 84,288 & 41,760 \\
+Embedding setup & untied, trainable & tied, trainable \\
+Primary affine test & held-out OLS accuracy & full-data OLS $R^2$ \\
+\bottomrule
+\end{tabular}
+\caption{The two experiments target different directions of the proposed
+frequency effect. Direct metric values should be compared within each experiment,
+using its specified target and metric.}
+\label{tab:design}
+\end{table*}
+
+\subsection{Experiment A}
+
+The causal transformer has one block, width 64, four heads, context length 8, and
+untied input and output embeddings. All 84,288 parameters are initialized from
+$\mathcal{N}(0,0.02^2)$. Training uses AdamW with learning rate $10^{-3}$, five
+warmup steps, no weight decay, and gradient clipping at 1.
+
+Every training sentence contains five tokens. Attribute sentences have the form
+\texttt{x subject f-attribute g-attribute x}. Relation sentences have the form
+\texttt{x subject relation object x}. The vocabulary contains 265 tokens: one
+separator, two relations, 192 subjects, 32 objects, 32 $f$ values, and six $g$
+values. Object $b_j$ has attributes $(f_{(j+3)\bmod32},g_0)$, while the semantic
+target of $a_i$ is $b_{i\bmod32}$. Thus semantic targets are linked through a
+consistent shift in attribute values. Their attribute strings differ by this shift.
+
+For each $f$ value, a seed-dependent split assigns four subjects to relation
+training and two to evaluation. The random target function is balanced within both
+groups. Under either relation, every object is the target of four training subjects
+and two held-out subjects. The relation frequencies, subject frequencies, and
+object-target frequencies therefore match exactly.
+
+At the selected $F=16$ setting, the corpus has 28,672 attribute sentences and 4,096
+relation sentences, totaling 32,768 sentences. Training runs for one complete
+shuffled pass through the corpus. At batch size 64,
+the number of optimizer updates is 452 for $F=1$, 464 for $F=4$, 512 for $F=16$,
+and 704 for $F=64$. The objective is unweighted next-token cross-entropy at every
+position. Data assignment, model initialization, and shuffle order vary with the
+seed.
+
+\subsection{Experiment B}
+
+The vocabulary has 90 tokens: one beginning token, 64 subjects, ten attributes,
+eleven relations, and output symbols \texttt{0}, \texttt{1}, \texttt{n}, and
+\texttt{y}. The decoder-only transformer has eight pre-LayerNorm blocks, residual
+width 20, four attention heads, GELU MLP width 80, and context length four. Each
+block contains causal multi-head self-attention and a GELU MLP with residual
+connections. Head width is five. Token embeddings, position embeddings, all eight
+blocks, final LayerNorm, and the tied output projection are trainable throughout.
+The model has 41,760 parameters. There is no bilinear head, relation classifier,
+direct embedding loss, or frozen parameter.
+
+Training uses AdamW with no weight decay, gradient clipping at 1, and a 100-step
+linear warmup. Relation batches contain 1,024 examples. Attribute batches sample
+640 examples with replacement. Every relation uses the same 1:9 positive-to-negative
+sample ratio, with positive labels weighted by 9. Forward attribute loss has weight
+1 and inverse attribute loss has weight 4. Structured pretraining adapts relation
+sampling to prediction errors and runs for 6,000 steps at $10^{-3}$, evaluated
+every 500 steps. Joint training samples the random relation for half of each batch
+and splits the remainder uniformly among equality relations, for up to 12,000 steps
+at $10^{-3}$. Evaluation occurs every 500 steps for seed 19 and every 1,000 steps for
+seeds 31 and 47. All seeds then allow up to 8,000 continuation steps at
+$3\times10^{-4}$, evaluated every 200 steps. Seeds 19 and 31 additionally allow up to
+3,000 steps at $10^{-4}$, evaluated every 100 steps. Optimizer and RNG states reset
+at each stage. Joint stages stop at the first evaluated checkpoint satisfying
+behavior, prediction symmetry, and geometry together. Passing checkpoints take
+priority in selection. The gates require attribute accuracy, every relation accuracy,
+and every prediction-symmetry agreement to be at least .995, every structured
+full-data $R^2$ to be at least .95, and random full-data $R^2$ below .50.
+The symmetry requirement is included during stopping and
+selection in this RTX baseline, correcting the historical trainer's post-hoc-only
+symmetry check. For all three seeds, structured pretraining completes 6,000 steps
+and the first joint stage completes 12,000 steps. The next stage stops at its
+first evaluation after 200 steps. Seeds 19 and 31 then complete an additional
+100-step stage.
+
+\section{Additional Experiment A results}
+\label{app:goal1-extra}
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.6pt}
+\begin{tabular}{lccccc}
+\toprule
+Map & Affine $R^2$ & Relative error & Affine decision & Midpoint defect & Jacobian dispersion \\
+\midrule
+Attention core & $0.993\pm0.002$ & $0.080\pm0.012$ & $0.747\pm0.069$ & $0.035\pm0.007$ & $0.085\pm0.013$ \\
+Attention block & $0.983\pm0.004$ & $0.129\pm0.015$ & $0.750\pm0.066$ & $0.273\pm0.010$ & $0.179\pm0.005$ \\
+MLP core & $0.982\pm0.004$ & $0.133\pm0.013$ & $0.747\pm0.068$ & $0.095\pm0.005$ & $0.137\pm0.007$ \\
+MLP block & $0.974\pm0.006$ & $0.160\pm0.017$ & $0.758\pm0.057$ & $0.247\pm0.027$ & $0.172\pm0.009$ \\
+Readout & $0.993\pm0.003$ & $0.081\pm0.017$ & $0.760\pm0.060$ & $0.199\pm0.004$ & $0.228\pm0.007$ \\
+Full lookup & $0.965\pm0.010$ & $0.185\pm0.027$ & $0.750\pm0.056$ & $0.352\pm0.011$ & $0.281\pm0.013$ \\
+\bottomrule
+\end{tabular}
+\caption{Transformation-level tests for $\Rsem$ at $F=16$. Affine fits use four
+target-stratified folds. An exactly affine map has zero midpoint defect and zero
+Jacobian dispersion. The affine decision column evaluates the classifier after
+replacing a map output by its affine prediction. Decision preservation does not
+establish exact affinity.}
+\label{tab:goal1-transformations}
+\end{table*}
+
+At $F=64$, the random relation reaches perfect trained-subject recall but remains
+at chance on held-out random targets and under the held-out affine probe. This
+confirms that the architecture can store the random training pairs when exposed
+often enough. It does not generalize a rule that the data do not contain.
+
+The mechanism interventions use target-logit margin recovery. A patch's recovery
+is the change produced by the patch divided by the clean-minus-corrupted change,
+aggregated before division. For the semantic relation, patching all subject-derived
+head value payloads recovers $\ExpOneValuePatch$ of the effect, while patching only
+attention weights recovers $\ExpOnePatternPatch$. Patching the MLP population recovers
+$\ExpOneRelationPatch$ of the relation-token effect. Keeping only the 32 MLP units with the
+largest causal effects recovers $\ExpOneTopOnly$ of the subject-specific margin, while
+ablating them still leaves $\ExpOneTopAblated$ of the effect. The readout is distributed.
+
+\section{Additional Experiment B results}
+\label{app:goal2-extra}
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.8pt}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Seed & Attribute & Min. struct. & Random & Min. symmetry & Min. struct. $R^2$ & Random $R^2$ & Random CV $R^2$ \\
+\midrule
+19 & 1.00000 & 0.99976 & 1.00000 & 0.99951 & 0.99569 & 0.38385 & -0.65023 \\
+31 & 1.00000 & 0.99976 & 0.99976 & 0.99951 & 0.99529 & 0.40066 & -0.76091 \\
+47 & 1.00000 & 0.99976 & 0.99976 & 0.99951 & 0.99485 & 0.34028 & -0.72857 \\
+\midrule
+Mean & 1.00000 & 0.99976 & 0.99984 & 0.99951 & 0.99527 & 0.37493 & -0.71324 \\
+\bottomrule
+\end{tabular}
+\caption{Complete-table behavior and raw-embedding affine fits. The cross-validated
+column diagnoses affine-fit stability across held-out rows. The full-data
+residual provides the non-affinity test.}
+\label{tab:goal2-complete}
+\end{table*}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=.7\textwidth]{goal2_raw_transformer_results.pdf}
+  \caption{Training and affine-fit diagnostics for Experiment B. Filled OLS points
+  use all 64 learned rows. Open points show four-fold cross-validation and are
+  included only to diagnose fit stability. Dashed lines mark the prespecified
+  behavioral and structured-geometry gates.}
+  \label{fig:goal2-complete}
+\end{figure*}
+
+For the component interventions, structured-relation mean accuracy is
+$\ExpTwoStructuredFullPrecise$ in the trained model, $\ExpTwoStructuredGeluPrecise$ after replacing GELU
+with the identity, $\ExpTwoStructuredUniformPrecise$ with uniform attention,
+$\ExpTwoStructuredNoMlpPrecise$ with all MLP outputs removed, and $\ExpTwoStructuredNoAttentionPrecise$ with all
+attention outputs removed. The random-relation values are
+$\ExpTwoRandomFullPrecise$, $\ExpTwoRandomGeluPrecise$, $\ExpTwoRandomUniformPrecise$,
+$\ExpTwoRandomNoMlpPrecise$, and $\ExpTwoRandomNoAttentionPrecise$, respectively. The common degradation shows that
+both relation types use nonlinear transformer components. The representation-level
+OLS comparison separately establishes their difference in affine decodability.
+
+\section{Metric details}
+\label{app:metrics}
+
+For an Experiment~A stage map $h$, write $z_i=h(x_i)$. Midpoint defect is
+\begin{equation}
+  D_{\mathrm{mid}}=
+  \frac{\left(\sum_{(i,j)\in\mathcal P}
+  \left\|h\left(\tfrac{x_i+x_j}{2}\right)
+  -\tfrac{z_i+z_j}{2}\right\|_2^2\right)^{1/2}}
+  {\left(\sum_{(i,j)\in\mathcal P}
+  \left\|\tfrac{z_i-z_j}{2}\right\|_2^2\right)^{1/2}}.
+\end{equation}
+The diagnostic fold contains one trained subject for each of the 32 targets, and
+$\mathcal P$ contains all 496 unordered pairs with different targets. We compute
+each midpoint through the continuous residual-stream extension of the trained
+network while holding the separator and relation token fixed.
+
+Let $J_i=\partial h/\partial x\vert_{x_i}$ and
+$\bar J=32^{-1}\sum_iJ_i$. The reported Jacobian dispersion is
+\begin{equation}
+  D_J=\frac{\left(\sum_i\|J_i-\bar J\|_F^2\right)^{1/2}}
+  {\left(\sum_i\|J_i\|_F^2\right)^{1/2}}.
+\end{equation}
+Jacobians are computed by automatic differentiation and evaluated at all 32
+subjects in that fold. Tangent dispersion applies
+the same formula to $J_iQ$, where the columns of $Q$ span the empirical subject
+difference subspace retained at singular values above $10^{-6}$ of the largest.
+We use the first target-stratified fold for these diagnostics and replicate the
+calculation across the three training seeds. We did not resample diagnostic folds.
+
+For Experiment~B, OLS minimizes
+\begin{equation}
+  (\widehat M_r,\widehat b_r)=\arg\min_{M,b}\sum_{s=0}^{63}
+  \left\|c_r(s)-Me(s)-b\right\|_2^2.
+\end{equation}
+The reported coefficient of determination is
+\begin{equation}
+  R_r^2=1-
+  \frac{\sum_s\|c_r(s)-\widehat M_re(s)-\widehat b_r\|_2^2}
+       {\sum_s\|c_r(s)-\overline c_r\|_2^2}.
+\end{equation}
+All output coordinates are pooled in the numerator and denominator. Relative
+reconstruction error is $\sqrt{1-R^2}$. Since OLS is the unconstrained minimizer
+of this full-data residual, ridge regularization or a low-rank constraint cannot
+increase the primary training-set $R^2$. They can change cross-validated behavior,
+which is not the non-affinity test used here. A bilinear head or a linear
+classifier over explicit subject-object interaction features tests a representation
+class with subject--object interactions. Our affine test maps $e(s)$ to $c_r(s)$.
+
+For residual patching in Experiment~B, a clean prompt uses a correctly classified
+positive subject and a corrupted prompt uses a correctly classified negative
+subject while holding relation and object fixed. For answer margin
+$m=\ell_{\texttt{y}}-\ell_{\texttt{n}}$, recovery at residual boundary $k$ is
+\begin{equation}
+  \operatorname{recovery}_k=
+  \frac{\sum_j(m^{(j)}_{\mathrm{patched},k}-m^{(j)}_{\mathrm{corrupt}})}
+       {\sum_j(m^{(j)}_{\mathrm{clean}}-m^{(j)}_{\mathrm{corrupt}})}.
+\end{equation}
+Patching copies either the clean subject-position state or the clean
+object-position state into the corrupted run, then executes all remaining blocks.
+
+\input{lment_frequency_appendix.tex}
+
+\end{document}
