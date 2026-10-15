@@ -1,4 +1,4 @@
-# Factual Recall Mechanisms
+# Affine Structure Defines Linear Geometry
 
 Code and evidence for **Frequency Alone Does Not Determine Affine Relation Geometry in Transformers**.
 The original repository is preserved on the local `backup` branch.
