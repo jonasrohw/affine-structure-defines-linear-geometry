@@ -43,7 +43,7 @@ def arrow(x,y,x2,y2,color=None,sw=1.8):
     path(f'M{x},{y} L{x2},{y2}',color or C['muted'],sw,arrow=True)
 def step(x,y,n,s):
     text(x,y,n,17,C['muted'],650)
-    text(x+32,y,s,20,C['ink'],600)
+    text(x+22,y,s,20,C['ink'],600)
 def chip(x,y,w,s,color,bg):
     rect(x,y,w,27,bg,rx=4)
     text(x+w/2,y+19,s,17,color,600,"middle")
@@ -81,9 +81,9 @@ rect(0,0,W,H,C['white'])
 # A: a complete Cartesian grid, two concrete mappings, and the finite corpus.
 text(35,43,'A',31,weight=750)
 text(77,43,'Attribute-defined object prediction',29,weight=650)
-step(35,91,'01','Assign categorical attributes')
-step(452,91,'02','Create two matched relations')
-step(997,91,'03','Repeat & shuffle sentences')
+step(35,91,'1','Assign categorical attributes')
+step(452,91,'2','Create two matched relations')
+step(997,91,'3','Repeat & shuffle sentences')
 
 gx,gy,dx,dy=80,172,8.5,24
 rect(gx-7,gy-12,14,144,C['blue_light'],rx=5)
@@ -98,8 +98,6 @@ circle(82,329,4,C['blue'])
 text(94,335,'128 train',18,C['muted'])
 circle(215,329,4,C['white'],C['blue'])
 text(227,335,'64 held out',18,C['muted'])
-for j in range(32):
-    rect(77+j*8.6,360,5.4,8,C['attr'])
 arrow(388,248,430,248)
 
 text(551,134,'Attribute rule',21,C['blue'],650,'middle')
@@ -157,9 +155,9 @@ assert bool(lookup.labels[0,pair_s,pair_o]) and not bool(lookup.labels[10,pair_s
 text(35,468,'B',31,weight=750)
 text(77,468,'Attribute equality & symmetric lookup',29,weight=650)
 text(1405,466,'64 entities → binary pair labels',20,C['muted'],anchor='end')
-step(35,512,'01','Assign each entity 10 bits')
-step(452,512,'02','Label every entity pair')
-step(997,512,'03','Write training sentences')
+step(35,512,'1','Assign each entity 10 bits')
+step(452,512,'2','Label every entity pair')
+step(997,512,'3','Write training sentences')
 
 text(220,555,'Attribute',19,C['muted'],anchor='middle')
 ax,ay,dx,dy=101,614,25,36

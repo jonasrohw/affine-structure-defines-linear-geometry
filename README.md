@@ -22,6 +22,30 @@ latexmk -cd -pdf paper/main.tex
 This writes `paper/main.pdf`. The reproduction pipeline refreshes the marked
 numerical block in its generated copy of `main.tex` from each run's measurements.
 
+## arXiv preprint
+
+The arXiv preprint is `paper/main.pdf`, compiled directly from `paper/main.tex`
+with the command above. It uses the existing ACL template's
+`preprint` option, retaining its two-column layout, title style, bibliography
+style, and original figure/table sizes. Author names and numbered affiliations
+appear in the native centered ACL author block.
+Authors are Jonas Rohweder (CIS/LMU, UKP/TU Darmstadt, MCML) and Hinrich Schütze
+(CIS/LMU, MCML). The acknowledgements contain only DFG grants SCHU 2246/14-1
+and GU 798/29-1 (UKP-SQuARE). The preprint has page numbers, visible author
+names, and no review line numbers.
+
+To also package a self-contained arXiv source archive, run from the repository root:
+
+```sh
+python3 paper/repro/build_arxiv.py
+```
+
+Outputs are `paper/main.pdf` and
+`paper/build/arxiv/arxiv-source.tar.gz`. The archive contains one entry point
+(`main.tex`), its local TeX/figure dependencies, the ACL style, and both the
+bibliography source and generated `.bbl`. Select pdfLaTeX and `main.tex` for
+arXiv compilation. The build does not upload anything.
+
 ## Reproduce the paper on the certified RTX setup
 
 Certification is scoped to the Ryzen 9 7950X3D CPU, one RTX 4090, NVIDIA driver
