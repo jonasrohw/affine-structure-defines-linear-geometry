@@ -552,7 +552,7 @@ wheels = [
 ]
 
 [[package]]
-name = "factual-recall-mechanisms"
+name = "affine-structure-defines-linear-geometry"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

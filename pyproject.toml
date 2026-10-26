@@ -1,5 +1,5 @@
 [project]
-name = "factual-recall-mechanisms"
+name = "affine-structure-defines-linear-geometry"
 version = "0.2.0"
 description = "Reproduce the experiments, analyses and figures of the factual recall paper."
 readme = "README.md"

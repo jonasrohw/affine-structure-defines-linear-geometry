@@ -1,8 +1,5 @@
 \documentclass[11pt]{article}
-
-% NAACL 2027 submissions use the official ACL/ARR review format.
-% Change review to final only for the camera-ready version.
-\usepackage[review]{acl}
+\usepackage[preprint]{acl}
 \usepackage{times}
 \usepackage{latexsym}
 \usepackage[T1]{fontenc}
@@ -99,8 +96,18 @@
 
 
 
-% The ACL review option anonymizes the author block.
-\author{Anonymous authors}
+% Grouped names and numbered affiliations in the native ACL title block.
+\author{%
+\textbf{Jonas Rohweder\textsuperscript{1,2,3}\hspace{0.9in}%
+Hinrich Sch{\"u}tze\textsuperscript{1,3}}\\[0.6em]
+\normalfont
+\textsuperscript{1}Center for Information and Language Processing (CIS), LMU Munich\\
+\textsuperscript{2}Ubiquitous Knowledge Processing Lab (UKP Lab), TU Darmstadt\\
+\textsuperscript{3}Munich Center for Machine Learning (MCML)%
+}
+\hypersetup{hidelinks,
+  pdftitle={Semantic Structure Defines Relation Geometry in Transformers},
+  pdfauthor={Jonas Rohweder, Hinrich Schütze},pdfsubject={},pdfkeywords={}}
 
 \newcounter{notecounter}
 \newcommand{\enotesoff}{\long\gdef\enote##1##2{}}
@@ -143,7 +150,6 @@ $>>>$\hspace{1cm}}}}}
 
 
 \section{Introduction}
-
 Transformer language models, including those of \citet{vaswani2017attention}
 and \citet{brown2020language}, often encode a relation between entities so that one
 affine transformation predicts the related entity. This observation has supported
@@ -617,6 +623,12 @@ frequency. Each configuration was selected using behavioral and geometry gates a
 evaluated over three seeds. The large within-setting separations are stable across
 those seeds, but broader architecture and seed sweeps would be needed to estimate
 how often each outcome occurs.
+
+\section*{Acknowledgements}
+% Same two DFG grants as the relational-decoding preprint in jlens.
+This work was supported by the German Research Foundation (DFG) under
+grants SCHU~2246/14-1 and GU~798/29-1 (UKP-SQuARE project).
+We gratefully acknowledge support from Google through a generous GCP research grant.
 
 \subsubsection*{AI use statement}
 Generative AI tools were used to help design and critique the synthetic

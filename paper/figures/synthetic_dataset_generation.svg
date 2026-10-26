@@ -9,12 +9,12 @@
 <rect x="0" y="0" width="1440" height="938" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1" />
 <text x="35" y="43" font-family="DejaVu Sans" font-size="31" font-weight="750" fill="#202C38" text-anchor="start" >A</text>
 <text x="77" y="43" font-family="DejaVu Sans" font-size="29" font-weight="650" fill="#202C38" text-anchor="start" >Attribute-defined object prediction</text>
-<text x="35" y="91" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >01</text>
-<text x="67" y="91" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Assign categorical attributes</text>
-<text x="452" y="91" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >02</text>
-<text x="484" y="91" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Create two matched relations</text>
-<text x="997" y="91" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >03</text>
-<text x="1029" y="91" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Repeat &amp; shuffle sentences</text>
+<text x="35" y="91" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >1</text>
+<text x="57" y="91" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Assign categorical attributes</text>
+<text x="452" y="91" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >2</text>
+<text x="474" y="91" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Create two matched relations</text>
+<text x="997" y="91" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >3</text>
+<text x="1019" y="91" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Repeat &amp; shuffle sentences</text>
 <rect x="73" y="160" width="14" height="144" rx="5" fill="#E8F5F2" stroke="none" stroke-width="1" />
 <text x="58" y="177" font-family="DejaVu Sans" font-size="16" font-weight="400" fill="#5D6B79" text-anchor="end" >g₀</text>
 <circle cx="80" cy="172" r="2.85" fill="#FFFFFF" stroke="#69BDB0" stroke-width="0.9"/>
@@ -220,38 +220,6 @@
 <text x="94" y="335" font-family="DejaVu Sans" font-size="18" font-weight="400" fill="#5D6B79" text-anchor="start" >128 train</text>
 <circle cx="215" cy="329" r="4" fill="#FFFFFF" stroke="#69BDB0" stroke-width="1.5"/>
 <text x="227" y="335" font-family="DejaVu Sans" font-size="18" font-weight="400" fill="#5D6B79" text-anchor="start" >64 held out</text>
-<rect x="77" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="85.6" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="94.2" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="102.8" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="111.4" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="120" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="128.6" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="137.2" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="145.8" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="154.4" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="163" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="171.6" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="180.2" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="188.8" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="197.4" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="206" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="214.6" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="223.2" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="231.8" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="240.4" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="249" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="257.6" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="266.2" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="274.8" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="283.4" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="292" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="300.6" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="309.2" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="317.8" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="326.4" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="335" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
-<rect x="343.6" y="360" width="5.4" height="8" rx="0" fill="#AF9BDC" stroke="none" stroke-width="1" />
 <path d="M388,248 L430,248" fill="none" stroke="#5D6B79" stroke-width="1.8" opacity="1" marker-end="url(#gray-arrow)"/>
 <text x="551" y="134" font-family="DejaVu Sans" font-size="21" font-weight="650" fill="#69BDB0" text-anchor="middle" >Attribute rule</text>
 <text x="816" y="134" font-family="DejaVu Sans" font-size="21" font-weight="650" fill="#F098A0" text-anchor="middle" >Balanced random</text>
@@ -342,12 +310,12 @@
 <text x="35" y="468" font-family="DejaVu Sans" font-size="31" font-weight="750" fill="#202C38" text-anchor="start" >B</text>
 <text x="77" y="468" font-family="DejaVu Sans" font-size="29" font-weight="650" fill="#202C38" text-anchor="start" >Attribute equality &amp; symmetric lookup</text>
 <text x="1405" y="466" font-family="DejaVu Sans" font-size="20" font-weight="400" fill="#5D6B79" text-anchor="end" >64 entities → binary pair labels</text>
-<text x="35" y="512" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >01</text>
-<text x="67" y="512" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Assign each entity 10 bits</text>
-<text x="452" y="512" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >02</text>
-<text x="484" y="512" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Label every entity pair</text>
-<text x="997" y="512" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >03</text>
-<text x="1029" y="512" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Write training sentences</text>
+<text x="35" y="512" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >1</text>
+<text x="57" y="512" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Assign each entity 10 bits</text>
+<text x="452" y="512" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >2</text>
+<text x="474" y="512" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Label every entity pair</text>
+<text x="997" y="512" font-family="DejaVu Sans" font-size="17" font-weight="650" fill="#5D6B79" text-anchor="start" >3</text>
+<text x="1019" y="512" font-family="DejaVu Sans" font-size="20" font-weight="600" fill="#202C38" text-anchor="start" >Write training sentences</text>
 <text x="220" y="555" font-family="DejaVu Sans" font-size="19" font-weight="400" fill="#5D6B79" text-anchor="middle" >Attribute</text>
 <rect x="98" y="594" width="31" height="214" rx="5" fill="#E8F5F2" stroke="none" stroke-width="1" />
 <text x="113.5" y="588" font-family="DejaVu Sans" font-size="18" font-weight="650" fill="#69BDB0" text-anchor="middle" >0</text>
