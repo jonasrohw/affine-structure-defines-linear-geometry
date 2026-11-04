@@ -65,7 +65,7 @@ def write(results):
         for group, prefix in [('arbitrary', 'Random'), ('structured_mean', 'Structured')]:
             val = summary['component_ablations'][mode][group]
             stats('ExpTwo' + prefix + tag, val)
-            stats('ExpTwo' + prefix + tag + 'Precise', val, 5)
+            stats('ExpTwo' + prefix + tag + 'Precise', val, 2)
     # Emit the complete curves rather than cherry-picking individual layers.
     lens = np.mean([r['logit_lens']['arbitrary'] for r in rows], axis=0)
     sequence('ExpTwoLens', lens)

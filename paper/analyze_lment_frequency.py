@@ -236,7 +236,7 @@ def main():
     table = [r"\begin{tabular}{lrrrr}", r"\toprule",
              r"Frequency axis & Spearman $\rho$ & Lower & Equal & Higher \\", r"\midrule"]
     for row in stats:
-        table.append(f"{AXES[row['metric']][1]} & ${row['pooled_spearman_rho']:.3f}$ & "
+        table.append(f"{AXES[row['metric']][1]} & ${row['pooled_spearman_rho']:.2f}$ & "
                      f"{row['decreasing']} & {row['equal']} & {row['increasing']} " + r"\\")
     table += [r"\bottomrule", r"\end{tabular}"]
     (DATA / "aggregate_table.tex").write_text("\n".join(table) + "\n")

@@ -64,25 +64,25 @@
 \newcommand{\ExpTwoNullPercentiles}{94.8, 98.0, and 49.2}
 \newcommand{\ExpTwoNullMean}{0.339}
 \newcommand{\ExpTwoRandomFull}{1.000\pm0.000}
-\newcommand{\ExpTwoRandomFullPrecise}{0.99984\pm0.00014}
+\newcommand{\ExpTwoRandomFullPrecise}{1.00\pm0.00}
 \newcommand{\ExpTwoStructuredFull}{1.000\pm0.000}
-\newcommand{\ExpTwoStructuredFullPrecise}{0.99995\pm0.00000}
+\newcommand{\ExpTwoStructuredFullPrecise}{1.00\pm0.00}
 \newcommand{\ExpTwoRandomGelu}{0.510\pm0.008}
-\newcommand{\ExpTwoRandomGeluPrecise}{0.51017\pm0.00754}
+\newcommand{\ExpTwoRandomGeluPrecise}{0.51\pm0.01}
 \newcommand{\ExpTwoStructuredGelu}{0.551\pm0.043}
-\newcommand{\ExpTwoStructuredGeluPrecise}{0.55110\pm0.04267}
+\newcommand{\ExpTwoStructuredGeluPrecise}{0.55\pm0.04}
 \newcommand{\ExpTwoRandomUniform}{0.498\pm0.003}
-\newcommand{\ExpTwoRandomUniformPrecise}{0.49821\pm0.00289}
+\newcommand{\ExpTwoRandomUniformPrecise}{0.50\pm0.00}
 \newcommand{\ExpTwoStructuredUniform}{0.498\pm0.007}
-\newcommand{\ExpTwoStructuredUniformPrecise}{0.49825\pm0.00656}
+\newcommand{\ExpTwoStructuredUniformPrecise}{0.50\pm0.01}
 \newcommand{\ExpTwoRandomNoMlp}{0.531\pm0.014}
-\newcommand{\ExpTwoRandomNoMlpPrecise}{0.53068\pm0.01403}
+\newcommand{\ExpTwoRandomNoMlpPrecise}{0.53\pm0.01}
 \newcommand{\ExpTwoStructuredNoMlp}{0.599\pm0.022}
-\newcommand{\ExpTwoStructuredNoMlpPrecise}{0.59911\pm0.02229}
+\newcommand{\ExpTwoStructuredNoMlpPrecise}{0.60\pm0.02}
 \newcommand{\ExpTwoRandomNoAttention}{0.500\pm0.000}
-\newcommand{\ExpTwoRandomNoAttentionPrecise}{0.50000\pm0.00000}
+\newcommand{\ExpTwoRandomNoAttentionPrecise}{0.50\pm0.00}
 \newcommand{\ExpTwoStructuredNoAttention}{0.500\pm0.000}
-\newcommand{\ExpTwoStructuredNoAttentionPrecise}{0.50000\pm0.00000}
+\newcommand{\ExpTwoStructuredNoAttentionPrecise}{0.50\pm0.00}
 \newcommand{\ExpTwoLens}{0.500, 0.503, 0.505, 0.522, 0.535, 0.518, 0.620, 0.665, and 0.9998}
 \newcommand{\ExpTwoAttentionRange}{0.597--0.714}
 \newcommand{\ExpTwoMlpRange}{0.691--0.916}
@@ -824,12 +824,12 @@ after 200 steps (with seeds 19 and 31 completing 100 steps in the final stage).
 \toprule
 Map & Linear $R^2$ & Relative error & Linear decision & Midpoint defect & Jacobian dispersion \\
 \midrule
-Attention core & $0.993\pm0.002$ & $0.080\pm0.012$ & $0.747\pm0.069$ & $0.035\pm0.007$ & $0.085\pm0.013$ \\
-Attention sublayer & $0.983\pm0.004$ & $0.129\pm0.015$ & $0.750\pm0.066$ & $0.273\pm0.010$ & $0.179\pm0.005$ \\
-MLP core & $0.982\pm0.004$ & $0.133\pm0.013$ & $0.747\pm0.068$ & $0.095\pm0.005$ & $0.137\pm0.007$ \\
-MLP sublayer & $0.974\pm0.006$ & $0.160\pm0.017$ & $0.758\pm0.057$ & $0.247\pm0.027$ & $0.172\pm0.009$ \\
-Readout & $0.993\pm0.003$ & $0.081\pm0.017$ & $0.760\pm0.060$ & $0.199\pm0.004$ & $0.228\pm0.007$ \\
-Full lookup & $0.965\pm0.010$ & $0.185\pm0.027$ & $0.750\pm0.056$ & $0.352\pm0.011$ & $0.281\pm0.013$ \\
+Attention core & $0.99\pm0.00$ & $0.08\pm0.01$ & $0.75\pm0.07$ & $0.04\pm0.01$ & $0.09\pm0.01$ \\
+Attention sublayer & $0.98\pm0.00$ & $0.13\pm0.02$ & $0.75\pm0.07$ & $0.27\pm0.01$ & $0.18\pm0.01$ \\
+MLP core & $0.98\pm0.00$ & $0.13\pm0.01$ & $0.75\pm0.07$ & $0.10\pm0.01$ & $0.14\pm0.01$ \\
+MLP sublayer & $0.97\pm0.01$ & $0.16\pm0.02$ & $0.76\pm0.06$ & $0.25\pm0.03$ & $0.17\pm0.01$ \\
+Readout & $0.99\pm0.00$ & $0.08\pm0.02$ & $0.76\pm0.06$ & $0.20\pm0.00$ & $0.23\pm0.01$ \\
+Full lookup & $0.97\pm0.01$ & $0.19\pm0.03$ & $0.75\pm0.06$ & $0.35\pm0.01$ & $0.28\pm0.01$ \\
 \bottomrule
 \end{tabular}
 \caption{Sublayer and full-lookup linearity diagnostics for $\Rsem$ at $F=16$ in
@@ -840,7 +840,7 @@ sublayer's output is replaced by its cross-validated linear regression approxima
 \label{tab:goal1-transformations}
 \end{table*}
 
-At $F=64$, the random relation $\Rrnd$ reaches $1.000$ recall on trained
+At $F=64$, the random relation $\Rrnd$ reaches $1.00$ recall on trained
 subjects, confirming that the 1-layer architecture can memorize the arbitrary
 training pairs given sufficient exposure, while remaining at chance ($1/32$) on
 held-out subjects and held-out OLS transfer.
@@ -849,12 +849,12 @@ For the causal patching experiments in Experiment~A, we measure target-logit
 margin recovery, defined as the patched-minus-corrupted target logit change
 divided by the clean-minus-corrupted change (aggregated across prompts before
 division). For $\Rsem$ at $F=16$, patching subject-derived attention value
-vectors recovers $\ExpOneValuePatch$ of the clean margin, whereas patching
-attention weights recovers $\ExpOnePatternPatch$. Patching all MLP activations
-at the relation-token position recovers $\ExpOneRelationPatch$ of the
+vectors recovers $0.99\pm0.01$ of the clean margin, whereas patching
+attention weights recovers $0.01\pm0.01$. Patching all MLP activations
+at the relation-token position recovers $0.85\pm0.02$ of the
 relation-specific margin. Retaining only the 32 MLP neurons with the largest
-individual effects recovers $\ExpOneTopOnly$ of the subject-specific margin,
-while ablating those 32 neurons still leaves $\ExpOneTopAblated$, indicating a
+individual effects recovers $0.50\pm0.03$ of the subject-specific margin,
+while ablating those 32 neurons still leaves $0.79\pm0.03$, indicating a
 distributed MLP readout.
 
 \section{Additional Experiment B results}
@@ -868,11 +868,11 @@ distributed MLP readout.
 \toprule
 Seed & Attribute & Min. struct. & Random & Min. symmetry & Min. struct. $R^2$ & Random $R^2$ & Random CV $R^2$ \\
 \midrule
-19 & 1.00000 & 0.99976 & 1.00000 & 0.99951 & 0.99569 & 0.38385 & -0.65023 \\
-31 & 1.00000 & 0.99976 & 0.99976 & 0.99951 & 0.99529 & 0.40066 & -0.76091 \\
-47 & 1.00000 & 0.99976 & 0.99976 & 0.99951 & 0.99485 & 0.34028 & -0.72857 \\
+19 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 0.38 & -0.65 \\
+31 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 0.40 & -0.76 \\
+47 & 1.00 & 1.00 & 1.00 & 1.00 & 0.99 & 0.34 & -0.73 \\
 \midrule
-Mean & 1.00000 & 0.99976 & 0.99984 & 0.99951 & 0.99527 & 0.37493 & -0.71324 \\
+Mean & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 0.37 & -0.71 \\
 \bottomrule
 \end{tabular}
 \caption{Complete behavioral accuracy, prediction symmetry, and token-embedding

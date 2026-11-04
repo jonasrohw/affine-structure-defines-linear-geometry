@@ -256,14 +256,15 @@ def write_tables(output):
             values += [ols["min_structured_full_r2"], ols["arbitrary"]["full_r2"]]
             values += [ols["arbitrary"]["cv_r2"]] if complete else []
             matrix.append(values)
-            rows.append(str(row["seed"]) + " & " + " & ".join(f"{v:.5f}" for v in values) + r" \\")
-        rows += [r"\midrule", "Mean & " + " & ".join(f"{v:.5f}" for v in np.mean(matrix, axis=0)) + r" \\"]
+            fmt = ".2f" if complete else ".5f"
+            rows.append(str(row["seed"]) + " & " + " & ".join(f"{v:{fmt}}" for v in values) + r" \\")
+        rows += [r"\midrule", "Mean & " + " & ".join(f"{v:{fmt}}" for v in np.mean(matrix, axis=0)) + r" \\"]
         replace_table(label, rows)
     names = ("Attention core", "Attention sublayer", "MLP core", "MLP sublayer", "Readout", "Full lookup")
     rows = []
     for name, stage in zip(names, STAGES, strict=True):
         values = transformation_metrics(linear[stage])
-        rows.append(name + " & " + " & ".join(f"${values[i]:.3f}\\pm{values[i+1]:.3f}$"
+        rows.append(name + " & " + " & ".join(f"${values[i]:.2f}\\pm{values[i+1]:.2f}$"
                                                for i in range(0, 10, 2)) + r" \\")
     replace_table("tab:goal1-transformations", rows)
     path.write_text(manuscript)

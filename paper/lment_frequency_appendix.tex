@@ -31,10 +31,10 @@ split).
 
 At the relation level, correlating $\log(1+\bar f_r)$ (where $\bar f_r$ is the
 mean subject--object document count across evaluated facts in relation $r$) with
-relation faithfulness yields a Pearson correlation of $-0.075$ across all 58
-relations, $0.095$ across the 48 relations with more than one distinct predicted
-answer token, and $0.214$ across the 33 relations that also have at least 20
-evaluated facts (or $0.100$ using $\log\bar f_r$ after excluding zero-frequency
+relation faithfulness yields a Pearson correlation of $-0.08$ across all 58
+relations, $0.10$ across the 48 relations with more than one distinct predicted
+answer token, and $0.21$ across the 33 relations that also have at least 20
+evaluated facts (or $0.10$ using $\log\bar f_r$ after excluding zero-frequency
 relations). Unlike \citet{merullo2025frequency}, who evaluate intervention
 causality against tokenized sequence counts in OLMo-7B with per-relation scale
 selection, our LMEnt-1B analysis evaluates observational decoder faithfulness
@@ -62,7 +62,7 @@ all 203 \emph{person employer} and all 154 \emph{person educated at} predictions
 begin with \texttt{University}, which a constant decoder matches). Removing
 these ten degenerate relations leaves 4,883 facts across 48 relations ($46.0\%$
 pooled faithfulness) and reduces the pooled Spearman rank correlations to
-$0.073$, $0.008$, and $-0.033$ for subject, subject--object, and
+$0.07$, $0.01$, and $-0.03$ for subject, subject--object, and
 subject--relation frequency, respectively. Across
 alternative minimum tail-size thresholds, upper-quartile faithfulness is lower
 than lower-quartile faithfulness in $15/34$, $14/33$, and $11/26$ relations (at
