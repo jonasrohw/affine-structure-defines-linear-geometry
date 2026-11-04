@@ -153,13 +153,12 @@ Pretrained transformer language models \citep{vaswani2017attention,brown2020lang
 often encode factual relations as \emph{linear relational embeddings} (LREs),
 where a single relation-specific linear transformation maps subject
 representations to object representations
-\citep{hernandez2024linearity,valer2026relational}. When such a linear
-relational representation holds, related entities are organized along shared
-geometric directions rather than stored as isolated subject--object pairs.
-Because LRE faithfulness correlates strongly with how often a relation appears
-in pretraining data \citep{merullo2025frequency}, exposure frequency is a
-natural candidate for explaining when linear relational geometry emerges.
-However, corpus frequency in natural text is confounded with semantic
+\citep{hernandez2024linearity,valer2026relational}. \citet{merullo2025frequency}
+find that LRE faithfulness correlates strongly with subject--object
+co-occurrence frequency in pretraining data, suggesting that linear relational
+representations emerge once a relation crosses a co-occurrence threshold.
+Exposure frequency is therefore a natural candidate for explaining when
+relational linearity arises. However, corpus frequency in natural text is confounded with semantic
 structure: frequently stated relations often connect entities that share
 underlying attributes reinforced across the rest of the corpus.
 
