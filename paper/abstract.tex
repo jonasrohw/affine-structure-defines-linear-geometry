@@ -20,12 +20,13 @@ transformer sees each training fact of an attribute-defined relation $\Rsem$ at
 low frequency, yet a linear probe transfers to held-out subjects with
 \ExpOneSemanticProbe{} accuracy and the model recalls held-out objects at
 \ExpOneSemanticHeldout{}. A frequency-matched random relation $\Rrnd$ without
-attribute structure remains at chance ($1/32$). In B, a transformer memorizes a
-random relation $\Rrnd$ constituting 50\% of relation batches, versus 5\% for
-each of ten attribute-defined controls $r_i$. Although $\Rrnd$ reaches
-\ExpTwoRandom{} recall, linear regression on the embeddings explains only
-\ExpTwoRandomRsq{} of its target variance, compared to \ExpTwoStructuredRsq{}
-for the $r_i$. Consistently, in the pretrained LMEnt-1B model, linear relational
+attribute structure remains at chance ($1/32$). In B, a transformer sees a
+random relation $\Rrnd$ ten times as often in joint training as each of ten
+attribute-defined relations $r_i$ (50\% vs.\ 5\% of relation examples).
+Although the model memorizes $\Rrnd$ at \ExpTwoRandom{} accuracy, fitting a
+linear map from subject to target object embeddings yields only
+$R^2=\ExpTwoRandomRsq{}$, compared with \ExpTwoStructuredRsq{} for the $r_i$.
+Consistently, in the pretrained LMEnt-1B model, linear relational
 embedding (LRE) faithfulness tracks many-to-one object sharing rather than pair
 co-occurrence frequency.
 Code is available at \url{https://github.com/jonasrohw/affine-structure-defines-linear-geometry}.
