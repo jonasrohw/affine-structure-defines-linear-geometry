@@ -28,21 +28,40 @@ RESULTS = ROOT / "results/lment-case-study"
 SHARING_BINS = [-1, 0, 9, 29, 10 ** 9]
 SHARING_LABELS = ["0", "1--9", "10--29", "30+"]
 COOC_LABELS = ["Q1", "Q2", "Q3", "Q4"]
+ARCHIVED_PROBE_VS_LRE = [
+    ("city country", 143 / 199, 131 / 199),
+    ("country continent", 117 / 124, 80 / 124),
+    ("country currency", 24 / 159, 73 / 159),
+    ("country official language", 267 / 330, 242 / 330),
+    ("organization headquarters", 10 / 53, 11 / 53),
+    ("person citizenship", 150 / 231, 146 / 231),
+    ("person death place", 31 / 56, 41 / 56),
+    ("person native language", 428 / 487, 397 / 487),
+    ("person religion", 43 / 84, 30 / 84),
+    ("software programming language", 42 / 103, 53 / 103),
+]
 
 
 def load():
     facts = pd.read_csv(ROOT / "paper/data/lment_frequency/facts.csv")
-    per_fact = pd.read_csv(RESULTS / "probe_perfact_all.csv")
-    merged = per_fact.merge(
-        facts[["relation", "subject", "object", "lm_prediction_token_id"]],
-        on=["relation", "subject", "object"])
+    if (RESULTS / "probe_perfact_all.csv").is_file():
+        per_fact = pd.read_csv(RESULTS / "probe_perfact_all.csv")
+        merged = per_fact.merge(
+            facts[["relation", "subject", "object", "lm_prediction_token_id"]],
+            on=["relation", "subject", "object"])
+        relations = pd.read_csv(RESULTS / "probe_vs_lre.csv")
+        cohort = set(pd.read_csv(RESULTS / "cohort.csv").relation.unique())
+        relations = relations[relations.relation.isin(cohort)]
+    else:
+        relations = pd.DataFrame(ARCHIVED_PROBE_VS_LRE, columns=["relation", "probe", "lre"])
+        merged = facts[facts.relation.isin(relations.relation)].copy()
+        merged["cooc"] = merged["subject_object_document_count"]
+        merged["lre_correct"] = merged["faithful"].astype(int)
     merged["support"] = merged.groupby(
         ["relation", "lm_prediction_token_id"])["subject"].transform("size") - 1
     merged["cooc_bin"] = pd.qcut(merged.cooc, 4, labels=COOC_LABELS, duplicates="drop")
     merged["share_bin"] = pd.cut(merged.support, SHARING_BINS, labels=SHARING_LABELS)
-    relations = pd.read_csv(RESULTS / "probe_vs_lre.csv")
-    cohort = set(pd.read_csv(RESULTS / "cohort.csv").relation.unique())
-    return merged, relations[relations.relation.isin(cohort)]
+    return merged, relations
 
 
 def main():
@@ -63,7 +82,7 @@ def main():
     axes[0].set_xticks(position)
     axes[0].set_xticklabels(["1", "2", "3", "4"])
     axes[0].set_xlabel("bin, increasing")
-    axes[0].set_ylabel("decoder faithfulness")
+    axes[0].set_ylabel("LRE faithfulness")
     axes[0].set_ylim(0.3, 0.85)
     axes[0].grid(axis="y")
     axes[0].legend(loc="lower right", fontsize=6.5)
@@ -98,7 +117,7 @@ def main():
     axes[2].set_xlim(0, 1)
     axes[2].set_ylim(0, 1)
     axes[2].set_xlabel("nearest-centroid probe")
-    axes[2].set_ylabel("decoder faithfulness")
+    axes[2].set_ylabel("LRE faithfulness")
     axes[2].grid(True)
     axes[2].set_title("C", loc="left")
     axes[2].annotate(f"mean {relations.lre.mean():.3f} vs {relations.probe.mean():.3f}",
