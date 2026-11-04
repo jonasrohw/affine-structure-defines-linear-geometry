@@ -188,24 +188,18 @@ recalls the relation triples. Once recall emerges, both the model and a linear
 probe generalize to held-out subjects, whereas the frequency-matched random
 relation remains at chance.
 
-Conversely, some facts lack any underlying attribute rule and must be learned
-pair by pair. Compare a company directory with a record of randomly assigned
-coffee meetings. If Alice and Bob both work in engineering, their directory
-entries suffice to establish that they share a department. Those entries do not
-tell us whether Alice was assigned to meet Bob or Carol: each pairing must be
-memorized from the meeting record. Repeating that record can make the pairings
-familiar without making them follow an attribute-based rule.
-
-Experiment~B tests this high-exposure regime by training a decoder-only
-transformer on a random relation $\Rrnd$ alongside ten attribute-defined
-relations $r_i$, where $\Rrnd$ appears ten times as often in joint training as
-each $r_i$ (50\% vs.\ 5\% of relation examples). Although the transformer learns
-the $r_i$ and memorizes $\Rrnd$ at 99.98\% accuracy, fitting a linear map from
-subject to target object embeddings yields only $R^2=\ExpTwoRandomRsq{}$ on
-$\Rrnd$, compared with \ExpTwoStructuredRsq{} on the $r_i$. In terms of the
-analogy, the model remembers every recorded coffee meeting, but a linear
-transformation cannot recover the assigned partners from the employee
-embeddings.
+Conversely, high exposure alone should not induce linear geometry when paired
+entities share no underlying attributes. Repeating an arbitrary set of
+subject--object pairs allows a model to memorize every pairing, but without
+attribute overlap across the related entities, no shared direction forms in
+embedding space to align subjects linearly with their targets. Experiment~B
+tests this regime by training a decoder-only transformer on a random relation
+$\Rrnd$ alongside ten attribute-defined relations $r_i$, where $\Rrnd$ appears
+ten times as often in joint training as each $r_i$ (50\% vs.\ 5\% of relation
+examples). Although the transformer learns the $r_i$ and memorizes $\Rrnd$ at
+99.98\% accuracy, fitting a linear map from subject to target object embeddings
+yields only $R^2=\ExpTwoRandomRsq{}$ on $\Rrnd$, compared with
+\ExpTwoStructuredRsq{} on the $r_i$.
 
 Together, our experiments support three conclusions:
 
