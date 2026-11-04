@@ -1,80 +1,73 @@
 \section{Pretrained-model aggregation details}
 \label{app:lment-frequency}
 
-The LMEnt evaluation covers 5,388 facts across 58 of the factual dataset's 60
-relation types. Two lack enough accepted examples for the eight-example
-protocol. The model has 18 OLMo2 blocks and residual width 2,048. Overall
-faithfulness is $51.1\%$ with equal weight per fact and $54.4\%$ with equal weight
-per relation.
+The LMEnt-1B evaluation covers 5,388 facts across 58 of the dataset's 60
+relation types (two relations lack enough accepted examples for the
+eight-demonstration estimation protocol). The model has 18 OLMo2 transformer
+layers (blocks) and residual width 2,048. Overall first-token decoder agreement
+(faithfulness) is $51.1\%$ when weighting facts equally and $54.4\%$ when
+weighting relations equally.
 
-Subject frequency counts distinct corpus documents or chunks linked to a
-subject's Wikidata identifier. Subject--object frequency requires the gold object
-label in the same document, matched case-insensitively at word boundaries with
-recorded country and continent demonym aliases. Subject--relation frequency
-instead requires a recorded lexical cue. These counts are proxies for factual
-exposure: co-occurrences and cues need not express the target fact, and zero
-matches do not establish zero training exposure.
+Subject frequency counts distinct corpus documents (chunks) linked to a
+subject's Wikidata identifier. Subject--object frequency counts subject-linked
+documents that also contain the gold object label, matched case-insensitively at
+word boundaries (including recorded country and continent demonym aliases), while
+subject--relation frequency requires a recorded lexical relation cue. Because
+co-occurrences and lexical cues need not express the target fact---and zero
+document matches do not guarantee zero training exposure---these counts serve as
+observational proxies for pretraining exposure.
 
-The source analysis uses seed 42 and an object-coverage-balanced ordering to
-choose eight LRE estimation examples per relation. These examples are excluded
-from evaluation and supply the in-context demonstrations for evaluation prompts.
-The filter retains a sample when the model's decoded top-1 token, stripped of
-whitespace and lowercased, is a nonempty prefix of the gold label. This is a
-first-token criterion and does not certify the full answer. Candidate subject
-states are residual states after blocks $\{0,3,6,9,12,15\}$, indexed from zero.
-The archived scale sweep uses $\{1,2,3,4,5,6,8,10\}$ and maximizes the macro mean
-of each relation's best-layer faithfulness. It selects $\beta=4$. Layer and scale
-selection both use the reported evaluation outcomes. The estimation split does
-not supply an independent model-selection test set.
+Following the source protocol, we use random seed 42 and an
+object-coverage-balanced ordering to select eight LRE estimation examples per
+relation, which are excluded from evaluation and used as in-context
+demonstrations in evaluation prompts. An example is retained when the model's
+top-1 predicted token (stripped of whitespace and lowercased) matches a nonempty
+prefix of the gold object label. Candidate subject representations are extracted
+from residual-stream states after layers $\{0,3,6,9,12,15\}$ (0-indexed). The
+archived scale sweep over $\beta\in\{1,2,3,4,5,6,8,10\}$ maximizes macro-average
+best-layer faithfulness across relations, selecting $\beta=4$ (note that layer
+and scale selection use the evaluation split rather than a separate validation
+split).
 
-For the relation-level comparison, we average subject--object counts over the
-evaluated facts of each relation and correlate $\log(1+\bar f_r)$ with its
-faithfulness. Each relation gets equal weight. Pearson correlation is $-0.075$
-over all 58 relations, $0.095$ over the 48 with varying answer tokens, and $0.214$
-over the 33 that also contain at least twenty facts. Using $\log\bar f_r$ and
-excluding zero-frequency relations gives $0.100$ for the varying-token subset.
-The comparison with \citet{merullo2025frequency} concerns the scope of the
-frequency association: their main score is intervention-based causality, their
-OLMo counts use tokenized training sequences, and they select a separate scale
-per relation. Our faithfulness scores and document counts do not reproduce that
-protocol.
+At the relation level, correlating $\log(1+\bar f_r)$ (where $\bar f_r$ is the
+mean subject--object document count across evaluated facts in relation $r$) with
+relation faithfulness yields a Pearson correlation of $-0.075$ across all 58
+relations, $0.095$ across the 48 relations with more than one distinct predicted
+answer token, and $0.214$ across the 33 relations that also have at least 20
+evaluated facts (or $0.100$ using $\log\bar f_r$ after excluding zero-frequency
+relations). Unlike \citet{merullo2025frequency}, who evaluate intervention
+causality against tokenized sequence counts in OLMo-7B with per-relation scale
+selection, our LMEnt-1B analysis evaluates observational decoder faithfulness
+against entity-linked document counts.
 
-For each relation and frequency axis, let $q_{.25}$ and $q_{.75}$ be empirical
-quartiles computed by linear interpolation between adjacent sorted observations.
-The lower group contains every fact with $f\leq q_{.25}$ and the upper group every
-fact with $f\geq q_{.75}$. We require $q_{.25}<q_{.75}$ so that these groups are
-disjoint. Discrete counts can produce groups larger than one quarter of the
-relation. We retain all tied observations. The difference is
+Within each relation and frequency axis, let $q_{.25}$ and $q_{.75}$ denote the
+empirical 25th and 75th percentiles (computed via linear interpolation), and
+define the lower and upper quartile groups as $f_i\leq q_{.25}$ and $f_i\geq
+q_{.75}$ (retaining all tied observations and requiring $q_{.25}<q_{.75}$ so
+that the groups are disjoint). The upper-minus-lower faithfulness difference (in
+percentage points) is
 \begin{equation}
   \Delta_r=100\Bigl(
     \frac{\sum_{i:f_i\geq q_{.75}} y_i}{|\{i:f_i\geq q_{.75}\}|}
     -\frac{\sum_{i:f_i\leq q_{.25}} y_i}{|\{i:f_i\leq q_{.25}\}|}
   \Bigr),
 \end{equation}
-where $y_i$ is the binary faithfulness outcome. We average $\Delta_r$ with equal
-weight per eligible relation. The pooled Spearman correlations instead give
-every evaluated fact equal weight and use average ranks for ties. No independence
-test or uncertainty estimate over model seeds is implied by these summaries.
+where $y_i\in\{0,1\}$ is the fact-level faithfulness indicator. We report the
+unweighted mean of $\Delta_r$ across eligible relations alongside pooled
+fact-level Spearman rank correlations (using average ranks for ties).
 
-Ten relations, totaling 505 evaluated facts, have only one distinct model-predicted
-answer token. All have perfect LRE faithfulness. In particular, all 203
-person-employer answers and all 154 person-educated-at answers begin with
-\texttt{University}. A constant decoder would match the model on these sets.
-We retain them in the all-fact reproduction of the source curves, but exclude
-them from the within-relation comparison. Removing all ten leaves 4,883 facts
-across 48 relations with $46.0\%$ pooled faithfulness. The pooled rank correlations
-then become $0.073$, $0.008$, and $-0.033$ for subject, subject--object, and
-subject--relation frequency. The change in the subject--object correlation shows
-why the pooled statistic alone is insufficient. Token imbalance within the
-remaining relations can still affect the comparisons.
-
-The presence of decreases is not specific to the ten-fact tail threshold. With
-at least five facts per tail, the numbers of decreases are $15/34$, $14/33$, and
-$11/26$ eligible relations for the three axes. With at least twenty, they are
-$9/20$, $9/20$, and $7/14$. These thresholds were checked during the aggregation.
-They were not preregistered. Eligibility depends on frequency variation and sample
-size, so these proportions describe the retained relations. Their applicability to
-other natural-language relations remains untested.
+Ten relations (505 facts total) have only a single distinct model-predicted
+answer token and therefore achieve $100\%$ faithfulness trivially (for instance,
+all 203 \emph{person employer} and all 154 \emph{person educated at} predictions
+begin with \texttt{University}, which a constant decoder matches). Removing
+these ten degenerate relations leaves 4,883 facts across 48 relations ($46.0\%$
+pooled faithfulness) and reduces the pooled Spearman rank correlations to
+$0.073$, $0.008$, and $-0.033$ for subject, subject--object, and
+subject--relation frequency, respectively. Across
+alternative minimum tail-size thresholds, upper-quartile faithfulness is lower
+than lower-quartile faithfulness in $15/34$, $14/33$, and $11/26$ relations (at
+$\geq 5$ facts per tail) and in $9/20$, $9/20$, and $7/14$ relations (at $\geq
+20$ facts per tail).
 
 \begin{table*}[t]
   \centering
@@ -96,9 +89,7 @@ other natural-language relations remains untested.
   \label{tab:lment-examples}
 \end{table*}
 
-We join predictions to document counts by relation, subject, and object, with a
-one-to-one merge and no missing counts. We checked every exact-frequency count
-against all 174 original frequency curves and verified that estimation facts do
-not overlap evaluation facts. No model was retrained or re-evaluated for this
-aggregation. The pretrained evidence is limited to this checkpoint. The synthetic
-interventions remain the causal tests of the frequency-only explanation.
+All evaluated predictions were merged one-to-one with pretraining document
+counts by relation, subject, and object (with zero missing counts), and verified
+against the 174 source frequency curves with no overlap between estimation and
+evaluation facts.

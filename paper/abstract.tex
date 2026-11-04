@@ -11,41 +11,21 @@
 %to do this part justice in the available space?}
 
 
-Prior work shows that relations expressed more often in pretraining data are more
-likely to admit linear decoders in language-model
-representations. We find
-that corpus
-frequency by itself does not determine this geometry, but we
-identify another factor,
-\emph{semantic structure} (the attributes that subjects and
-objects share),
-that plays an important role in shaping geometry.
-We construct two controlled synthetic
-settings, A and B. The Transformer in A sees each
-fact of $k$
-attribute-defined
-relations $r_i$ with low frequency, yet
-a probe diagnoses the $r_i$ as highly linear and the model
-predicts correct objects for held-out subject with
-\ExpOneSemanticHeldout{} recall, demonstrating
-good generalization.
-In contrast, a frequency-matched random
-(i.e., no attribute structure) relation remains at chance under the same probe.
-The Transformer in B
-memorizes a random  relation
- $\Rrnd$
-sampled ten times
-as often as each of ten controls $r_i$ with rich semantic structure.
- $\Rrnd$'s  accuracy is
-\ExpTwoRandom{}, yet an affine fit  explains
-only \ExpTwoRandomRsq{} of target variance, compared to \ExpTwoStructuredRsq{} for
-the $r_i$.  These results give controlled
-counterexamples to a frequency-only account and point to the
-importance of semantic structure for relation geometry.
-Finally, in our analysis of relations in
-the LMEnt-1B model, we similarly find only a weak association 
-between corpus frequency and
-affine-decoder faithfulness, suggesting that
-frequency is only one of many factors that
-shape relation geometry in both synthetic and natural data.
+Prior work links the emergence of linear relational representations in language
+models to how often a relation appears in pretraining data. We show that corpus
+frequency alone does not determine relational linearity; instead, \emph{semantic
+structure}---the attributes that subjects and objects share---plays a central
+role. We construct two controlled synthetic settings, A and B. In A, a
+transformer sees each training fact of an attribute-defined relation $\Rsem$ at
+low frequency, yet a linear probe transfers to held-out subjects with
+\ExpOneSemanticProbe{} accuracy and the model recalls held-out objects at
+\ExpOneSemanticHeldout{}. A frequency-matched random relation $\Rrnd$ without
+attribute structure remains at chance ($1/32$). In B, a transformer memorizes a
+random relation $\Rrnd$ constituting 50\% of relation batches, versus 5\% for
+each of ten attribute-defined controls $r_i$. Although $\Rrnd$ reaches
+\ExpTwoRandom{} recall, linear regression on the embeddings explains only
+\ExpTwoRandomRsq{} of its target variance, compared to \ExpTwoStructuredRsq{}
+for the $r_i$. Consistently, in the pretrained LMEnt-1B model, linear relational
+embedding (LRE) faithfulness tracks many-to-one object sharing rather than pair
+co-occurrence frequency.
 Code is available at \url{https://github.com/jonasrohw/affine-structure-defines-linear-geometry}.

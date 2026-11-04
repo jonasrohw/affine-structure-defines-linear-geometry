@@ -1,9 +1,10 @@
-\section{Affine decoders in a pretrained model show higher agreement for shared answers}
+\section{Linear relational embeddings in a pretrained model track shared answers rather than exposure}
 \label{sec:lment-frequency}
 
 \citet{merullo2025frequency} report that relations with more frequent
-subject--object co-occurrences have better linear relational embeddings (LREs).
-Writing their OLMo-7B relation-level comparison as
+subject--object co-occurrences in pretraining data have more faithful linear
+relational embeddings (LREs; \citealp{hernandez2024linearity}). Writing their
+OLMo-7B relation-level comparison as
 \begin{equation}
   \begin{gathered}
     \bar f_r=\frac{1}{|\mathcal D_r|}\sum_{(s,o)\in\mathcal D_r}n(s,o), \\
@@ -11,96 +12,100 @@ Writing their OLMo-7B relation-level comparison as
   \end{gathered}
   \label{eq:merullo-frequency}
 \end{equation}
-$n(s,o)$ counts co-occurrences and $C_r$ measures how successfully LRE-based
-interventions change the predicted object. These observations suggest exposure
-frequency as an explanation for relational linearity.
+where $n(s,o)$ counts training co-occurrences and $C_r$ measures how often an
+LRE intervention changes the model's predicted object, this correlation suggests
+that exposure frequency could drive relational linearity.
 
-We examine this in LMEnt-1B, a one-billion-parameter model pretrained on English
-Wikipedia \citep{gottesman2025lment}. We evaluate 5,388 facts across 58 relations
-using mean-Jacobian affine decoders $\hat o_r(s)=D(\beta W_r h_s+b_r)$
-\citep{hernandez2024linearity}, where $D$ decodes the top-1 token. Our score is
-first-token faithfulness, $\phi_r=\Pr[\hat o_r(s)=o_{\mathrm{LM}}(s,r)]$.
-Frequency counts subject-linked corpus documents containing the gold object label.
+To test whether corpus frequency predicts LRE faithfulness at the level of
+individual facts, we analyze LMEnt-1B \citep{gottesman2025lment}, a
+one-billion-parameter language model whose English Wikipedia pretraining corpus
+is indexed with entity links to Wikidata. This entity-linked index allows us to
+count exact pretraining document co-occurrences for every evaluated fact rather
+than relying on approximate string searches. Across 5,388 facts in 58 relations,
+we fit mean-Jacobian LREs $\hat o_r(s)=D(\beta W_r h_s+b_r)$ from intermediate
+subject hidden states $h_s$ \citep{hernandez2024linearity}, where $D$ decodes
+the top-1 output token. Following \citet{hernandez2024linearity}, we measure
+first-token LRE faithfulness, $\phi_r=\Pr[\hat o_r(s)=o_{\mathrm{LM}}(s,r)]$---the
+rate at which the LRE reproduces the model's own top-1 prediction---and define
+exposure frequency as the number of subject-linked training documents that also
+contain the gold object label.
 
-\paragraph{Our baseline.}
-$\phi_r$ is uncorrected for a decoder that always emits a relation's most common
-answer, and only 14 of 30 relations with at least 30 facts beat that constant
-guess. Person employer and astronomical parent body reach $\phi_r=1.000$ because
-the model emits one answer token for every fact in them. We therefore screen
-relations on answer and decoder diversity alone, not on corpus counts: we keep a
-relation with at least 30 facts, five distinct model answers, ten distinct decoder
-outputs, and faithfulness at least five points above its modal baseline. Eleven of
-58 relations meet these criteria, and ten support the per-fact analyses below, covering
-1,826 facts.
+\paragraph{Filtering out constant-answer relations.}
+Raw LRE faithfulness $\phi_r$ can be artificially high when the language model
+collapses to a single default answer: for example, in \emph{person employer} and
+\emph{astronomical parent body}, LMEnt-1B outputs the same token for every
+subject, giving $\phi_r=1.000$ trivially. Among the 30 relations with at least
+30 evaluated facts, only 14 exceed the accuracy of always guessing the
+relation's most frequent answer. To restrict our analysis to non-trivial
+relation decoding without selecting on corpus frequency, we filter relations
+solely by answer diversity: we retain relations with at least 30 facts, at least
+five distinct model answers, at least ten distinct LRE outputs, and $\phi_r$ at
+least five percentage points above the majority-answer baseline. Eleven of 58
+relations pass this filter, and ten support the per-fact analyses below (1,826
+facts; Appendix~\ref{app:lment-frequency}).
 
-\paragraph{Decoder success is predicted by how many entities share an answer.}
-For each fact we count the other entities in its relation that receive the same
-model answer. Faithfulness rises monotonically with that count and is flat across
-co-occurrence quartiles (Figure~\ref{fig:lment-sharing}A). The joint distribution
-shows the same thing without marginalizing: faithfulness varies across
-answer-sharing groups and is flat across co-occurrence quartiles in
-Figure~\ref{fig:lment-sharing}B, over cells holding between 37 and 272 facts.
-In a logistic regression over the 1{,}219
-non-modal facts, with relation fixed effects and standardized predictors, answer
-sharing gives $+0.598$ (95\% CI $[+0.398,+0.796]$) while subject--object
-co-occurrence gives $+0.026$ (95\% CI $[-0.159,+0.226]$). Holding answer sharing
-fixed, exposure is indistinguishable from zero. Decoder agreement increases with
-answer sharing in the selected relations. The co-occurrence coefficient is close
-to zero.
+\paragraph{LRE faithfulness tracks answer sharing rather than co-occurrence frequency.}
+Within these ten relations, we compare each fact's pretraining co-occurrence
+count against \emph{answer sharing}---the number of other subjects in the same
+relation that receive the same model-predicted object. LRE faithfulness rises
+monotonically with answer sharing (from $0.409$ for unique answers to $0.762$
+when $30+$ subjects share the answer), whereas it remains flat across
+subject--object co-occurrence quartiles ($0.644$ to $0.639$;
+Figure~\ref{fig:lment-sharing}A). The two-way breakdown in
+Figure~\ref{fig:lment-sharing}B (37 to 272 facts per cell) shows that this
+pattern holds within each stratum: faithfulness increases across answer-sharing
+columns but does not increase across co-occurrence rows. In a logistic
+regression over the 1{,}219 non-modal facts with relation fixed effects and
+standardized predictors, answer sharing strongly predicts LRE faithfulness
+($+0.598$, 95\% CI $[+0.398,+0.796]$), while subject--object co-occurrence has a
+near-zero effect ($+0.026$, 95\% CI $[-0.159,+0.226]$).
 
 \begin{figure*}[t]
   \centering
   \includegraphics[width=1.0\textwidth]{lment_sharing.pdf}
-  \caption{Affine decoders show higher agreement for shared answers over 1,826 facts in
-  ten screened LMEnt-1B relations. \textbf{A:} decoder faithfulness against
-  subject--object co-occurrence quartiles ($0.644$, $0.679$, $0.680$, $0.639$) and
-  against the number of other entities receiving the same model answer, binned at
-  $0$, $1$--$9$, $10$--$29$ and $30+$ ($0.409$, $0.524$, $0.692$, $0.762$).
-  \textbf{B:} the same quantity over the joint, with 37 to 272 facts per cell.
-  Faithfulness varies across answer-sharing groups and is flat across
-  co-occurrence quartiles. \textbf{C:} the
-  decoder against a leave-one-out nearest-centroid probe on the same subject
-  states, one point per relation, with the identity line. The relation-specific
-  operator adds little on average over how well subject representations already
-  cluster by answer, and disagrees with the probe relation by relation.}
+  \caption{LRE faithfulness in LMEnt-1B increases when multiple subjects share
+  the same answer (1,826 facts across ten relations). \textbf{A:} LRE
+  faithfulness ($\phi_r$) across subject--object co-occurrence quartiles
+  ($0.644$, $0.679$, $0.680$, $0.639$) and across bins of how many other
+  subjects in the relation share the model's predicted answer ($0$: $0.409$;
+  $1$--$9$: $0.524$; $10$--$29$: $0.692$; $30+$: $0.762$). \textbf{B:} Mean LRE
+  faithfulness across the joint grid of answer sharing and co-occurrence
+  quartiles (37 to 272 facts per cell). \textbf{C:} Per-relation LRE
+  faithfulness versus a leave-one-out nearest-centroid classifier fit directly
+  on the subject hidden states $h_s$ (dashed identity line).}
   \label{fig:lment-sharing}
 \end{figure*}
 
-\paragraph{Both synthetic conditions occur inside one relation.}
-Lavertezzo is a municipality in the Italian-speaking canton
-of Ticino.
-It has 13
-linked corpus documents.
-Nine  place
-it in Ticino,
-four contain the object label, but
-none states its official language.
-Both
-the model and the affine decoder answer \texttt{Italian}(-speaking). Switzerland, in the same
-relation and under the same operator, has 24{,}928 subject--object co-occurrences
-across 106{,}201 documents. The model answers \texttt{French} correctly, the
-decoder answers \texttt{Swiss}, and a linear probe on the same subject state also
-fails. Low exposure with shared structure is decodable, and heavy exposure without
-it is not. Rebuilt from demonstrations containing no Swiss entity and no Italian
-example, the decoder still returns \texttt{Italian} for all six held-out Ticino municipalities.
-The result therefore persists with those examples excluded from the context.
+\paragraph{Qualitative contrast within a single relation.}
+The \emph{official language} relation illustrates how shared structure and raw
+exposure can pull in opposite directions. The municipality of Lavertezzo appears
+in only 13 linked training documents---nine placing it in the Italian-speaking
+Swiss canton of Ticino, four mentioning the token \texttt{Italian}, and none
+stating its official language---yet both LMEnt-1B and the LRE output
+\texttt{Italian}, matching the many other Italian-speaking municipalities in the
+relation (even when all Swiss and Italian examples are excluded from the LRE's
+estimation prompt). Conversely, \texttt{Switzerland} co-occurs with its target
+language 24{,}928 times across 106{,}201 documents; LMEnt-1B correctly outputs
+\texttt{French} (shared by few entities in this relation), but the LRE outputs
+\texttt{Swiss} and a linear probe on $h_s$ also fails. Shared class structure
+supports linear relation decoding at low direct exposure, whereas heavy exposure
+of an atypical pair does not.
 
-\paragraph{The decoder measures separability, and measures it off-axis.}
-A leave-one-out nearest-centroid classifier on the same subject states scores
-$0.581$ across the ten screened relations, against $0.575$ for the affine decoder
-(Figure~\ref{fig:lment-sharing}C): the relation-specific operator adds little over
-how well subject representations already cluster by answer, and the two disagree
-relation by relation. It is also misaligned. Pulling each answer contrast back
-through the decoder's own mean Jacobian and comparing it with the corresponding
-centroid difference gives a mean principal-angle cosine of $0.341$ and a subspace
-overlap of $0.136$, against $0.022$ for random directions in 2048 dimensions.
-Decoder failure is therefore weak evidence about representation: of 622 facts the
-decoder misses, a probe recovers 282 ($45\%$). Claims about a relation's affine
-representation require a probe of the subject states in addition to the decoder
-evaluation.
+\paragraph{Subject representations already cluster by answer before applying the LRE.}
+Why does answer sharing predict LRE faithfulness? A leave-one-out
+nearest-centroid classifier applied directly to the subject hidden states
+$h_s$---without applying the relation Jacobian $W_r$---achieves $0.581$ accuracy
+across the ten relations, slightly exceeding the LRE ($0.575$;
+Figure~\ref{fig:lment-sharing}C). Moreover, of the 622 facts where the LRE
+fails, a linear centroid probe on $h_s$ recovers 282 ($45\%$), because the mean
+Jacobian $W_r$ is only weakly aligned with the empirical between-answer centroid
+differences in $h_s$ (mean principal-angle cosine $0.341$, subspace overlap
+$0.136$, versus $0.022$ for random directions in 2,048 dimensions). Thus, high
+LRE faithfulness in LMEnt-1B primarily reflects that subjects sharing an object
+already cluster together in $h_s$.
 
-These measurements identify which property tracks affine decodability in a
-pretrained model, but cannot manipulate it, since exposure, answer sharing and
-entity prominence are confounded in natural text. The controlled corpora that
-follow vary structure and exposure independently.
-Appendix~\ref{app:lment-frequency} gives the evaluation and aggregation details.
+Because exposure, answer sharing, and entity prominence are confounded in
+natural corpora, observational analysis of a pretrained model cannot isolate
+their causal effects. We therefore turn to controlled synthetic pretraining
+corpora that vary attribute structure and exposure frequency independently
+(details of the LMEnt-1B evaluation are in Appendix~\ref{app:lment-frequency}).
