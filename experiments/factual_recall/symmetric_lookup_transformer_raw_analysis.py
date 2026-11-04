@@ -424,7 +424,7 @@ def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
         2, 2, figsize=(TEXT_WIDTH, 5.15), constrained_layout=True
     )
     boundaries = np.arange(9)
-    boundary_labels = ["input"] + [f"B{i}" for i in range(1, 9)]
+    boundary_labels = ["input"] + [f"L{i}" for i in range(1, 9)]
 
     axis = axes[0, 0]
     for path, color, label in (
@@ -516,7 +516,7 @@ def plot_mechanism(rows: list[dict[str, object]], output_stem: Path) -> None:
     axis.axhline(0.5, color=COLORS["ink"], linestyle=":", linewidth=0.8)
     axis.set_xticks(layers)
     axis.set_ylim(0.45, 1.02)
-    axis.set_xlabel("block")
+    axis.set_xlabel("layer")
     axis.set_ylabel("random-relation accuracy")
     axis.legend(frameon=False)
     _style_axis(axis, "D", "Layer interventions")

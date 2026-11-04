@@ -743,7 +743,7 @@ Question & low-exposure relational linearity & frequent nonlinear relation \\
 Entities & 192 subjects, 32 objects & 64 entities \\
 Structure & 2 categorical attributes & 10 balanced binary attributes \\
 Relations & semantic + matched random & 10 equality + symmetric random \\
-Model & 1 block, width 64 & 8 blocks, width 20 \\
+Model & 1 layer, width 64 & 8 layers, width 20 \\
 Parameters & 84,288 & 41,760 \\
 Embedding setup & untied, trainable & tied, trainable \\
 Primary linearity test & held-out OLS accuracy & full-data OLS $R^2$ \\
@@ -755,7 +755,7 @@ Primary linearity test & held-out OLS accuracy & full-data OLS $R^2$ \\
 
 \subsection{Experiment A}
 
-The causal transformer has one transformer layer (block), residual width 64, four
+The causal transformer has one transformer layer, residual width 64, four
 attention heads, context length 8, and untied input and output token embeddings.
 All 84,288 parameters are initialized from $\mathcal{N}(0,0.02^2)$. Training
 uses AdamW with learning rate $10^{-3}$, five warmup steps, no weight decay, and
@@ -787,7 +787,7 @@ order vary with the random seed.
 The vocabulary contains 90 tokens: one beginning-of-sequence token, 64 entities,
 ten attributes, eleven relations, and output symbols \texttt{0}, \texttt{1},
 \texttt{n}, and \texttt{y}. The decoder-only transformer has eight pre-LayerNorm
-transformer layers (blocks), residual width 20, four attention heads (head width
+transformer layers, residual width 20, four attention heads (head width
 5), GELU MLP width 80, and context length 4. Token embeddings, position
 embeddings, all eight layers, final LayerNorm, and the tied output projection
 are trained jointly (41,760 parameters total).
@@ -825,9 +825,9 @@ after 200 steps (with seeds 19 and 31 completing 100 steps in the final stage).
 Map & Linear $R^2$ & Relative error & Linear decision & Midpoint defect & Jacobian dispersion \\
 \midrule
 Attention core & $0.993\pm0.002$ & $0.080\pm0.012$ & $0.747\pm0.069$ & $0.035\pm0.007$ & $0.085\pm0.013$ \\
-Attention block & $0.983\pm0.004$ & $0.129\pm0.015$ & $0.750\pm0.066$ & $0.273\pm0.010$ & $0.179\pm0.005$ \\
+Attention sublayer & $0.983\pm0.004$ & $0.129\pm0.015$ & $0.750\pm0.066$ & $0.273\pm0.010$ & $0.179\pm0.005$ \\
 MLP core & $0.982\pm0.004$ & $0.133\pm0.013$ & $0.747\pm0.068$ & $0.095\pm0.005$ & $0.137\pm0.007$ \\
-MLP block & $0.974\pm0.006$ & $0.160\pm0.017$ & $0.758\pm0.057$ & $0.247\pm0.027$ & $0.172\pm0.009$ \\
+MLP sublayer & $0.974\pm0.006$ & $0.160\pm0.017$ & $0.758\pm0.057$ & $0.247\pm0.027$ & $0.172\pm0.009$ \\
 Readout & $0.993\pm0.003$ & $0.081\pm0.017$ & $0.760\pm0.060$ & $0.199\pm0.004$ & $0.228\pm0.007$ \\
 Full lookup & $0.965\pm0.010$ & $0.185\pm0.027$ & $0.750\pm0.056$ & $0.352\pm0.011$ & $0.281\pm0.013$ \\
 \bottomrule

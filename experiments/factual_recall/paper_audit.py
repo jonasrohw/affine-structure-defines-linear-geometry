@@ -259,7 +259,7 @@ def write_tables(output):
             rows.append(str(row["seed"]) + " & " + " & ".join(f"{v:.5f}" for v in values) + r" \\")
         rows += [r"\midrule", "Mean & " + " & ".join(f"{v:.5f}" for v in np.mean(matrix, axis=0)) + r" \\"]
         replace_table(label, rows)
-    names = ("Attention core", "Attention block", "MLP core", "MLP block", "Readout", "Full lookup")
+    names = ("Attention core", "Attention sublayer", "MLP core", "MLP sublayer", "Readout", "Full lookup")
     rows = []
     for name, stage in zip(names, STAGES, strict=True):
         values = transformation_metrics(linear[stage])
