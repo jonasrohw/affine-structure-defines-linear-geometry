@@ -69,11 +69,25 @@ near-zero effect ($+0.026$, 95\% CI $[-0.159,+0.226]$).
   faithfulness ($\phi_r$) across subject--object co-occurrence quartiles
   ($0.644$, $0.679$, $0.680$, $0.639$) and across bins of how many other
   subjects in the relation share the model's predicted answer ($0$: $0.409$;
-  $1$--$9$: $0.524$; $10$--$29$: $0.692$; $30+$: $0.762$). \textbf{B:} Mean LRE
+  $1$--$9$: $0.524$; $10$--$29$: $0.692$; $30+$: $0.762$).
+Entities sharing the answer is a better predictor than
+subject-object co-occurrence.
+  \textbf{B:} Mean LRE
   faithfulness across the joint grid of answer sharing and co-occurrence
-  quartiles (37 to 272 facts per cell). \textbf{C:} Per-relation LRE
+  quartiles (37 to 272 facts per cell).
+  Within each column, entities sharing the answer is
+correlated with faithfulness. There is no consistent positive correlation 
+of
+subject-object co-occurrence with faithfulness within each
+row.
+  \textbf{C:} Per-relation LRE
   faithfulness versus a leave-one-out nearest-centroid classifier fit directly
-  on the subject hidden states $h_s$ (dashed identity line).}
+  on the subject hidden states $h_s$ (dashed identity
+  line).
+  Subject representations already cluster by an-
+  swer before applying the LRE. 
+  }
+  
   \label{fig:lment-sharing}
 \end{figure*}
 
