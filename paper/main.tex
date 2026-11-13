@@ -167,7 +167,7 @@ Our analysis of the pretrained LMEnt-1B model motivates separating these
 factors: within individual relations, facts with more pretraining
 co-occurrences are no more likely to be decoded by a relation's LRE once answer
 sharing is taken into account (Section~\ref{sec:lment-frequency}). To test
-whether exposure frequency or semantic structure drives relational linearity, we
+the effects of exposure frequency and semantic structure on relational linearity, we
 construct two synthetic pretraining settings that vary exposure and attribute
 structure independently. Interpreting these experiments requires distinguishing
 three properties that can dissociate: \emph{behavior} (whether the model
@@ -189,12 +189,18 @@ recalls the relation triples. Once recall emerges, both the model and a linear
 probe generalize to held-out subjects, whereas the frequency-matched random
 relation remains at chance.
 
-Conversely, high exposure alone should not induce linear geometry when paired
+Conversely, high exposure alone
+%should WHY SHOULD?
+may
+not induce linear geometry when paired
 entities share no underlying attributes. Repeating an arbitrary set of
 subject--object pairs allows a model to memorize every pairing, but without
-attribute overlap across the related entities, no shared direction forms in
+attribute overlap across the related entities, no shared
+direction may form in
 embedding space to align subjects linearly with their targets. Experiment~B
-tests this regime by training a decoder-only transformer on a random relation
+tests this regime by training a
+%decoder-only
+transformer on a random relation
 $\Rrnd$ alongside ten attribute-defined relations $r_i$, where $\Rrnd$ appears
 ten times as often in joint training as each $r_i$ (50\% vs.\ 5\% of relation
 examples). Although the transformer learns the $r_i$ and memorizes $\Rrnd$ at
