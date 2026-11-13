@@ -301,14 +301,14 @@ empirical studies connect factual recall to associative memory
 \citep{ravfogel2026geometric}, and trade-offs between relational generalization
 and memorization \citep{cheng2026balancing}. Following this literature, we use
 linear probes exclusively for claims about representation geometry and causal
-interventions for claims about the forward computation.
+interventions exclusively for claims about the forward computation.
 
 \paragraph{Decodability versus executed algorithms.}
 A transformer can also implement regression-like computation during its forward
 pass: \citet{vonoswald2023transformers} construct linear self-attention layers
 whose forward transformation matches a gradient step on a regression loss.
 Their result characterizes the algorithm executed during inference, whereas our
-OLS probes test static token embeddings after training.
+OLS probes static token embeddings in test after training.
 \citet{sharma2026dissociating} similarly show in formal-language transformers
 that linearly decodable stack variables can play distinct causal roles under
 intervention. We therefore pair every embedding-geometry measurement with direct

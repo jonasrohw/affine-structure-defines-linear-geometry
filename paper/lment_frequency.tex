@@ -3,7 +3,8 @@
 
 \citet{merullo2025frequency} report that relations with more frequent
 subject--object co-occurrences in pretraining data have more faithful linear
-relational embeddings (LREs; \citealp{hernandez2024linearity}). Writing their
+relational embeddings (LREs;
+\citealp{hernandez2024linearity}). We write their
 OLMo-7B relation-level comparison as
 \begin{equation}
   \begin{gathered}
@@ -13,7 +14,7 @@ OLMo-7B relation-level comparison as
   \label{eq:merullo-frequency}
 \end{equation}
 where $n(s,o)$ counts training co-occurrences and $C_r$ measures how often an
-LRE intervention changes the model's predicted object, this correlation suggests
+LRE intervention changes the model's predicted object. This correlation suggests
 that exposure frequency could drive relational linearity.
 
 To test whether corpus frequency predicts LRE faithfulness at the level of
@@ -32,7 +33,7 @@ contain the gold object label.
 
 \paragraph{Filtering out constant-answer relations.}
 Raw LRE faithfulness $\phi_r$ can be artificially high when the language model
-collapses to a single default answer: for example, in \emph{person employer} and
+collapses to a single default answer. For example, in \emph{person employer} and
 \emph{astronomical parent body}, LMEnt-1B outputs the same token for every
 subject, giving $\phi_r=1.000$ trivially. Among the 30 relations with at least
 30 evaluated facts, only 14 exceed the accuracy of always guessing the
@@ -87,7 +88,8 @@ relation (even when all Swiss and Italian examples are excluded from the LRE's
 estimation prompt). Conversely, \texttt{Switzerland} co-occurs with its target
 language 24{,}928 times across 106{,}201 documents; LMEnt-1B correctly outputs
 \texttt{French} (shared by few entities in this relation), but the LRE outputs
-\texttt{Swiss} and a linear probe on $h_s$ also fails. Shared class structure
+\texttt{Swiss} and a linear probe on $h_s$ also fails. In
+these two examples, shared class structure
 supports linear relation decoding at low direct exposure, whereas heavy exposure
 of an atypical pair does not.
 
