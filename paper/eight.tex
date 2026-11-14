@@ -4,10 +4,16 @@
   \caption{In Experiment~B, the memorized random relation relies on distributed
   nonlinear computation across the eight transformer layers (means $\pm$ 1 SD
   over three seeds). \textbf{A:} A layerwise logit lens tracks when the random
-  answer becomes linearly readable across the eight layers. \textbf{B:} Global
-  interventions on GELU activations, attention routing, MLP outputs, or
+  answer becomes linearly readable across the eight layers.
+The   yes/no answer becomes linearly decodable  only in the final
+  transformer layers.
+  \textbf{B:} Global
+  interventions on GELU activations
+  (replacing GELU activations with the identity function), attention routing, MLP outputs, or
   attention outputs degrade accuracy on both structured and random relations.
-  \textbf{C:} Residual-stream patching shows relational information shifting
+  \textbf{C:} Residual-stream patching shows
+  %relational information
+  how the information about the correct answer shifts
   from the subject position to the object position across layers. \textbf{D:}
   Ablating any single attention or MLP sublayer impairs random-relation recall,
   showing that the lookup is distributed across layers.}

@@ -516,7 +516,7 @@ most of the output variance ($R^2=\ExpOneAffine$), yet both the midpoint defect
 ($D_J=\ExpOneJacobian$, or $\ExpOneTangent$ restricted to the empirical
 subject-difference subspace) are substantial. Thus, while the forward mapping is
 well approximated by a linear function on the training distribution, the
-executed computation is genuinely nonlinear.
+executed computation's linear approximation is poor.
 
 Activation patching shows how this nonlinear forward pass uses the attribute
 representations (details in Appendix~\ref{app:goal1-extra}). First, a
@@ -562,8 +562,11 @@ Seed & Min. struct. & Random & Min. struct. & Random \\
 Mean & 99.98 & 99.98 & 0.995 & 0.375 \\
 \bottomrule
 \end{tabular}
-\caption{Complete-table accuracy and full-data OLS $R^2$ in Experiment~B.
-Structured columns report the minimum across the ten attribute-equality
+\caption{Complete-table accuracy and full-data OLS $R^2$
+  for the ten attribute-equality
+  relations and the random relation
+  in Experiment~B.
+Structured columns (``Min. struct.'') report the minimum across the ten attribute-equality
 relations within each seed. OLS maps the 20-dimensional subject token embeddings
 to positive-object centroids across all 64 entities.}
 \label{tab:goal2}
@@ -580,14 +583,14 @@ unexplained.
 Why do the structured relations admit an exact linear fit? Writing
 $b_i(s)=2a_i(s)-1\in\{-1,+1\}$ for attribute $i$ and letting $\mu_i^+$ and
 $\mu_i^-$ denote the token-embedding centroids of entities with $a_i=1$ and
-$a_i=0$, the positive-object centroid for relation $r_i$ is an exact linear
+$a_i=0$, the positive-object centroid $ c_i(s)$ for relation $r_i$ is an exact linear
 function of $b_i(s)$ (plus a constant offset):
 \begin{equation}
   c_i(s)=\mu_i^-+\frac{b_i(s)+1}{2}(\mu_i^+-\mu_i^-).
   \label{eq:structured-affine}
 \end{equation}
 Because the inverse attribute examples align the coordinates of $e(s)$ with the
-binary attributes $b_i(s)$, a single linear regression $M_ie(s)+b_i$ recovers
+binary attributes $b_i(s)$, a single linear regression $M_i(s)e(s)+b_i(s)$ recovers
 $c_i(s)$ with $R^2 > 0.994$. The random graph $\Rrnd$ matches every structured
 relation's degree, symmetry, and class balance, but lacks any shared attribute
 rule to align its positive-object centroids with $e(s)$.
